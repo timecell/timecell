@@ -7,6 +7,8 @@ import fastifyStatic from "@fastify/static";
 import { crashRoutes } from "./routes/crash.js";
 import { portfolioRoutes } from "./routes/portfolio.js";
 import { priceRoutes } from "./routes/price.js";
+import { temperatureRoutes } from "./routes/temperature.js";
+import { positionSizingRoutes } from "./routes/position-sizing.js";
 
 function findWebDist(): string | null {
 	const candidates = [
@@ -32,6 +34,8 @@ export async function buildServer() {
 	await fastify.register(crashRoutes, { prefix: "/api" });
 	await fastify.register(portfolioRoutes, { prefix: "/api" });
 	await fastify.register(priceRoutes, { prefix: "/api" });
+	await fastify.register(temperatureRoutes, { prefix: "/api" });
+	await fastify.register(positionSizingRoutes, { prefix: "/api" });
 
 	// Health check
 	fastify.get("/api/health", async () => ({ status: "ok", version: "0.1.0" }));
