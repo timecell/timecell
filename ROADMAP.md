@@ -55,14 +55,16 @@ Chat IS the product. The AI advisor is the primary experience — users ask ques
 - [x] **Guided first-run flow** — Questions not sliders: "What's your net worth?" → "How much is liquid?" → "What % is BTC?" → reveal dashboard with YOUR numbers
 - [x] **Sleep test, capacity gate, conviction gates, de-risk triggers, report card** — Full Position Sizing Process (Framework Part 3)
 
-**In progress — Layout flip (chat-dominant):**
-- [ ] **Chat takes full width** — Chat is the main surface. Full-width on desktop with dashboard as narrow collapsible right sidebar (~320px). Mobile: chat is default, dashboard is secondary tab.
-- [ ] **Conversational onboarding** — Replace GuidedFlow 4-step walkthrough with AI-driven onboarding in chat. New users see "Welcome! Tell me about your portfolio" instead of a wizard. Remove WelcomeHero and StageCallout.
-- [ ] **Dashboard sidebar** — Dashboard becomes a collapsible panel: key metrics (survival score, temperature, action items) visible at a glance. Expands for detail. Collapses to just icons.
-- [ ] **Streaming responses** — Switch from blocking to incremental text display. Critical for chat-dominant UX — users stare at the chat, perceived latency matters.
-- [ ] **Tool calls UX** — Collapse tool call cards by default. Show brief inline status ("Analyzing crash scenarios...") then fold into the response. Users see "Your ruin test shows 1.8%" — not a prominent card with raw JSON. Tools are invisible infrastructure.
+**Shipped — Layout flip (chat-dominant):**
+- [x] **Chat takes full width** — Chat is the main surface. Full-width on desktop with 380px collapsible dashboard sidebar. Mobile: chat is default, dashboard is secondary tab.
+- [x] **Conversational onboarding** — AI welcome message replaces 4-step wizard. New users see "Welcome! Tell me about your portfolio" in chat. OnboardingModal, WelcomeHero, GuidedFlow removed.
+- [x] **Dashboard sidebar** — Collapsible right panel: Key Metrics (5 pinned) vs Full Dashboard toggle. localStorage persistence for sidebar state.
+- [x] **Streaming responses** — `messages.stream()` with incremental text display. Blinking cursor during generation.
+- [x] **Tool calls UX** — Subtle inline status dots, collapsed by default. Expandable via left-border detail. Tools are invisible infrastructure.
 - [ ] **Additional AI tools** — Capacity gate, allocation drift, historical crash simulation, downside insurance, custody risk, geometric CAGR (6 engine functions not yet exposed)
-- [ ] **Landing page v2** — Reflects chat-first product: hero shows chat demo, not dashboard table. "Open App" is primary CTA.
+- [x] **Landing page v2** — Chat-first CIO positioning. "Open App" is primary CTA.
+
+**Insight (Session 9):** TimeCell is an AI agent, not a CLI tool. Every user from day one experiences the CIO paradigm — no legacy dashboard-only mode. The web app IS the product. CLI becomes a power-user/developer tool. Future channels (WhatsApp, Telegram, API) are just new surfaces for the same conversational agent.
 
 **Deferred:**
 - [ ] CIO memory across sessions — Persist portfolio context + conversation insights in localStorage. On return: "Welcome back. Last time we discussed your 15% allocation. Temperature moved from 55 to 62 — want me to review?" (v0.4)
@@ -231,7 +233,8 @@ OSS-first distribution — no paid channels, no sales team.
 | 2026-02-27 | Distribution: hosted web app > CLI for non-tech users | timecell.ai/app = zero install |
 | 2026-02-28 | Chat-first architecture (v0.3) | Product shifted from dashboard-first to chat-first. AI advisor (Claude) is the primary experience via BYOK. Engine functions exposed as Claude tools. Dashboard is visual reference. Browser-direct API calls (no proxy). Inspired by OpenClaw model. |
 | 2026-02-28 | OpenClaw UX pattern as reference | Tool-using AI with local-first architecture and no setup friction. TimeCell is the same pattern applied to investing instead of coding. Key lessons: tools invisible by default (CIO gives judgment, not plumbing), progressive context building, conversational onboarding (no wizard), session memory (CIO remembers and proactively references changes), streaming for perceived responsiveness. |
-| 2026-02-28 | Layout flip: chat-dominant interface | User insight: chat is 90-95% of the value, dashboard is 5%. Current 50/50 split (440px chat + dashboard) is backwards. Flipping: chat takes full width, dashboard becomes collapsible sidebar. Dashboard doesn't disappear — still serves users without API key and provides visual proof for AI responses. Future: WhatsApp/Telegram as text-only channel, web app as "rich" channel with interactive widgets. |
+| 2026-02-28 | Layout flip: chat-dominant interface | User insight: chat is 90-95% of the value, dashboard is 5%. Flipped: chat full width, dashboard as 380px collapsible sidebar. |
+| 2026-02-28 | TimeCell is an agent, not a CLI tool | Every user from day one gets the CIO paradigm. No legacy dashboard-only experience. Web app is the product. CLI is power-user/developer tool. Future channels (WhatsApp, Telegram) are surfaces for the same conversational agent. |
 | 2026-02-28 | Live temperature pulled forward from v0.4 | Discovered existing live MVRV/RHODL feed in Turso DB (shared with fo-web, open-fo, mc-bitcoin-tools). Daily sync via GitHub Actions. Connecting TimeCell directly rather than building from scratch. |
 | 2026-02-28 | Framework generalizability analysis (4-AI second opinion) | Claude + OpenAI + Gemini + DeepSeek consensus: core process (conviction, sizing, ruin, sleep) transfers with high confidence. Temperature is Bitcoin-specific — needs pluggable adapters per asset (CAPE for stocks, cap rates for RE, real yields for bonds). Yield-bearing assets break zero-yield assumption. v1.0 rewritten with adapter architecture. Strongest counterargument: without on-chain data quality, framework loses its differentiating edge over generic advice. |
 
@@ -239,17 +242,22 @@ OSS-first distribution — no paid channels, no sales team.
 
 ## Build History
 
-### v0.3 (partial) — Sessions 6-7 (Feb 28)
+### v0.3 (partial) — Sessions 6-9 (Feb 28)
 - Chat-first AI advisor: ChatPanel, useChat hook (agentic tool loop, abort/cancel, activeToolName), ApiKeySetup (BYOK)
 - 8 engine functions exposed as Claude tools with try/catch, system prompt with framework knowledge
-- Split layout: chat (440px left) + dashboard (right), mobile tab bar, dvh viewport fix, 44px touch targets
-- GuidedFlow fixed-position sidebar removed (replaced by chat), StageCallout changed to sticky
+- Layout flip: chat full-width, 380px collapsible dashboard sidebar (Key Metrics / Full Dashboard toggle)
+- Conversational onboarding: AI welcome message replaces 4-step wizard. OnboardingModal/WelcomeHero/GuidedFlow removed.
+- Streaming responses: messages.stream() with incremental display, blinking cursor
+- Tool calls UX: subtle inline status dots, collapsed by default, expandable detail
+- Landing page v2: chat-first CIO positioning, "Open App" primary CTA
 - QA review: 3 parallel agents (UX, tools, mobile), 10+ critical/high issues fixed
 - Temperature v3.0 (MVRV z-score CDF + RHODL log-scale, 6-tier zones), live Turso connection
 - Sleep test engine (8 tests) + capacity gate engine (23 tests), 86 total tests
-- OnboardingModal (4-step wizard), SleepTest (visceral loss display), ReportCard (screenshot-friendly)
+- SleepTest (visceral loss display), ReportCard (screenshot-friendly)
 - Framework generalizability analysis (4-AI second opinion), ROADMAP rewritten with adapter architecture
 - Financial disclaimer, standalone mode fix, action plan 6-tier thresholds
+- SurvivalHero sidebar overflow fix, markdown table/heading/numbered list rendering
+- Logo size increases across app and landing page
 
 ### v0.2 — Sessions 4-5 (Feb 28)
 - Action plan engine (11 rules, 17 tests), temperature gauge, position sizing (20 tests)
