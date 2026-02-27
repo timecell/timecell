@@ -393,7 +393,7 @@ export default function App() {
 				<header className="border-b border-slate-800 px-4 sm:px-6 py-3 sm:py-4">
 					<div className="max-w-7xl mx-auto flex items-center justify-between gap-2">
 						<div className="flex items-center gap-2 sm:gap-3 min-w-0">
-							<img src="/logo.png" alt="TimeCell" className="h-7 sm:h-8 brightness-110 flex-shrink-0" />
+							<img src="/logo.png" alt="TimeCell" className="h-9 sm:h-10 brightness-110 flex-shrink-0" />
 							<span className="text-xs text-slate-500 bg-slate-800 px-2 py-0.5 rounded flex-shrink-0">v0.3</span>
 							<BtcPriceTicker
 								fallbackPrice={portfolio.btcPriceUsd}
