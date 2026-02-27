@@ -5,12 +5,18 @@
 **Why:** Most people don't have access to a CIO who knows their complete financial picture, thinks in frameworks, and gives direct actionable guidance. TimeCell is that CIO — not a dashboard to stare at, but an advisor to talk to. The dashboard is proof; the conversation is the product.
 
 **Product arc:**
-1. **Bitcoin CIO** (v0.1-v0.3) — Prove the pattern: framework → engine → conversational advisor
-2. **Daily habit** (v0.4-v0.5) — Proactive CIO: live data, monitoring, "here's what changed and what you should do"
+1. **Bitcoin CIO** (v0.1-v0.3) — Prove the pattern: framework → engine → conversational advisor (web app)
+2. **TimeCell Agent** (v0.4-v0.5) — Local daemon: background monitoring, proactive alerts, Telegram/WhatsApp, session memory, self-improving skills
 3. **Full portfolio** (v1.0+) — Multi-asset CIO: stocks, bonds, real estate — one advisor for everything
 4. **Platform** (v2.0+) — Family office CIO: role-scoped agents, governance, execution
 
-**Architecture principle:** One shared engine, multiple surfaces. Chat is the primary surface — dashboard is visual proof. Individual mode hides complexity; family office mode exposes governance. Computation is deterministic and auditable; personality/rendering is separate.
+**Architecture principle (settled, 4-AI validated):** TimeCell is an AI agent, not a CLI tool or web app. The core is a local daemon ("TimeCell Agent") — a long-lived background process that monitors markets, runs scheduled checks, delivers alerts, and remembers context. Multiple surfaces connect to this agent:
+- **Web app** (timecell.ai/app) — zero-install trial & rich UI. Also serves as "remote control" for the daemon.
+- **Messaging** (Telegram, WhatsApp, Signal) — daily touchpoint for alerts and quick queries.
+- **CLI** — developer/power-user tool, daemon installer.
+The web app is the acquisition funnel. The daemon is the product. Installation friction is a temporary problem solved progressively (like OpenClaw did — started complex, simplified over time). Architectural ceiling is permanent — a browser-sandboxed app can never run background monitoring, access the filesystem, pipe data between tools, or self-improve. BYOK + local-first requires a local agent for proactive features.
+
+**Kill-switch:** If daemon install conversion < 5% after 6 weeks of polished installer, fall back to web-app-first with server-side monitoring. The web app already works standalone.
 
 **UX principle (from OpenClaw):** Tools are invisible infrastructure. The CIO uses crash_survival, temperature, position_sizing behind the scenes — users see the judgment, not the plumbing. Tool status shown briefly during execution, results collapsed by default. Progressive context: the CIO builds understanding over the conversation, remembers across sessions, and proactively references what changed.
 
@@ -64,23 +70,33 @@ Chat IS the product. The AI advisor is the primary experience — users ask ques
 - [ ] **Additional AI tools** — Capacity gate, allocation drift, historical crash simulation, downside insurance, custody risk, geometric CAGR (6 engine functions not yet exposed)
 - [x] **Landing page v2** — Chat-first CIO positioning. "Open App" is primary CTA.
 
-**Insight (Session 9):** TimeCell is an AI agent, not a CLI tool. Every user from day one experiences the CIO paradigm — no legacy dashboard-only mode. The web app IS the product. CLI becomes a power-user/developer tool. Future channels (WhatsApp, Telegram, API) are just new surfaces for the same conversational agent.
+**Insight (Session 9):** TimeCell is an AI agent, not a CLI tool or web app. The daemon/agent is the core product — the web app is the trial/demo that converts users to agent installers. Install friction is temporary (solve progressively like OpenClaw); architectural ceiling is permanent (browser can never do background monitoring, filesystem access, self-improvement). 4-AI second opinion validated this direction.
 
-**Deferred:**
-- [ ] CIO memory across sessions — Persist portfolio context + conversation insights in localStorage. On return: "Welcome back. Last time we discussed your 15% allocation. Temperature moved from 55 to 62 — want me to review?" (v0.4)
-- [ ] Conversation persistence / multi-conversation (v0.4)
+**Deferred to v0.4 (daemon features):**
+- [ ] CIO memory across sessions — Persist portfolio context + conversation insights. On return: "Welcome back. Temperature moved from 55 to 62 — want me to review?"
+- [ ] Conversation persistence / multi-conversation
 - [ ] Embed dashboard widgets inline in chat responses (v0.5)
 
-## v0.4 — "Stay informed"
+## v0.4 — "TimeCell Agent" (the daemon)
 
-Live data and ongoing awareness. Replace mock data with real feeds. Establish the three daily loops: portfolio health snapshot → crash survival check → exposure-weighted alerts.
+Transform CLI from setup wizard into a long-lived local agent. The agent runs in the background, monitors markets, and delivers proactive CIO advice via web UI and messaging.
 
-- [x] **Live MVRV/RHODL temperature** — Pulling forward — connecting to existing Turso live feed from fo-web project. Replace mock temperature with real on-chain data feeds. Credibility-critical: mock data breaks trust.
-- [x] **Live currency conversion** — Auto-fetch INR/USD/EUR/GBP/SGD rates, display-only conversion, cached with 1hr TTL
-- [ ] **Portfolio history** — SQLite persistence, "what changed since last visit"
-- [x] **Allocation drift detection** — Alert when portfolio drifts outside chosen conviction rung due to price movement
-- [x] **PDF export** — One-page report card as downloadable PDF (html2canvas + jspdf)
-- [x] **Mobile-optimized UX** — Larger touch targets, better slider controls on phone, responsive breakpoints
+**Core daemon:**
+- [ ] **TimeCell Gateway** — Long-lived Node.js daemon process. `npx @timecell/cli agent start` launches it. Health check endpoint. Graceful shutdown. Auto-restart on crash.
+- [ ] **Scheduled monitoring** — Cron-style checks: temperature every 4h, portfolio drift daily, ruin test on significant BTC price moves.
+- [ ] **Telegram bot integration** — Daily morning brief: "Temperature: 37 (Fear). Your portfolio survived overnight. DCA multiplier: 1.5x." Quick query support.
+- [ ] **Session memory** — Local Markdown/SQLite persistence. Agent remembers past conversations, portfolio changes, advice given. Progressive context building.
+- [ ] **Web UI as remote control** — timecell.ai/app connects to local daemon via localhost API. Daemon does the heavy lifting; web renders results.
+
+**Carried forward:**
+- [x] **Live MVRV/RHODL temperature** — Connected to existing Turso live feed.
+- [x] **Live currency conversion** — Auto-fetch rates, cached with 1hr TTL.
+- [ ] **Portfolio history** — SQLite persistence, "what changed since last visit."
+- [x] **Allocation drift detection** — Alert when portfolio drifts outside conviction rung.
+- [x] **PDF export** — One-page report card as downloadable PDF.
+- [x] **Mobile-optimized UX** — Larger touch targets, responsive breakpoints.
+
+**Kill-switch metric:** If <5% of web users convert to daemon install after 6 weeks of polished installer, fall back to server-side monitoring + web push notifications.
 
 ## v0.5 — "Compare and decide"
 
@@ -234,7 +250,7 @@ OSS-first distribution — no paid channels, no sales team.
 | 2026-02-28 | Chat-first architecture (v0.3) | Product shifted from dashboard-first to chat-first. AI advisor (Claude) is the primary experience via BYOK. Engine functions exposed as Claude tools. Dashboard is visual reference. Browser-direct API calls (no proxy). Inspired by OpenClaw model. |
 | 2026-02-28 | OpenClaw UX pattern as reference | Tool-using AI with local-first architecture and no setup friction. TimeCell is the same pattern applied to investing instead of coding. Key lessons: tools invisible by default (CIO gives judgment, not plumbing), progressive context building, conversational onboarding (no wizard), session memory (CIO remembers and proactively references changes), streaming for perceived responsiveness. |
 | 2026-02-28 | Layout flip: chat-dominant interface | User insight: chat is 90-95% of the value, dashboard is 5%. Flipped: chat full width, dashboard as 380px collapsible sidebar. |
-| 2026-02-28 | TimeCell is an agent, not a CLI tool | Every user from day one gets the CIO paradigm. No legacy dashboard-only experience. Web app is the product. CLI is power-user/developer tool. Future channels (WhatsApp, Telegram) are surfaces for the same conversational agent. |
+| 2026-02-28 | Daemon-as-core architecture (4-AI validated, 2 rounds) | Round 1: all 4 AIs recommended web-first, daemon optional. Founder pushed back: OpenClaw expanded to non-devs, CLI can do things web never can (background monitoring, filesystem, self-improvement), install friction is temporary but ceiling is permanent. Round 2: OpenAI shifted to daemon-first (higher EV ~41 vs ~34), Gemini maintained dissent (trust crisis for financial product), DeepSeek proposed hybrid (daemon + web as remote control). Final decision: daemon IS the core product, web app is acquisition funnel / remote control. Kill-switch: <5% install conversion after 6 weeks → fall back to server-side monitoring. |
 | 2026-02-28 | Live temperature pulled forward from v0.4 | Discovered existing live MVRV/RHODL feed in Turso DB (shared with fo-web, open-fo, mc-bitcoin-tools). Daily sync via GitHub Actions. Connecting TimeCell directly rather than building from scratch. |
 | 2026-02-28 | Framework generalizability analysis (4-AI second opinion) | Claude + OpenAI + Gemini + DeepSeek consensus: core process (conviction, sizing, ruin, sleep) transfers with high confidence. Temperature is Bitcoin-specific — needs pluggable adapters per asset (CAPE for stocks, cap rates for RE, real yields for bonds). Yield-bearing assets break zero-yield assumption. v1.0 rewritten with adapter architecture. Strongest counterargument: without on-chain data quality, framework loses its differentiating edge over generic advice. |
 
