@@ -124,6 +124,11 @@ Two modes, one engine. Mass retail stays simple; family office exposes governanc
 - Shorthand number input in all text fields (8m, 500k, 2cr) — ✅ Done in onboarding modal
 - Code splitting — Lazy-load dashboard sections to reduce initial bundle (currently 1.4MB)
 
+### Conversational Interface
+- **Chat panel** — Sliding panel in web dashboard for contextual Q&A. Template-based v1 (engine explains its own output), LLM-powered v2 (Claude/GPT for free-form). Dashboard = show, Chat = explain + decide.
+- **CLI conversational mode** — Extend existing CLI wizard with AI-powered chat that reads engine output and interprets it
+- **User personas** — 3 test personas (Conservative HNI / Aggressive crypto-native / Curious newcomer) for flow testing and UX validation
+
 ### Intelligence
 - AI-powered "what changed since last visit"
 - Anomaly detection and alerts

@@ -29,6 +29,7 @@ import { WhatIfComparison } from "./components/WhatIfComparison";
 import { HistoricalCrashOverlay } from "./components/HistoricalCrashOverlay";
 import { OnboardingModal, useOnboarding } from "./components/OnboardingModal";
 import { CurrencySelector } from "./components/CurrencySelector";
+import { GuidedFlow, WelcomeHero } from "./components/GuidedFlow";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { calculateSleepTest, scoreToZone } from "@timecell/engine";
 
@@ -144,14 +145,20 @@ export default function App() {
 					</div>
 				</header>
 
+				{/* Guided Flow — floating sidebar + mobile bar */}
+				<GuidedFlow />
+
 				{/* Main content */}
-				<main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
+				<main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6 lg:ml-64">
 					{/* Error banner */}
 					{error && (
 						<div className="rounded-lg border border-red-500/50 bg-red-900/20 px-4 py-3 text-sm text-red-400">
 							{error}
 						</div>
 					)}
+
+					{/* Welcome hero — first visit after onboarding */}
+					<WelcomeHero />
 
 					{/* Report Card — toggle from header button */}
 					{reportCardOpen && result && (
@@ -166,70 +173,76 @@ export default function App() {
 						</div>
 					)}
 
-					{/* ZONE 1: Hero — Big survival score + ruin test */}
-					{result && <SurvivalHero result={result} />}
+					{/* What-If Mode — toggle from header button */}
+					{whatIfOpen && result && (
+						<WhatIfComparison
+							currentPortfolio={portfolio}
+							currencySymbol={currencySymbol}
+						/>
+					)}
 
-					{/* Loading skeleton for hero */}
-					{!result && loading && (
-						<div className="rounded-2xl border border-slate-700 bg-slate-800/30 p-5 sm:p-8 animate-pulse">
-							<div className="flex flex-col sm:flex-row items-start sm:items-center gap-5 sm:gap-10">
-								<div>
-									<div className="h-4 w-32 bg-slate-700 rounded mb-4" />
-									<div className="h-20 w-36 bg-slate-700 rounded" />
-								</div>
-								<div className="hidden sm:block w-px h-24 bg-slate-700" />
-								<div className="flex-1 w-full space-y-4">
-									<div className="h-12 w-full sm:w-48 bg-slate-700 rounded" />
-									<div className="flex gap-4">
-										<div className="h-10 flex-1 sm:w-28 bg-slate-700 rounded" />
-										<div className="h-10 flex-1 sm:w-28 bg-slate-700 rounded" />
+					{/* ═══════════════════════════════════════════════════════════ */}
+					{/* STAGE 1: KNOW YOUR POSITION                               */}
+					{/* "Can I survive a crash? Enter your numbers and find out."  */}
+					{/* ═══════════════════════════════════════════════════════════ */}
+					<section id="stage-position" className="scroll-mt-20 space-y-6">
+						<div className="flex items-center gap-3 pt-2">
+							<span className="flex items-center justify-center w-7 h-7 rounded-full bg-orange-500/20 text-orange-400 text-xs font-bold border border-orange-500/30">1</span>
+							<div>
+								<h2 className="text-sm font-semibold text-white">Know Your Position</h2>
+								<p className="text-xs text-slate-500">Enter YOUR numbers. The dashboard personalizes to your situation.</p>
+							</div>
+						</div>
+
+						{/* Survival Hero */}
+						{result && <SurvivalHero result={result} />}
+						{!result && loading && (
+							<div className="rounded-2xl border border-slate-700 bg-slate-800/30 p-5 sm:p-8 animate-pulse">
+								<div className="flex flex-col sm:flex-row items-start sm:items-center gap-5 sm:gap-10">
+									<div>
+										<div className="h-4 w-32 bg-slate-700 rounded mb-4" />
+										<div className="h-20 w-36 bg-slate-700 rounded" />
+									</div>
+									<div className="hidden sm:block w-px h-24 bg-slate-700" />
+									<div className="flex-1 w-full space-y-4">
+										<div className="h-12 w-full sm:w-48 bg-slate-700 rounded" />
+										<div className="flex gap-4">
+											<div className="h-10 flex-1 sm:w-28 bg-slate-700 rounded" />
+											<div className="h-10 flex-1 sm:w-28 bg-slate-700 rounded" />
+										</div>
 									</div>
 								</div>
 							</div>
-						</div>
-					)}
+						)}
 
-					{/* ZONE 2: Interactive — Sliders + Chart side by side */}
-					<div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-						<div className="lg:col-span-2">
-							<PortfolioForm
-								portfolio={portfolio}
-								onUpdate={updatePortfolio}
-								savedAt={savedAt}
-								currencySymbol={currencySymbol}
-								currencyRate={currencyRate}
-							/>
+						{/* Portfolio sliders + crash chart */}
+						<div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+							<div className="lg:col-span-2">
+								<PortfolioForm
+									portfolio={portfolio}
+									onUpdate={updatePortfolio}
+									savedAt={savedAt}
+									currencySymbol={currencySymbol}
+									currencyRate={currencyRate}
+								/>
+							</div>
+							<div className="lg:col-span-3">
+								{result && !loading && (
+									<CrashChart result={result} currencySymbol={currencySymbol} currencyRate={currencyRate} />
+								)}
+								{loading && (
+									<div className="rounded-xl border border-slate-700 bg-slate-800/30 p-6 animate-pulse h-full min-h-[300px]">
+										<div className="h-5 w-48 bg-slate-700 rounded mb-6" />
+										<div className="h-full bg-slate-700/30 rounded" />
+									</div>
+								)}
+							</div>
 						</div>
-						<div className="lg:col-span-3">
-							{result && !loading && (
-								<CrashChart result={result} currencySymbol={currencySymbol} currencyRate={currencyRate} />
-							)}
-							{loading && (
-								<div className="rounded-xl border border-slate-700 bg-slate-800/30 p-6 animate-pulse h-full min-h-[300px]">
-									<div className="h-5 w-48 bg-slate-700 rounded mb-6" />
-									<div className="h-full bg-slate-700/30 rounded" />
-								</div>
-							)}
-						</div>
-					</div>
 
-					{/* ZONE 2.5: Sleep Test — visceral gut-check */}
-					<SleepTest
-						totalValueUsd={portfolio.totalValueUsd}
-						btcPercentage={portfolio.btcPercentage}
-						currencySymbol={currencySymbol}
-						currencyRate={currencyRate}
-					/>
-
-					{/* ZONE 3: Market Intelligence — Temperature + Position Sizing + Capacity Gate + Action Plan */}
-					<div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-						<TemperatureGauge onTemperatureChange={setTemperatureScore} />
-						<PositionSizing
+						{/* Sleep test + capacity gate */}
+						<SleepTest
 							totalValueUsd={portfolio.totalValueUsd}
-							currentBtcPct={portfolio.btcPercentage}
-							monthlyBurnUsd={portfolio.monthlyBurnUsd}
-							liquidReserveUsd={portfolio.liquidReserveUsd}
-							btcPriceUsd={portfolio.btcPriceUsd}
+							btcPercentage={portfolio.btcPercentage}
 							currencySymbol={currencySymbol}
 							currencyRate={currencyRate}
 						/>
@@ -240,76 +253,130 @@ export default function App() {
 							currencySymbol={currencySymbol}
 							currencyRate={currencyRate}
 						/>
-						<ActionPlan
-							btcPercentage={portfolio.btcPercentage}
-							ruinTestPassed={result?.ruinTestPassed ?? true}
-							runwayMonths={result?.scenarios?.[result.scenarios.length - 1]?.runwayMonths ?? Infinity}
-							temperatureScore={temperatureScore}
-							liquidReserveUsd={portfolio.liquidReserveUsd}
-							monthlyBurnUsd={portfolio.monthlyBurnUsd}
-							totalValueUsd={portfolio.totalValueUsd}
-						/>
-						{/* ConvictionGates — only renders when btcPercentage >= 25 */}
-						<div className="sm:col-span-2">
-							<ConvictionGates
-								btcPercentage={portfolio.btcPercentage}
-								ruinTestPassed={result?.ruinTestPassed ?? true}
-								sleepTestSeverity={sleepTestSeverity}
+					</section>
+
+					{/* ═══════════════════════════════════════════════════════════ */}
+					{/* STAGE 2: READ THE MARKET                                  */}
+					{/* "Where are we in the cycle? Read the market signals."      */}
+					{/* ═══════════════════════════════════════════════════════════ */}
+					<section id="stage-risk" className="scroll-mt-20 space-y-6">
+						<div className="flex items-center gap-3 pt-4 border-t border-slate-800">
+							<span className="flex items-center justify-center w-7 h-7 rounded-full bg-orange-500/20 text-orange-400 text-xs font-bold border border-orange-500/30">2</span>
+							<div>
+								<h2 className="text-sm font-semibold text-white">Read the Market</h2>
+								<p className="text-xs text-slate-500">Where are we in the cycle? These signals tell you if it's time to buy, hold, or sell.</p>
+							</div>
+						</div>
+
+						<div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+							<TemperatureGauge onTemperatureChange={setTemperatureScore} />
+							<MarketSentiment
+								temperatureScore={temperatureScore}
+								temperatureZone={scoreToZone(temperatureScore)}
 							/>
 						</div>
-					</div>
+						<FourYearMA btcPriceUsd={portfolio.btcPriceUsd} />
+						<ThesisHealthCheck />
+					</section>
 
-					{/* ZONE 3.5: De-Risk Triggers — written rules committed before emotions take over */}
-					<DeRiskTriggers
-						temperatureScore={temperatureScore}
-						ruinTestPassed={result?.ruinTestPassed ?? true}
-						runwayMonths={result?.scenarios?.[result.scenarios.length - 1]?.runwayMonths ?? Infinity}
-					/>
+					{/* ═══════════════════════════════════════════════════════════ */}
+					{/* STAGE 3: TAKE ACTION                                      */}
+					{/* "Based on your risk profile and temperature, do this."     */}
+					{/* ═══════════════════════════════════════════════════════════ */}
+					<section id="stage-action" className="scroll-mt-20 space-y-6">
+						<div className="flex items-center gap-3 pt-4 border-t border-slate-800">
+							<span className="flex items-center justify-center w-7 h-7 rounded-full bg-orange-500/20 text-orange-400 text-xs font-bold border border-orange-500/30">3</span>
+							<div>
+								<h2 className="text-sm font-semibold text-white">Take Action</h2>
+								<p className="text-xs text-slate-500">Your personalized action steps based on risk profile and market temperature.</p>
+							</div>
+						</div>
 
-					{/* ZONE 3.6: Selling Rules — temperature-based de-accumulation ladder */}
-				<SellingRules
-					temperatureScore={temperatureScore}
-					btcPercentage={portfolio.btcPercentage}
-					totalValueUsd={portfolio.totalValueUsd}
-					btcPriceUsd={portfolio.btcPriceUsd}
-					currencySymbol={currencySymbol}
-					currencyRate={currencyRate}
-				/>
+						<div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+							<ActionPlan
+								btcPercentage={portfolio.btcPercentage}
+								ruinTestPassed={result?.ruinTestPassed ?? true}
+								runwayMonths={result?.scenarios?.[result.scenarios.length - 1]?.runwayMonths ?? Infinity}
+								temperatureScore={temperatureScore}
+								liquidReserveUsd={portfolio.liquidReserveUsd}
+								monthlyBurnUsd={portfolio.monthlyBurnUsd}
+								totalValueUsd={portfolio.totalValueUsd}
+							/>
+							<PositionSizing
+								totalValueUsd={portfolio.totalValueUsd}
+								currentBtcPct={portfolio.btcPercentage}
+								monthlyBurnUsd={portfolio.monthlyBurnUsd}
+								liquidReserveUsd={portfolio.liquidReserveUsd}
+								btcPriceUsd={portfolio.btcPriceUsd}
+								currencySymbol={currencySymbol}
+								currencyRate={currencyRate}
+							/>
+						</div>
+						<ConvictionGates
+							btcPercentage={portfolio.btcPercentage}
+							ruinTestPassed={result?.ruinTestPassed ?? true}
+							sleepTestSeverity={sleepTestSeverity}
+						/>
+						<DCACalculator
+							currentBtcPrice={portfolio.btcPriceUsd}
+							temperatureScore={temperatureScore}
+							currencySymbol={currencySymbol}
+							currencyRate={currencyRate}
+						/>
+						<SellingRules
+							temperatureScore={temperatureScore}
+							btcPercentage={portfolio.btcPercentage}
+							totalValueUsd={portfolio.totalValueUsd}
+							btcPriceUsd={portfolio.btcPriceUsd}
+							currencySymbol={currencySymbol}
+							currencyRate={currencyRate}
+						/>
+					</section>
 
-				{/* ZONE 3.65: DCA Calculator — temperature-aware buying strategy (Framework Part 4) */}
-				<DCACalculator
-					currentBtcPrice={portfolio.btcPriceUsd}
-					temperatureScore={temperatureScore}
-					currencySymbol={currencySymbol}
-					currencyRate={currencyRate}
-				/>
+					{/* ═══════════════════════════════════════════════════════════ */}
+					{/* STAGE 4: PROTECT YOURSELF                                 */}
+					{/* "Set your safety net before you need it."                  */}
+					{/* ═══════════════════════════════════════════════════════════ */}
+					<section id="stage-protect" className="scroll-mt-20 space-y-6">
+						<div className="flex items-center gap-3 pt-4 border-t border-slate-800">
+							<span className="flex items-center justify-center w-7 h-7 rounded-full bg-orange-500/20 text-orange-400 text-xs font-bold border border-orange-500/30">4</span>
+							<div>
+								<h2 className="text-sm font-semibold text-white">Protect Yourself</h2>
+								<p className="text-xs text-slate-500">Set your safety net. Written rules prevent panic decisions.</p>
+							</div>
+						</div>
 
-				{/* ZONE 3.7: Downside Insurance — put option budgeting + break-even calculator (Framework Part 6) */}
-				<DownsideInsurance
-					totalBtcValueUsd={portfolio.totalValueUsd * (portfolio.btcPercentage / 100)}
-					btcPriceUsd={portfolio.btcPriceUsd}
-					currencySymbol={currencySymbol}
-					currencyRate={currencyRate}
-				/>
+						<DeRiskTriggers
+							temperatureScore={temperatureScore}
+							ruinTestPassed={result?.ruinTestPassed ?? true}
+							runwayMonths={result?.scenarios?.[result.scenarios.length - 1]?.runwayMonths ?? Infinity}
+						/>
+						<DownsideInsurance
+							totalBtcValueUsd={portfolio.totalValueUsd * (portfolio.btcPercentage / 100)}
+							btcPriceUsd={portfolio.btcPriceUsd}
+							currencySymbol={currencySymbol}
+							currencyRate={currencyRate}
+						/>
+						<CustodyTracker
+							totalBtcValueUsd={portfolio.totalValueUsd * (portfolio.btcPercentage / 100)}
+							btcPriceUsd={portfolio.btcPriceUsd}
+							currencySymbol={currencySymbol}
+							currencyRate={currencyRate}
+						/>
+						<HistoricalCrashOverlay
+							totalValueUsd={portfolio.totalValueUsd}
+							btcPercentage={portfolio.btcPercentage}
+							monthlyBurnUsd={portfolio.monthlyBurnUsd}
+							liquidReserveUsd={portfolio.liquidReserveUsd}
+							btcPriceUsd={portfolio.btcPriceUsd}
+							currencySymbol={currencySymbol}
+							currencyRate={currencyRate}
+						/>
+					</section>
 
-				{/* ZONE 3.72: Custody Tracker — exchange vs self-custody risk (Framework Part 7) */}
-				<CustodyTracker
-					totalBtcValueUsd={portfolio.totalValueUsd * (portfolio.btcPercentage / 100)}
-					btcPriceUsd={portfolio.btcPriceUsd}
-					currencySymbol={currencySymbol}
-					currencyRate={currencyRate}
-				/>
-
-				{/* ZONE 3.75: Market Sentiment — TimeCell temperature vs Fear & Greed cross-validation */}
-					<MarketSentiment
-						temperatureScore={temperatureScore}
-						temperatureZone={scoreToZone(temperatureScore)}
-					/>
-
-				{/* ZONE 3.8: 4-Year Moving Average — Framework Part 4.3, cycle timing */}
-				<FourYearMA btcPriceUsd={portfolio.btcPriceUsd} />
-
-					{/* ZONE 4: Crash details — collapsed by default */}
+					{/* ═══════════════════════════════════════════════════════════ */}
+					{/* REFERENCE: Crash details + framework knowledge             */}
+					{/* ═══════════════════════════════════════════════════════════ */}
 					{result && !loading && (
 						<div>
 							<button
@@ -331,24 +398,11 @@ export default function App() {
 						</div>
 					)}
 
-					{/* ZONE 4.5: Historical Crash Overlay — how you would have fared in past crashes */}
-					<HistoricalCrashOverlay
-						totalValueUsd={portfolio.totalValueUsd}
-						btcPercentage={portfolio.btcPercentage}
-						monthlyBurnUsd={portfolio.monthlyBurnUsd}
-						liquidReserveUsd={portfolio.liquidReserveUsd}
-						btcPriceUsd={portfolio.btcPriceUsd}
-						currencySymbol={currencySymbol}
-						currencyRate={currencyRate}
-					/>
-
-					{/* ZONE 5: Framework — below fold */}
 					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 						<ConvictionLadder btcPercentage={portfolio.btcPercentage} />
 						<JourneyTracker btcPercentage={portfolio.btcPercentage} />
 						<InfoPanel />
 					</div>
-					<ThesisHealthCheck />
 				</main>
 
 				{/* Footer */}
