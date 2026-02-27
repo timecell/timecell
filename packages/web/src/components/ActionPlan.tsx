@@ -205,7 +205,12 @@ export function ActionPlan({
 						All clear — your portfolio is well-positioned.
 					</div>
 				)}
-			</CardContent>
+
+			{/* Disclaimer */}
+			<p className="text-xs text-slate-500 mt-4 pt-3 border-t border-slate-700/50">
+				This is a computational framework, not financial advice. Consult a qualified financial advisor before making investment decisions.
+			</p>
+		</CardContent>
 		</Card>
 	);
 }

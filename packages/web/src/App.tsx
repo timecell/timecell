@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { usePortfolio } from "./hooks/usePortfolio";
+import type { PortfolioInput } from "./hooks/usePortfolio";
 import { SurvivalHero } from "./components/SurvivalHero";
 import { PortfolioForm } from "./components/PortfolioForm";
 import { CrashChart } from "./components/CrashChart";
@@ -8,22 +9,49 @@ import { BtcPriceTicker } from "./components/BtcPriceTicker";
 import { TemperatureGauge } from "./components/TemperatureGauge";
 import { PositionSizing } from "./components/PositionSizing";
 import { ActionPlan } from "./components/ActionPlan";
+import { SleepTest } from "./components/SleepTest";
 import { ConvictionLadder } from "./components/ConvictionLadder";
 import { InfoPanel } from "./components/InfoPanel";
+import { ReportCard } from "./components/ReportCard";
+import { OnboardingModal, useOnboarding } from "./components/OnboardingModal";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
 export default function App() {
 	const { portfolio, currencySymbol, result, loading, error, savedAt, loadPortfolio, updatePortfolio } = usePortfolio();
 	const [detailsOpen, setDetailsOpen] = useState(false);
+	const [reportCardOpen, setReportCardOpen] = useState(false);
 	const [temperatureScore, setTemperatureScore] = useState(55);
+	const reportCardRef = useRef<HTMLDivElement>(null);
+	const { showOnboarding, dismiss: dismissOnboarding } = useOnboarding();
 
 	useEffect(() => {
 		loadPortfolio();
 	}, []);
 
+	const handleOnboardingComplete = useCallback(
+		(values: Partial<PortfolioInput>) => {
+			dismissOnboarding();
+			updatePortfolio(values);
+		},
+		[dismissOnboarding, updatePortfolio],
+	);
+
+	const handleOnboardingSkip = useCallback(() => {
+		dismissOnboarding();
+	}, [dismissOnboarding]);
+
 	return (
 		<TooltipProvider delayDuration={300}>
 		<div className="min-h-screen bg-gradient-to-br from-slate-950 to-slate-900 text-white">
+			{/* Onboarding wizard — first visit only */}
+			{showOnboarding && (
+				<OnboardingModal
+					currencySymbol={currencySymbol}
+					onComplete={handleOnboardingComplete}
+					onSkip={handleOnboardingSkip}
+				/>
+			)}
+
 			{/* Header */}
 			<header className="border-b border-slate-800 px-4 sm:px-6 py-4">
 				<div className="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
@@ -34,7 +62,25 @@ export default function App() {
 						</span>
 						<BtcPriceTicker fallbackPrice={portfolio.btcPriceUsd} currencySymbol={currencySymbol} />
 					</div>
-					<span className="text-xs sm:text-sm text-slate-500">Crash Survival Calculator</span>
+					<div className="flex items-center gap-3">
+						<span className="text-xs sm:text-sm text-slate-500">Crash Survival Calculator</span>
+						{result && (
+							<button
+								type="button"
+								onClick={() => {
+									setReportCardOpen((o) => !o);
+									setTimeout(() => reportCardRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 100);
+								}}
+								className={`text-xs px-3 py-1.5 rounded-lg border transition-colors ${
+									reportCardOpen
+										? "bg-orange-500/20 border-orange-500/50 text-orange-400"
+										: "bg-slate-800 border-slate-700 text-slate-400 hover:border-slate-600 hover:text-slate-200"
+								}`}
+							>
+								{reportCardOpen ? "Hide Report Card" : "View Report Card"}
+							</button>
+						)}
+					</div>
 				</div>
 			</header>
 
@@ -44,6 +90,18 @@ export default function App() {
 				{error && (
 					<div className="rounded-lg border border-red-500/50 bg-red-900/20 px-4 py-3 text-sm text-red-400">
 						{error}
+					</div>
+				)}
+
+				{/* Report Card — toggle from header button */}
+				{reportCardOpen && result && (
+					<div ref={reportCardRef}>
+						<ReportCard
+							portfolio={portfolio}
+							result={result}
+							temperatureScore={temperatureScore}
+							currencySymbol={currencySymbol}
+						/>
 					</div>
 				)}
 
@@ -85,6 +143,13 @@ export default function App() {
 						)}
 					</div>
 				</div>
+
+				{/* ZONE 2.5: Sleep Test — visceral gut-check */}
+				<SleepTest
+					totalValueUsd={portfolio.totalValueUsd}
+					btcPercentage={portfolio.btcPercentage}
+					currencySymbol={currencySymbol}
+				/>
 
 				{/* ZONE 3: Market Intelligence — Temperature + Position Sizing + Action Plan */}
 				<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

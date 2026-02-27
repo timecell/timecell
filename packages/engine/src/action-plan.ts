@@ -62,7 +62,7 @@ export function generateActionPlan(input: ActionPlanInput): ActionItem[] {
 		});
 	}
 
-	if (temperatureScore > 75) {
+	if (temperatureScore >= 80) {
 		items.push({
 			severity: "red",
 			message:
@@ -106,7 +106,7 @@ export function generateActionPlan(input: ActionPlanInput): ActionItem[] {
 		});
 	}
 
-	if (temperatureScore < 20) {
+	if (temperatureScore < 30) {
 		items.push({
 			severity: "amber",
 			message:
@@ -115,11 +115,20 @@ export function generateActionPlan(input: ActionPlanInput): ActionItem[] {
 		});
 	}
 
-	if (temperatureScore >= 60 && temperatureScore <= 75) {
+	if (temperatureScore >= 60 && temperatureScore < 70) {
 		items.push({
 			severity: "amber",
 			message:
-				"Greed zone. Slow down buying. Review your risk management and de-risk triggers.",
+				"Caution zone. Slow down buying. Review your risk management.",
+			rule: "temperature-caution",
+		});
+	}
+
+	if (temperatureScore >= 70 && temperatureScore < 80) {
+		items.push({
+			severity: "amber",
+			message:
+				"Greed zone. Stop DCA. Review de-risk triggers.",
 			rule: "temperature-greed",
 		});
 	}
@@ -134,7 +143,7 @@ export function generateActionPlan(input: ActionPlanInput): ActionItem[] {
 		});
 	}
 
-	if (temperatureScore >= 20 && temperatureScore < 40) {
+	if (temperatureScore >= 30 && temperatureScore < 50) {
 		items.push({
 			severity: "green",
 			message: "Fear zone. Good time to DCA aggressively.",
@@ -142,7 +151,7 @@ export function generateActionPlan(input: ActionPlanInput): ActionItem[] {
 		});
 	}
 
-	if (temperatureScore >= 40 && temperatureScore < 60) {
+	if (temperatureScore >= 50 && temperatureScore < 60) {
 		items.push({
 			severity: "green",
 			message: "Neutral zone. Continue DCA at normal pace.",

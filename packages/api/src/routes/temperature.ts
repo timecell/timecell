@@ -3,10 +3,10 @@ import { calculateTemperature } from "@timecell/engine";
 
 // ---------------------------------------------------------------------------
 // Mock data — will be replaced with live MVRV/RHODL feeds in a future release.
-// MVRV ~1.8 and RHODL ~1.6 are representative of mid-cycle neutral territory.
+// MVRV ~1.8 is mid-cycle; RHODL ~2000 is moderate (range: 120–30,541).
 // ---------------------------------------------------------------------------
 const MOCK_MVRV = 1.8;
-const MOCK_RHODL = 1.6;
+const MOCK_RHODL = 2000;
 
 export async function temperatureRoutes(fastify: FastifyInstance) {
 	fastify.get("/temperature", async () => {

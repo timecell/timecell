@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
+import { calculateTemperature } from "@timecell/engine";
+import type { TemperatureZone } from "@timecell/engine";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -7,9 +9,13 @@ import { Card, CardContent } from "@/components/ui/card";
 
 interface TemperatureData {
 	score: number;
-	zone: "Extreme Fear" | "Fear" | "Neutral" | "Greed" | "Extreme Greed";
+	zone: TemperatureZone;
+	mvrvScore: number;
+	rhodlScore: number;
 	mvrv: number;
 	rhodl: number;
+	btcPrice?: number;
+	timestamp?: string;
 	dataSource: string;
 }
 
@@ -17,13 +23,14 @@ interface TemperatureData {
 // Helpers
 // ---------------------------------------------------------------------------
 
-/** Map a 0–100 score to a CSS colour string via a blue→green→yellow→orange→red gradient. */
+/** Map a 0–100 score to a CSS colour string via a 6-tier gradient. */
 function scoreToColor(score: number): string {
-	if (score < 20) return "#3b82f6"; // blue-500
-	if (score < 40) return "#22c55e"; // green-500
-	if (score < 60) return "#eab308"; // yellow-500
-	if (score < 75) return "#f97316"; // orange-500
-	return "#ef4444"; // red-500
+	if (score < 30) return "#3b82f6"; // blue-500  — Extreme Fear
+	if (score < 50) return "#22c55e"; // green-500 — Fear
+	if (score < 60) return "#eab308"; // yellow-500 — Neutral
+	if (score < 70) return "#facc15"; // yellow-400 — Caution
+	if (score < 80) return "#f97316"; // orange-500 — Greed
+	return "#ef4444"; // red-500  — Extreme Greed
 }
 
 /** Zone-specific Tailwind text colour class. */
@@ -35,6 +42,8 @@ function zoneTextClass(zone: TemperatureData["zone"]): string {
 			return "text-green-400";
 		case "Neutral":
 			return "text-yellow-400";
+		case "Caution":
+			return "text-yellow-300";
 		case "Greed":
 			return "text-orange-400";
 		case "Extreme Greed":
@@ -80,11 +89,12 @@ interface Band {
 }
 
 const BANDS: Band[] = [
-	{ from: 0, to: 20, color: "#3b82f6" },  // blue — Extreme Fear
-	{ from: 20, to: 40, color: "#22c55e" }, // green — Fear
-	{ from: 40, to: 60, color: "#eab308" }, // yellow — Neutral
-	{ from: 60, to: 75, color: "#f97316" }, // orange — Greed
-	{ from: 75, to: 100, color: "#ef4444" }, // red — Extreme Greed
+	{ from: 0, to: 30, color: "#3b82f6" },  // blue — Extreme Fear
+	{ from: 30, to: 50, color: "#22c55e" }, // green — Fear
+	{ from: 50, to: 60, color: "#eab308" }, // yellow — Neutral
+	{ from: 60, to: 70, color: "#facc15" }, // yellow-400 — Caution
+	{ from: 70, to: 80, color: "#f97316" }, // orange — Greed
+	{ from: 80, to: 100, color: "#ef4444" }, // red — Extreme Greed
 ];
 
 function BandArc({ from, to, radius, cx, cy }: { from: number; to: number; radius: number; cx: number; cy: number }) {
@@ -151,7 +161,7 @@ function GaugeSVG({ score }: { score: number }) {
 			<circle cx={CX} cy={CY} r="2.5" fill="#0f172a" />
 
 			{/* Tick marks at zone boundaries */}
-			{[0, 20, 40, 60, 75, 100].map((tick) => {
+			{[0, 30, 50, 60, 70, 80, 100].map((tick) => {
 				const outer = scoreToPoint(tick, RADIUS + 10, CX, CY);
 				const inner = scoreToPoint(tick, RADIUS - 10, CX, CY);
 				return (
@@ -194,6 +204,18 @@ export function TemperatureGauge({ onTemperatureChange }: TemperatureGaugeProps 
 	useEffect(() => {
 		let cancelled = false;
 
+		function fallbackToMock() {
+			const MOCK_MVRV = 1.8;
+			const MOCK_RHODL = 2000;
+			const result = calculateTemperature(MOCK_MVRV, MOCK_RHODL);
+			if (!cancelled) {
+				setData({ ...result, dataSource: "mock" });
+				setError(null);
+				onTemperatureChange?.(result.score);
+				setLoading(false);
+			}
+		}
+
 		async function fetchTemperature() {
 			try {
 				const res = await fetch("/api/temperature");
@@ -205,15 +227,26 @@ export function TemperatureGauge({ onTemperatureChange }: TemperatureGaugeProps 
 					onTemperatureChange?.(json.score);
 				}
 			} catch (err) {
+				// API unavailable — fall back to local engine calculation
 				if (!cancelled) {
-					setError(err instanceof Error ? err.message : "Failed to load temperature");
+					try {
+						fallbackToMock();
+						return;
+					} catch {
+						setError(err instanceof Error ? err.message : "Failed to load temperature");
+					}
 				}
 			} finally {
 				if (!cancelled) setLoading(false);
 			}
 		}
 
+		// Both standalone and CLI modes now try the API first.
+		// In standalone (Vercel), /api/temperature hits the serverless function (Turso).
+		// In CLI mode, /api/temperature hits the local Fastify server.
+		// If either fails, we fall back to mock data.
 		fetchTemperature();
+
 		return () => {
 			cancelled = true;
 		};
@@ -265,12 +298,12 @@ export function TemperatureGauge({ onTemperatureChange }: TemperatureGaugeProps 
 							<div className="rounded-lg bg-slate-900/50 border border-slate-700/50 px-3 py-2">
 								<p className="text-xs text-slate-500 uppercase tracking-wider mb-0.5">MVRV</p>
 								<p className="text-lg font-bold text-slate-200 tabular-nums">{data.mvrv.toFixed(2)}</p>
-								<p className="text-xs text-slate-500">60% weight</p>
+								<p className="text-xs text-slate-500">score: {data.mvrvScore} · 60%</p>
 							</div>
 							<div className="rounded-lg bg-slate-900/50 border border-slate-700/50 px-3 py-2">
 								<p className="text-xs text-slate-500 uppercase tracking-wider mb-0.5">RHODL</p>
-								<p className="text-lg font-bold text-slate-200 tabular-nums">{data.rhodl.toFixed(2)}</p>
-								<p className="text-xs text-slate-500">40% weight</p>
+								<p className="text-lg font-bold text-slate-200 tabular-nums">{data.rhodl.toLocaleString(undefined, { maximumFractionDigits: 0 })}</p>
+								<p className="text-xs text-slate-500">score: {data.rhodlScore} · 40%</p>
 							</div>
 						</div>
 
@@ -278,6 +311,11 @@ export function TemperatureGauge({ onTemperatureChange }: TemperatureGaugeProps 
 						{data.dataSource === "mock" && (
 							<p className="mt-3 text-xs text-slate-600 text-center">
 								Mock data — live on-chain feeds coming soon
+							</p>
+						)}
+						{data.dataSource === "turso-live" && data.timestamp && (
+							<p className="mt-3 text-xs text-slate-500 text-center">
+								Live on-chain data — updated {new Date(data.timestamp).toLocaleDateString()}
 							</p>
 						)}
 					</div>

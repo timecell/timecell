@@ -32,7 +32,7 @@ describe("action plan — red rules", () => {
 		expect(item!.severity).toBe("red");
 	});
 
-	it("temperature > 75 -> red temperature-extreme-greed", () => {
+	it("temperature >= 80 -> red temperature-extreme-greed", () => {
 		const items = generateActionPlan({ ...SAFE, temperatureScore: 80 });
 		const item = findByRule(items, "temperature-extreme-greed");
 		expect(item).toBeDefined();
@@ -77,15 +77,22 @@ describe("action plan — amber rules", () => {
 		expect(gates!.severity).toBe("amber");
 	});
 
-	it("temperature < 20 -> amber temperature-extreme-fear", () => {
+	it("temperature < 30 -> amber temperature-extreme-fear", () => {
 		const items = generateActionPlan({ ...SAFE, temperatureScore: 10 });
 		const item = findByRule(items, "temperature-extreme-fear");
 		expect(item).toBeDefined();
 		expect(item!.severity).toBe("amber");
 	});
 
-	it("temperature 60-75 -> amber temperature-greed", () => {
+	it("temperature 60-70 -> amber temperature-caution", () => {
 		const items = generateActionPlan({ ...SAFE, temperatureScore: 65 });
+		const item = findByRule(items, "temperature-caution");
+		expect(item).toBeDefined();
+		expect(item!.severity).toBe("amber");
+	});
+
+	it("temperature 70-80 -> amber temperature-greed", () => {
+		const items = generateActionPlan({ ...SAFE, temperatureScore: 75 });
 		const item = findByRule(items, "temperature-greed");
 		expect(item).toBeDefined();
 		expect(item!.severity).toBe("amber");
@@ -104,15 +111,15 @@ describe("action plan — green rules", () => {
 		expect(item!.severity).toBe("green");
 	});
 
-	it("temperature 20-40 -> green temperature-fear", () => {
-		const items = generateActionPlan({ ...SAFE, temperatureScore: 30 });
+	it("temperature 30-50 -> green temperature-fear", () => {
+		const items = generateActionPlan({ ...SAFE, temperatureScore: 35 });
 		const item = findByRule(items, "temperature-fear");
 		expect(item).toBeDefined();
 		expect(item!.severity).toBe("green");
 	});
 
-	it("temperature 40-60 -> green temperature-neutral", () => {
-		const items = generateActionPlan({ ...SAFE, temperatureScore: 50 });
+	it("temperature 50-60 -> green temperature-neutral", () => {
+		const items = generateActionPlan({ ...SAFE, temperatureScore: 55 });
 		const item = findByRule(items, "temperature-neutral");
 		expect(item).toBeDefined();
 		expect(item!.severity).toBe("green");
@@ -180,8 +187,8 @@ describe("action plan — edge cases", () => {
 		expect(item).toBeUndefined();
 	});
 
-	it("temperatureScore exactly 20 -> triggers fear not extreme-fear", () => {
-		const items = generateActionPlan({ ...SAFE, temperatureScore: 20 });
+	it("temperatureScore exactly 30 -> triggers fear not extreme-fear", () => {
+		const items = generateActionPlan({ ...SAFE, temperatureScore: 30 });
 		expect(findByRule(items, "temperature-fear")).toBeDefined();
 		expect(findByRule(items, "temperature-extreme-fear")).toBeUndefined();
 	});

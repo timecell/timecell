@@ -2,7 +2,7 @@
 
 ## What Is This
 
-TimeCell (timecell.ai) is a local-first, CLI-first money and investing framework tool. Bitcoin crash survival is the initial wedge; the product evolves to cover the full investing lifecycle.
+TimeCell (timecell.ai) is an open-source, local-first framework for managing money and investments using AI. Part of the AI Labs project — money is the first domain. Bitcoin crash survival is the initial wedge; the project evolves to cover the full investing lifecycle for individuals and family offices. Not a commercial product — built for impact, like OpenClaw for code.
 
 **Install:** `npx @timecell/cli` → setup wizard → local SQLite → localhost dashboard
 **Config:** `~/.timecell/`
