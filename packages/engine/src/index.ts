@@ -23,3 +23,5 @@ export {
 	getConvictionRung,
 } from "./position-sizing.js";
 export type { PositionSizingInput, PositionSizingResult } from "./position-sizing.js";
+export { generateActionPlan } from "./action-plan.js";
+export type { ActionPlanInput, ActionItem, ActionSeverity } from "./action-plan.js";
