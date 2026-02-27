@@ -110,13 +110,13 @@ export function CrashCard({ scenario }: { scenario: CrashScenario }) {
 			<CardContent className="p-3 sm:p-5 pt-3 sm:pt-4">
 				<div className="space-y-2 sm:space-y-3">
 					<div className="flex justify-between gap-2">
-						<span className="text-slate-400 text-xs sm:text-sm flex-shrink-0">BTC Price</span>
+						<span className="text-slate-300 text-xs sm:text-sm flex-shrink-0">BTC Price</span>
 						<span className="text-white font-mono text-xs sm:text-sm text-right">
 							{formatUsd(scenario.btcPriceAtCrash)}
 						</span>
 					</div>
 					<div className="flex justify-between gap-2">
-						<span className="text-slate-400 text-xs sm:text-sm flex-shrink-0">Portfolio Value</span>
+						<span className="text-slate-300 text-xs sm:text-sm flex-shrink-0">Portfolio Value</span>
 						<span className={`font-mono text-xs sm:text-sm ${style.text} text-right`}>
 							{formatUsd(scenario.portfolioValueAfterCrash)}
 						</span>
@@ -125,7 +125,7 @@ export function CrashCard({ scenario }: { scenario: CrashScenario }) {
 						<div className="flex justify-between gap-2">
 							<Tooltip>
 								<TooltipTrigger asChild>
-									<span className="text-slate-400 text-xs sm:text-sm flex-shrink-0 cursor-help underline decoration-dotted underline-offset-4 decoration-slate-600">
+									<span className="text-slate-300 text-xs sm:text-sm flex-shrink-0 cursor-help underline decoration-dotted underline-offset-4 decoration-slate-600">
 										Hedge Payoff
 									</span>
 								</TooltipTrigger>
@@ -141,7 +141,7 @@ export function CrashCard({ scenario }: { scenario: CrashScenario }) {
 					<div className="flex justify-between gap-2">
 						<Tooltip>
 							<TooltipTrigger asChild>
-								<span className="text-slate-400 text-xs sm:text-sm flex-shrink-0 cursor-help underline decoration-dotted underline-offset-4 decoration-slate-600">
+								<span className="text-slate-300 text-xs sm:text-sm flex-shrink-0 cursor-help underline decoration-dotted underline-offset-4 decoration-slate-600">
 									Net Position
 								</span>
 							</TooltipTrigger>
@@ -157,13 +157,15 @@ export function CrashCard({ scenario }: { scenario: CrashScenario }) {
 					<div className="flex justify-between gap-2">
 						<Tooltip>
 							<TooltipTrigger asChild>
-								<span className="text-slate-400 text-xs sm:text-sm flex-shrink-0 cursor-help underline decoration-dotted underline-offset-4 decoration-slate-600">
+								<span className="text-slate-300 text-xs sm:text-sm flex-shrink-0 cursor-help underline decoration-dotted underline-offset-4 decoration-slate-600">
 									Runway
 								</span>
 							</TooltipTrigger>
 							<TooltipContent>
 								<p>
-									Months of {formatUsd(scenario.runwayMonths > 0 && scenario.runwayMonths !== Infinity ? Math.round(scenario.netPosition / scenario.runwayMonths) : 0)}/mo burn covered by remaining portfolio value
+									{isFinite(scenario.runwayMonths) && scenario.runwayMonths > 0
+										? `Months of ${formatUsd(Math.round(scenario.netPosition / scenario.runwayMonths))}/mo burn covered by remaining assets`
+										: "Months of expenses covered by remaining assets"}
 								</p>
 							</TooltipContent>
 						</Tooltip>

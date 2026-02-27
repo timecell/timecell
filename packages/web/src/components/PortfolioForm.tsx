@@ -35,7 +35,7 @@ function InputField({
 	return (
 		<div>
 			<div className="flex justify-between mb-2 sm:mb-1.5">
-				<label className="text-xs sm:text-sm text-slate-400">{label}</label>
+				<label className="text-xs sm:text-sm text-slate-300">{label}</label>
 				<span className="text-xs sm:text-sm font-mono text-white">
 					{format ? format(value) : value}
 					{suffix}
@@ -85,7 +85,7 @@ export function PortfolioForm({ portfolio, onUpdate }: Props) {
 					value={portfolio.monthlyBurnUsd}
 					onChange={(v) => onUpdate({ monthlyBurnUsd: v })}
 					min={0}
-					max={200_000}
+					max={500_000}
 					step={1_000}
 					format={formatLabel}
 				/>

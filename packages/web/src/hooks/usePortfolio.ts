@@ -46,19 +46,23 @@ export function usePortfolio() {
 	const [hedgePositions, setHedgePositions] = useState<HedgePosition[]>([]);
 	const [result, setResult] = useState<SurvivalResult | null>(null);
 	const [loading, setLoading] = useState(false);
+	const [error, setError] = useState<string | null>(null);
 
 	const calculate = useCallback(async (p: PortfolioInput, h: HedgePosition[]) => {
 		setLoading(true);
+		setError(null);
 		try {
 			const res = await fetch(`${API_BASE}/crash-survival`, {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({ portfolio: p, hedgePositions: h }),
 			});
+			if (!res.ok) throw new Error(`API returned ${res.status}`);
 			const data: SurvivalResult = await res.json();
 			setResult(data);
 		} catch (err) {
 			console.error("Failed to calculate:", err);
+			setError("Could not reach the calculation engine. Is the API server running on port 3737?");
 		} finally {
 			setLoading(false);
 		}
@@ -91,6 +95,7 @@ export function usePortfolio() {
 		hedgePositions,
 		result,
 		loading,
+		error,
 		loadPortfolio,
 		updatePortfolio,
 		setHedgePositions,

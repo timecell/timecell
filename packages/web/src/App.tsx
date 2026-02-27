@@ -7,7 +7,7 @@ import { SurvivalSummary } from "./components/SurvivalSummary";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
 export default function App() {
-	const { portfolio, result, loading, loadPortfolio, updatePortfolio } = usePortfolio();
+	const { portfolio, result, loading, error, loadPortfolio, updatePortfolio } = usePortfolio();
 
 	useEffect(() => {
 		loadPortfolio();
@@ -40,6 +40,13 @@ export default function App() {
 					</div>
 
 					<div className="lg:col-span-2 space-y-6">
+						{/* Error banner */}
+						{error && (
+							<div className="rounded-lg border border-red-500/50 bg-red-900/20 px-4 py-3 text-sm text-red-400">
+								{error}
+							</div>
+						)}
+
 						{/* Survival summary */}
 						{result && <SurvivalSummary result={result} />}
 
@@ -48,7 +55,18 @@ export default function App() {
 
 						{/* Crash scenario cards */}
 						{loading && (
-							<div className="text-center text-slate-400 py-12">Calculating...</div>
+							<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+								{[30, 50, 70, 80].map((pct) => (
+									<div key={pct} className="rounded-xl border border-slate-700 bg-slate-800/30 p-5 animate-pulse">
+										<div className="h-6 w-16 bg-slate-700 rounded mb-4" />
+										<div className="space-y-3">
+											<div className="h-4 bg-slate-700/50 rounded" />
+											<div className="h-4 bg-slate-700/50 rounded w-3/4" />
+											<div className="h-4 bg-slate-700/50 rounded w-1/2" />
+										</div>
+									</div>
+								))}
+							</div>
 						)}
 						{result && !loading && <CrashGrid result={result} />}
 					</div>

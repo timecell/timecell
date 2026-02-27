@@ -10,6 +10,7 @@ import {
 	Cell,
 } from "recharts";
 import type { SurvivalResult, CrashScenario } from "../hooks/usePortfolio";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 function formatUsd(value: number): string {
 	if (value >= 1_000_000) return `$${(value / 1_000_000).toFixed(1)}M`;
@@ -42,10 +43,13 @@ export function CrashChart({ result }: { result: SurvivalResult }) {
 	}));
 
 	return (
-		<div className="rounded-xl border border-slate-700 bg-slate-800/50 p-6">
-			<h3 className="text-lg font-semibold text-white mb-4">
-				Portfolio Value & Runway by Crash Scenario
-			</h3>
+		<Card className="border-slate-700 bg-slate-800/50 shadow-none">
+			<CardHeader className="p-4 sm:p-6 pb-0 sm:pb-0">
+				<CardTitle className="text-base sm:text-lg text-white">
+					Portfolio Value & Runway by Crash Scenario
+				</CardTitle>
+			</CardHeader>
+			<CardContent className="p-4 sm:p-6 pt-4 sm:pt-4">
 			<div className="h-64">
 				<ResponsiveContainer width="100%" height="100%">
 					<ComposedChart
@@ -129,6 +133,7 @@ export function CrashChart({ result }: { result: SurvivalResult }) {
 					</ComposedChart>
 				</ResponsiveContainer>
 			</div>
-		</div>
+			</CardContent>
+		</Card>
 	);
 }
