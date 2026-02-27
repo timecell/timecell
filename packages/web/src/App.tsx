@@ -85,7 +85,7 @@ export default function App() {
 
 	return (
 		<TooltipProvider delayDuration={300}>
-			<div className="min-h-screen bg-gradient-to-br from-slate-950 to-slate-900 text-white">
+			<div className="h-[100dvh] overflow-hidden bg-gradient-to-br from-slate-950 to-slate-900 text-white flex flex-col">
 				{/* Onboarding wizard — first visit only */}
 				{showOnboarding && (
 					<OnboardingModal
