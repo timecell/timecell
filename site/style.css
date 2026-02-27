@@ -180,7 +180,7 @@ body {
 }
 
 .logo-img {
-  height: 36px;
+  height: 44px;
   width: auto;
 }
 
@@ -355,9 +355,12 @@ body {
 }
 
 .hero-logo {
-  height: clamp(80px, 15vw, 120px);
+  height: clamp(72px, 12vw, 100px);
   width: auto;
   margin-bottom: 8px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .hero-label {
