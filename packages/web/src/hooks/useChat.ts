@@ -252,7 +252,10 @@ export function useChat(
 
 					loopCount++;
 
-					const response = await client.messages.create({
+					// Use blocking call for intermediate turns (tool-use rounds).
+					// We only know if this is the final turn after we see stop_reason,
+					// so we always start with a streaming call and check afterwards.
+					const stream = client.messages.stream({
 						model,
 						max_tokens: 4096,
 						system: systemPrompt,
@@ -260,24 +263,94 @@ export function useChat(
 						messages: workingMessages as Anthropic.MessageParam[],
 					});
 
+					// Wire up abort: when the controller fires, stop the stream
+					const onAbort = () => { stream.abort(); };
+					abortController.signal.addEventListener("abort", onAbort, { once: true });
+
+					// Determine if this will be the final (text-only) turn by peeking
+					// at the first event. We track accumulated text and tool blocks.
+					let accumulatedText = "";
+					const streamingMsgId = generateId();
+					let streamingMsgAdded = false;
+
+					// Stream events — update UI incrementally for text blocks
+					for await (const event of stream) {
+						// Stop processing if aborted
+						if (abortController.signal.aborted) break;
+
+						if (event.type === "content_block_delta" && event.delta.type === "text_delta") {
+							accumulatedText += event.delta.text;
+
+							if (!streamingMsgAdded) {
+								// Add placeholder message on first text chunk
+								streamingMsgAdded = true;
+								const placeholder: ChatMessage = {
+									id: streamingMsgId,
+									role: "assistant",
+									content: accumulatedText,
+									toolCalls: collectedToolCalls.length > 0 ? [...collectedToolCalls] : undefined,
+									isStreaming: true,
+									timestamp: Date.now(),
+								};
+								setMessages((prev) => truncateMessages([...prev, placeholder]));
+							} else {
+								// Update existing streaming message with new chunk
+								setMessages((prev) =>
+									prev.map((m) =>
+										m.id === streamingMsgId
+											? { ...m, content: accumulatedText }
+											: m,
+									),
+								);
+							}
+						}
+					}
+
+					abortController.signal.removeEventListener("abort", onAbort);
+
 					if (abortController.signal.aborted) break;
+
+					// Get the final accumulated message from the stream
+					const response = await stream.finalMessage();
 
 					const toolUseBlocks = extractToolUseBlocks(response);
 
-					// If no tool calls, we have the final response
+					// If no tool calls, we have the final response — finalize the streaming message
 					if (toolUseBlocks.length === 0) {
 						const finalText = extractTextContent(response);
 
-						const assistantMessage: ChatMessage = {
-							id: generateId(),
-							role: "assistant",
-							content: finalText,
-							toolCalls: collectedToolCalls.length > 0 ? collectedToolCalls : undefined,
-							timestamp: Date.now(),
-						};
-
-						setMessages((prev) => truncateMessages([...prev, assistantMessage]));
+						if (streamingMsgAdded) {
+							// Finalize the streaming message already in the list
+							setMessages((prev) =>
+								prev.map((m) =>
+									m.id === streamingMsgId
+										? {
+												...m,
+												content: finalText,
+												toolCalls: collectedToolCalls.length > 0 ? collectedToolCalls : undefined,
+												isStreaming: false,
+											}
+										: m,
+								),
+							);
+						} else {
+							// No text was streamed (edge case: empty response)
+							const assistantMessage: ChatMessage = {
+								id: generateId(),
+								role: "assistant",
+								content: finalText,
+								toolCalls: collectedToolCalls.length > 0 ? collectedToolCalls : undefined,
+								timestamp: Date.now(),
+							};
+							setMessages((prev) => truncateMessages([...prev, assistantMessage]));
+						}
 						break;
+					}
+
+					// We have tool calls — remove the streaming placeholder if it was added
+					// (it will be re-added with tool results when the final text arrives)
+					if (streamingMsgAdded) {
+						setMessages((prev) => prev.filter((m) => m.id !== streamingMsgId));
 					}
 
 					// Show which tool is running

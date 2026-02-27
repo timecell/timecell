@@ -441,7 +441,12 @@ function MessageBubble({ message }: { message: ChatMessage }) {
 					</div>
 				)}
 
-				{/* Streaming indicator */}
+				{/* Streaming cursor — shown inside the bubble while content is arriving */}
+				{message.isStreaming && message.content && (
+					<span className="inline-block w-0.5 h-3.5 bg-orange-400 ml-0.5 animate-pulse align-middle" />
+				)}
+
+				{/* Streaming indicator — shown before first text chunk */}
 				{message.isStreaming && !message.content && <StreamingIndicator />}
 
 				{/* Timestamp */}
@@ -460,11 +465,27 @@ function MessageBubble({ message }: { message: ChatMessage }) {
 // ---------------------------------------------------------------------------
 
 const SUGGESTED_QUESTIONS = [
+	"I'd like to check my portfolio",
 	"Can I survive a crash?",
-	"What should I do with my portfolio?",
-	"Is it a good time to buy Bitcoin?",
-	"How much should I allocate to BTC?",
+	"What should I do with my Bitcoin?",
+	"Is it a good time to buy?",
 ];
+
+const WELCOME_MESSAGE: ChatMessage = {
+	id: "welcome_msg",
+	role: "assistant",
+	content: `Welcome! I'm your AI Chief Investment Officer. 👋
+
+Tell me about your portfolio and I'll give you a personalized analysis. I need a few numbers:
+
+• **Total portfolio value** (all assets)
+• **How much is in Bitcoin** (percentage or dollar amount)
+• **Monthly expenses** (your burn rate)
+• **Liquid cash reserve** (non-invested savings)
+
+You can type something like "I have $500k total, 15% in Bitcoin, $8k/month expenses, and $50k in cash" — or just tell me one number at a time and I'll ask for the rest.`,
+	timestamp: 0,
+};
 
 // ---------------------------------------------------------------------------
 // Main component
@@ -648,8 +669,10 @@ export function ChatPanel({
 							<MessageBubble key={msg.id} message={msg} />
 						))}
 
-					{/* Loading indicator */}
-					{isLoading && <StreamingIndicator toolName={activeToolName} />}
+					{/* Loading indicator — only show when no streaming message is active (tool execution phase) */}
+					{isLoading && !messages.some((m) => m.isStreaming) && (
+						<StreamingIndicator toolName={activeToolName} />
+					)}
 
 					<div ref={messagesEndRef} />
 				</div>
