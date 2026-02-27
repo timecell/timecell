@@ -247,28 +247,25 @@ function ToolCallCard({ tool }: { tool: { name: string; input: Record<string, un
 	const status = inferToolStatus(tool.result);
 
 	return (
-		<div
-			className={`rounded-lg border ${toolStatusBorder(status)} bg-slate-900/60 text-xs mb-2`}
-		>
+		<div className="text-xs mb-1">
 			<button
 				type="button"
 				onClick={() => setExpanded(!expanded)}
-				className="w-full flex items-center gap-2 px-3 py-2 text-left hover:bg-slate-800/50 transition-colors rounded-lg"
+				className="flex items-center gap-1.5 text-left hover:text-slate-300 transition-colors py-0.5"
 			>
-				<span className="text-slate-500">&#x1f527;</span>
-				<span className={`flex-shrink-0 w-1.5 h-1.5 rounded-full ${status === "success" ? "bg-emerald-400" : status === "error" ? "bg-red-400" : "bg-amber-400"}`} />
-				<span className="text-slate-300 flex-1">{toolCallLabel(tool.name)}</span>
+				<span className={`flex-shrink-0 w-1.5 h-1.5 rounded-full ${status === "success" ? "bg-emerald-400/70" : status === "error" ? "bg-red-400/70" : "bg-amber-400/70"}`} />
+				<span className="text-slate-500">{toolCallLabel(tool.name)}</span>
 				{expanded ? (
-					<ChevronDown className="w-3 h-3 text-slate-500" />
+					<ChevronDown className="w-3 h-3 text-slate-600" />
 				) : (
-					<ChevronRight className="w-3 h-3 text-slate-500" />
+					<ChevronRight className="w-3 h-3 text-slate-600" />
 				)}
 			</button>
 			{expanded && (
 				<div
-					className={`px-3 pb-2 text-xs ${toolStatusColor(status)} leading-relaxed border-t border-slate-800`}
+					className={`ml-3 mt-1 mb-2 pl-3 border-l-2 ${toolStatusBorder(status)} text-xs ${toolStatusColor(status)} leading-relaxed`}
 				>
-					<pre className="pt-2 whitespace-pre-wrap break-words font-mono">{tool.result}</pre>
+					<pre className="whitespace-pre-wrap break-words font-mono">{tool.result}</pre>
 				</div>
 			)}
 		</div>
