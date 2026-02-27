@@ -51,6 +51,9 @@ Complete the Position Sizing Process (Framework Part 3). Every screen ends with 
 - [x] **Interactive conviction gates** — At 25%+, show checkboxes: multi-cycle experience? 2yr expenses outside BTC? No forced-sale liabilities? Sleep test? Written triggers? Warn clearly if gates aren't met.
 - [x] **De-risk triggers** — Written rules UI: "If temperature > 80, sell X%. If ruin test fails, reduce to Y%." Framework Part 3 Step 5.
 - [x] **One-page report card** — Single summary: survival score, ruin test, conviction rung, temperature, action plan. Screenshot-friendly, shareable with advisors.
+- [ ] **Chat-first AI advisor** — Claude-powered chat panel as primary experience. BYOK (user provides API key). Engine functions as AI tools. Framework embodied in system prompt.
+- [ ] **BYOK setup** — API key entry, model selection (sonnet/opus/haiku), localStorage storage
+- [ ] **Split layout** — Chat (left 440px) + Dashboard (right scrollable). Mobile: tab bar toggle.
 
 ## v0.4 — "Stay informed"
 
@@ -207,6 +210,7 @@ OSS-first distribution — no paid channels, no sales team.
 | 2026-02-27 | Currency: option 2 (with conversion) for long-term | Math is currency-agnostic, but INR users need ₹ display + live conversion |
 | 2026-02-27 | Logo: v3-3 (orange circle+dot + wordmark) | Finalized after 5 rounds |
 | 2026-02-27 | Distribution: hosted web app > CLI for non-tech users | timecell.ai/app = zero install |
+| 2026-02-28 | Chat-first architecture (v0.3) | Product shifted from dashboard-first to chat-first. AI advisor (Claude) is the primary experience via BYOK. Engine functions exposed as Claude tools. Dashboard is visual reference. Browser-direct API calls (no proxy). Inspired by OpenClaw model. |
 | 2026-02-28 | Live temperature pulled forward from v0.4 | Discovered existing live MVRV/RHODL feed in Turso DB (shared with fo-web, open-fo, mc-bitcoin-tools). Daily sync via GitHub Actions. Connecting TimeCell directly rather than building from scratch. |
 | 2026-02-28 | Framework generalizability analysis (4-AI second opinion) | Claude + OpenAI + Gemini + DeepSeek consensus: core process (conviction, sizing, ruin, sleep) transfers with high confidence. Temperature is Bitcoin-specific — needs pluggable adapters per asset (CAPE for stocks, cap rates for RE, real yields for bonds). Yield-bearing assets break zero-yield assumption. v1.0 rewritten with adapter architecture. Strongest counterargument: without on-chain data quality, framework loses its differentiating edge over generic advice. |
 

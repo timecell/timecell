@@ -30,6 +30,7 @@ import { HistoricalCrashOverlay } from "./components/HistoricalCrashOverlay";
 import { OnboardingModal, useOnboarding } from "./components/OnboardingModal";
 import { CurrencySelector } from "./components/CurrencySelector";
 import { GuidedFlow, WelcomeHero } from "./components/GuidedFlow";
+import { ChatPanel } from "./components/ChatPanel";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { calculateSleepTest, scoreToZone } from "@timecell/engine";
 
@@ -42,6 +43,7 @@ export default function App() {
 	const [temperatureScore, setTemperatureScore] = useState(55);
 	const reportCardRef = useRef<HTMLDivElement>(null);
 	const { showOnboarding, dismiss: dismissOnboarding } = useOnboarding();
+	const [chatVisible, setChatVisible] = useState(true);
 
 	// Derive conviction rung max allocation from current BTC%
 	const convictionRungMax = useMemo((): number => {
@@ -98,7 +100,7 @@ export default function App() {
 					<div className="max-w-7xl mx-auto flex items-center justify-between gap-2">
 						<div className="flex items-center gap-2 sm:gap-3 min-w-0">
 							<img src="/logo.png" alt="TimeCell" className="h-7 sm:h-8 brightness-110 flex-shrink-0" />
-							<span className="text-xs text-slate-500 bg-slate-800 px-2 py-0.5 rounded flex-shrink-0">v0.2</span>
+							<span className="text-xs text-slate-500 bg-slate-800 px-2 py-0.5 rounded flex-shrink-0">v0.3</span>
 							<BtcPriceTicker
 								fallbackPrice={portfolio.btcPriceUsd}
 								currencySymbol={currencySymbol}
@@ -145,11 +147,46 @@ export default function App() {
 					</div>
 				</header>
 
-				{/* Guided Flow — floating sidebar + mobile bar */}
-				<GuidedFlow />
+				{/* Mobile tab bar */}
+				<div className="lg:hidden flex border-b border-slate-800">
+					<button
+						type="button"
+						onClick={() => setChatVisible(true)}
+						className={`flex-1 py-2.5 text-sm font-medium text-center transition-colors ${
+							chatVisible
+								? "text-orange-400 border-b-2 border-orange-400 bg-slate-900/50"
+								: "text-slate-500 hover:text-slate-300"
+						}`}
+					>
+						💬 Chat
+					</button>
+					<button
+						type="button"
+						onClick={() => setChatVisible(false)}
+						className={`flex-1 py-2.5 text-sm font-medium text-center transition-colors ${
+							!chatVisible
+								? "text-orange-400 border-b-2 border-orange-400 bg-slate-900/50"
+								: "text-slate-500 hover:text-slate-300"
+						}`}
+					>
+						📊 Dashboard
+					</button>
+				</div>
 
-				{/* Main content */}
-				<main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6 lg:ml-64">
+				<div className="flex flex-1 overflow-hidden" style={{ height: "calc(100vh - 57px)" }}>
+					{/* Chat Panel — left side */}
+					<div className={`${chatVisible ? "flex" : "hidden"} lg:flex flex-col w-full lg:w-[440px] lg:min-w-[440px] border-r border-slate-800 bg-slate-950`}>
+						<ChatPanel
+							portfolio={portfolio}
+							temperatureScore={temperatureScore}
+							currencySymbol={currencySymbol}
+						/>
+					</div>
+
+					{/* Dashboard — right side, scrollable */}
+					<div className={`${!chatVisible ? "flex" : "hidden"} lg:flex flex-col flex-1 overflow-y-auto`}>
+						<GuidedFlow />
+						<main className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
 					{/* Error banner */}
 					{error && (
 						<div className="rounded-lg border border-red-500/50 bg-red-900/20 px-4 py-3 text-sm text-red-400">
@@ -405,12 +442,14 @@ export default function App() {
 					</div>
 				</main>
 
-				{/* Footer */}
-				<footer className="border-t border-slate-800 px-4 sm:px-6 py-4 mt-8 sm:mt-12">
-					<div className="max-w-7xl mx-auto text-center text-xs text-slate-600">
-						TimeCell — Local-first. Your data stays on your machine.
+						{/* Footer */}
+						<footer className="border-t border-slate-800 px-4 sm:px-6 py-4 mt-8 sm:mt-12">
+							<div className="max-w-6xl mx-auto text-center text-xs text-slate-600">
+								TimeCell — Local-first. Your data stays on your machine.
+							</div>
+						</footer>
 					</div>
-				</footer>
+				</div>
 			</div>
 		</TooltipProvider>
 	);
