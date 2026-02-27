@@ -471,7 +471,7 @@ export function ChatPanel({
 
 	return (
 		<>
-			<div className="flex flex-col h-full bg-slate-950 border-r border-slate-800">
+			<div className="flex flex-col h-full bg-slate-950">
 				{/* ── Header ── */}
 				<div className="flex items-center justify-between px-4 py-3 border-b border-slate-800">
 					<div className="flex items-center gap-2">
