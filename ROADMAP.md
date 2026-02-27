@@ -51,9 +51,12 @@ Complete the Position Sizing Process (Framework Part 3). Every screen ends with 
 - [x] **Interactive conviction gates** — At 25%+, show checkboxes: multi-cycle experience? 2yr expenses outside BTC? No forced-sale liabilities? Sleep test? Written triggers? Warn clearly if gates aren't met.
 - [x] **De-risk triggers** — Written rules UI: "If temperature > 80, sell X%. If ruin test fails, reduce to Y%." Framework Part 3 Step 5.
 - [x] **One-page report card** — Single summary: survival score, ruin test, conviction rung, temperature, action plan. Screenshot-friendly, shareable with advisors.
-- [ ] **Chat-first AI advisor** — Claude-powered chat panel as primary experience. BYOK (user provides API key). Engine functions as AI tools. Framework embodied in system prompt.
-- [ ] **BYOK setup** — API key entry, model selection (sonnet/opus/haiku), localStorage storage
-- [ ] **Split layout** — Chat (left 440px) + Dashboard (right scrollable). Mobile: tab bar toggle.
+- [x] **Chat-first AI advisor** — Claude-powered chat panel as primary experience. BYOK (user provides API key). 8 engine functions as AI tools. Framework embodied in system prompt. Agentic tool-use loop with abort/cancel.
+- [x] **BYOK setup** — API key entry, model selection (sonnet/opus/haiku), localStorage storage, clear with confirmation
+- [x] **Split layout** — Chat (left 440px) + Dashboard (right scrollable). Mobile: tab bar toggle with 44px touch targets and dvh viewport fix.
+- [ ] **Streaming responses** — Switch from blocking to incremental text display for better perceived responsiveness
+- [ ] **Additional AI tools** — Capacity gate, allocation drift, historical crash simulation, downside insurance, custody risk, geometric CAGR (6 engine functions not yet exposed)
+- [ ] **Conversation persistence improvement** — Token-aware history (not just message count), multi-conversation support
 
 ## v0.4 — "Stay informed"
 
@@ -128,9 +131,12 @@ Two modes, one engine. Mass retail stays simple; family office exposes governanc
 - Code splitting — Lazy-load dashboard sections to reduce initial bundle (currently 1.4MB)
 
 ### Conversational Interface
-- **Chat panel** — Sliding panel in web dashboard for contextual Q&A. Template-based v1 (engine explains its own output), LLM-powered v2 (Claude/GPT for free-form). Dashboard = show, Chat = explain + decide.
+- ~~Chat panel~~ — ✅ Built in v0.3 (chat-first layout, 8 tools, BYOK, agentic loop)
 - **CLI conversational mode** — Extend existing CLI wizard with AI-powered chat that reads engine output and interprets it
 - **User personas** — 3 test personas (Conservative HNI / Aggressive crypto-native / Curious newcomer) for flow testing and UX validation
+- **Chat streaming** — Progressive text rendering, tool-by-tool status updates, streaming API
+- **Multi-conversation history** — Conversation titles, history sidebar, search across conversations
+- **Message actions** — Copy to clipboard, share, pin important advice, bookmark
 
 ### Intelligence
 - AI-powered "what changed since last visit"
@@ -218,7 +224,12 @@ OSS-first distribution — no paid channels, no sales team.
 
 ## Build History
 
-### v0.3 (partial) — Session 6 (Feb 28)
+### v0.3 (partial) — Sessions 6-7 (Feb 28)
+- Chat-first AI advisor: ChatPanel, useChat hook (agentic tool loop, abort/cancel, activeToolName), ApiKeySetup (BYOK)
+- 8 engine functions exposed as Claude tools with try/catch, system prompt with framework knowledge
+- Split layout: chat (440px left) + dashboard (right), mobile tab bar, dvh viewport fix, 44px touch targets
+- GuidedFlow fixed-position sidebar removed (replaced by chat), StageCallout changed to sticky
+- QA review: 3 parallel agents (UX, tools, mobile), 10+ critical/high issues fixed
 - Temperature v3.0 (MVRV z-score CDF + RHODL log-scale, 6-tier zones), live Turso connection
 - Sleep test engine (8 tests) + capacity gate engine (23 tests), 86 total tests
 - OnboardingModal (4-step wizard), SleepTest (visceral loss display), ReportCard (screenshot-friendly)
