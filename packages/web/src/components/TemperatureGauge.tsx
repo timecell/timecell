@@ -182,7 +182,11 @@ function GaugeSVG({ score }: { score: number }) {
 // Main component
 // ---------------------------------------------------------------------------
 
-export function TemperatureGauge() {
+export interface TemperatureGaugeProps {
+	onTemperatureChange?: (score: number) => void;
+}
+
+export function TemperatureGauge({ onTemperatureChange }: TemperatureGaugeProps = {}) {
 	const [data, setData] = useState<TemperatureData | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
@@ -198,6 +202,7 @@ export function TemperatureGauge() {
 				if (!cancelled) {
 					setData(json);
 					setError(null);
+					onTemperatureChange?.(json.score);
 				}
 			} catch (err) {
 				if (!cancelled) {

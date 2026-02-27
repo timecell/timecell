@@ -6,12 +6,15 @@
 
 import {
 	calculateCrashSurvival,
+	generateActionPlan,
 	DEMO_PORTFOLIO,
 	DEMO_HEDGE_POSITIONS,
 	DEMO_BTC_PRICE,
 	type PortfolioInput,
 	type HedgePosition,
 	type SurvivalResult,
+	type ActionPlanInput,
+	type ActionItem,
 } from "@timecell/engine";
 
 const STORAGE_KEY = "timecell:portfolio";
@@ -78,4 +81,12 @@ export function calculateLocally(
 	hedgePositions: HedgePosition[],
 ): SurvivalResult {
 	return calculateCrashSurvival(portfolio, hedgePositions);
+}
+
+// ---------------------------------------------------------------------------
+// Action Plan (direct engine call)
+// ---------------------------------------------------------------------------
+
+export function generateActionPlanLocally(input: ActionPlanInput): ActionItem[] {
+	return generateActionPlan(input);
 }

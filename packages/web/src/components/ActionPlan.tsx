@@ -1,7 +1,18 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { Card, CardContent } from "@/components/ui/card";
+import { generateActionPlanLocally } from "../lib/engine-standalone";
 
 const API_BASE = "/api";
+
+// ---------------------------------------------------------------------------
+// Standalone detection (same pattern as usePortfolio.ts)
+// ---------------------------------------------------------------------------
+
+function detectStandalone(): boolean {
+	if (import.meta.env.VITE_STANDALONE === "true") return true;
+	if (typeof window !== "undefined" && window.location.pathname.startsWith("/app")) return true;
+	return false;
+}
 
 // ---------------------------------------------------------------------------
 // Types (mirroring engine — no direct engine dep in web)
@@ -79,32 +90,16 @@ export function ActionPlan({
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 
-	const calculate = useCallback(async () => {
-		setLoading(true);
-		try {
-			const res = await fetch(`${API_BASE}/action-plan`, {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({
-					btcPercentage,
-					ruinTestPassed,
-					runwayMonths,
-					temperatureScore,
-					liquidReserveUsd,
-					monthlyBurnUsd,
-					totalValueUsd,
-				}),
-			});
-			if (!res.ok) throw new Error(`API ${res.status}`);
-			setItems(await res.json());
-			setError(null);
-		} catch (err) {
-			console.error("action-plan error:", err);
-			setError(err instanceof Error ? err.message : "Failed to load action plan");
-		} finally {
-			setLoading(false);
-		}
-	}, [
+	// Sticky standalone flag — once API fails, stay in standalone mode
+	const standaloneRef = useRef<boolean | null>(null);
+
+	function isStandalone(): boolean {
+		if (standaloneRef.current !== null) return standaloneRef.current;
+		standaloneRef.current = detectStandalone();
+		return standaloneRef.current;
+	}
+
+	const input = {
 		btcPercentage,
 		ruinTestPassed,
 		runwayMonths,
@@ -112,7 +107,46 @@ export function ActionPlan({
 		liquidReserveUsd,
 		monthlyBurnUsd,
 		totalValueUsd,
-	]);
+	};
+
+	const calculateStandalone = useCallback(() => {
+		try {
+			const result = generateActionPlanLocally(input);
+			setItems(result as ActionItem[]);
+			setError(null);
+		} catch (err) {
+			console.error("action-plan standalone error:", err);
+			setError("Calculation failed.");
+		}
+	}, [btcPercentage, ruinTestPassed, runwayMonths, temperatureScore, liquidReserveUsd, monthlyBurnUsd, totalValueUsd]);
+
+	const calculate = useCallback(async () => {
+		if (isStandalone()) {
+			setLoading(true);
+			calculateStandalone();
+			setLoading(false);
+			return;
+		}
+
+		setLoading(true);
+		try {
+			const res = await fetch(`${API_BASE}/action-plan`, {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(input),
+			});
+			if (!res.ok) throw new Error(`API ${res.status}`);
+			setItems(await res.json());
+			setError(null);
+		} catch (err) {
+			console.error("action-plan API failed, falling back to standalone:", err);
+			// Fall back to local calculation and stay in standalone mode
+			standaloneRef.current = true;
+			calculateStandalone();
+		} finally {
+			setLoading(false);
+		}
+	}, [calculateStandalone, btcPercentage, ruinTestPassed, runwayMonths, temperatureScore, liquidReserveUsd, monthlyBurnUsd, totalValueUsd]);
 
 	useEffect(() => {
 		calculate();

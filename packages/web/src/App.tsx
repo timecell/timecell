@@ -15,6 +15,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 export default function App() {
 	const { portfolio, currencySymbol, result, loading, error, savedAt, loadPortfolio, updatePortfolio } = usePortfolio();
 	const [detailsOpen, setDetailsOpen] = useState(false);
+	const [temperatureScore, setTemperatureScore] = useState(55);
 
 	useEffect(() => {
 		loadPortfolio();
@@ -87,7 +88,7 @@ export default function App() {
 
 				{/* ZONE 3: Market Intelligence — Temperature + Position Sizing + Action Plan */}
 				<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-					<TemperatureGauge />
+					<TemperatureGauge onTemperatureChange={setTemperatureScore} />
 					<PositionSizing
 						totalValueUsd={portfolio.totalValueUsd}
 						currentBtcPct={portfolio.btcPercentage}
@@ -100,7 +101,7 @@ export default function App() {
 						btcPercentage={portfolio.btcPercentage}
 						ruinTestPassed={result?.ruinTestPassed ?? true}
 						runwayMonths={result?.scenarios?.[result.scenarios.length - 1]?.runwayMonths ?? Infinity}
-						temperatureScore={55}
+						temperatureScore={temperatureScore}
 						liquidReserveUsd={portfolio.liquidReserveUsd}
 						monthlyBurnUsd={portfolio.monthlyBurnUsd}
 						totalValueUsd={portfolio.totalValueUsd}

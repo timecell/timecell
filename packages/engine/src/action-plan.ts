@@ -83,7 +83,7 @@ export function generateActionPlan(input: ActionPlanInput): ActionItem[] {
 	if (runwayMonths < 18) {
 		items.push({
 			severity: "red",
-			message: `Insufficient runway (${Math.round(runwayMonths)} months). Need 18+ months. Increase liquid reserve or reduce BTC allocation.`,
+			message: `Insufficient runway (${runwayMonths === Infinity ? "unlimited" : Math.round(runwayMonths)} months). Need 18+ months. Increase liquid reserve or reduce BTC allocation.`,
 			rule: "insufficient-runway",
 		});
 	}
