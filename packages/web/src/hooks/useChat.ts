@@ -61,7 +61,7 @@ function generateId(): string {
 function loadFromStorage<T>(key: string, fallback: T): T {
 	try {
 		const raw = localStorage.getItem(key);
-		if (raw != null) return JSON.parse(raw) as T;
+		if (raw != null && raw !== "") return JSON.parse(raw) as T;
 	} catch {
 		// corrupted data — use fallback
 	}
@@ -127,15 +127,17 @@ export function useChat(
 		loadFromStorage<ChatMessage[]>(STORAGE_KEY_HISTORY, []),
 	);
 	const [isLoading, setIsLoading] = useState(false);
+	const [activeToolName, setActiveToolName] = useState<string | null>(null);
 	const [error, setError] = useState<string | null>(null);
-	const [apiKey, setApiKeyState] = useState<string | null>(() =>
-		localStorage.getItem(STORAGE_KEY_API_KEY),
-	);
+	const [apiKey, setApiKeyState] = useState<string | null>(() => {
+		const stored = localStorage.getItem(STORAGE_KEY_API_KEY);
+		return stored || null; // treat empty string as null
+	});
 	const [model, setModelState] = useState<string>(() =>
 		localStorage.getItem(STORAGE_KEY_MODEL) ?? DEFAULT_MODEL,
 	);
 
-	// Ref to avoid stale closure in the agentic loop
+	// Abort controller for cancelling in-flight requests
 	const abortRef = useRef<AbortController | null>(null);
 
 	// Persist messages when they change
@@ -145,8 +147,13 @@ export function useChat(
 
 	// API key setter (persists to localStorage)
 	const setApiKey = useCallback((key: string) => {
-		localStorage.setItem(STORAGE_KEY_API_KEY, key);
-		setApiKeyState(key);
+		if (key) {
+			localStorage.setItem(STORAGE_KEY_API_KEY, key);
+			setApiKeyState(key);
+		} else {
+			localStorage.removeItem(STORAGE_KEY_API_KEY);
+			setApiKeyState(null);
+		}
 		setError(null);
 	}, []);
 
@@ -162,6 +169,16 @@ export function useChat(
 		localStorage.removeItem(STORAGE_KEY_HISTORY);
 	}, []);
 
+	// Cancel in-flight request
+	const cancelRequest = useCallback(() => {
+		if (abortRef.current) {
+			abortRef.current.abort();
+			abortRef.current = null;
+		}
+		setIsLoading(false);
+		setActiveToolName(null);
+	}, []);
+
 	// ------------------------------------------------------------------
 	// Send a message — the core agentic loop
 	// ------------------------------------------------------------------
@@ -173,11 +190,18 @@ export function useChat(
 				return;
 			}
 
+			if (isLoading) return; // prevent double-sends
+
 			const trimmed = text.trim();
 			if (!trimmed) return;
 
 			setError(null);
 			setIsLoading(true);
+			setActiveToolName(null);
+
+			// Set up abort controller
+			const abortController = new AbortController();
+			abortRef.current = abortController;
 
 			// Append user message
 			const userMessage: ChatMessage = {
@@ -204,10 +228,9 @@ export function useChat(
 			});
 
 			// Build conversation history for the API
-			// We send the full message history (role + content only)
+			// Only send text content from stored messages (tool calls are within
+			// a single turn and not persisted as structured API messages)
 			const apiMessages: AnthropicMessage[] = [];
-
-			// Add previous messages
 			for (const msg of [...messages, userMessage]) {
 				apiMessages.push({
 					role: msg.role,
@@ -220,10 +243,13 @@ export function useChat(
 			const collectedToolCalls: ChatMessage["toolCalls"] = [];
 
 			// Working copy of messages for multi-turn tool resolution
-			let workingMessages = [...apiMessages];
+			const workingMessages = [...apiMessages];
 
 			try {
 				while (loopCount < MAX_TOOL_LOOPS) {
+					// Check if cancelled
+					if (abortController.signal.aborted) break;
+
 					loopCount++;
 
 					const response = await client.messages.create({
@@ -233,6 +259,8 @@ export function useChat(
 						tools: TOOLS as Anthropic.Tool[],
 						messages: workingMessages as Anthropic.MessageParam[],
 					});
+
+					if (abortController.signal.aborted) break;
 
 					const toolUseBlocks = extractToolUseBlocks(response);
 
@@ -251,6 +279,9 @@ export function useChat(
 						setMessages((prev) => truncateMessages([...prev, assistantMessage]));
 						break;
 					}
+
+					// Show which tool is running
+					setActiveToolName(toolUseBlocks[0].name);
 
 					// Resolve each tool call
 					const assistantContent: AnthropicContentBlock[] = response.content.map((block) => {
@@ -299,21 +330,31 @@ export function useChat(
 						role: "user",
 						content: toolResults,
 					});
+
+					setActiveToolName(null);
 				}
 			} catch (err: unknown) {
-				const errorMessage = classifyError(err);
-				setError(errorMessage);
+				if (abortController.signal.aborted) {
+					// User cancelled — not an error
+				} else {
+					const errorMessage = classifyError(err);
+					setError(errorMessage);
+				}
 			} finally {
 				setIsLoading(false);
+				setActiveToolName(null);
+				abortRef.current = null;
 			}
 		},
-		[apiKey, model, messages, portfolio, temperatureScore, temperatureZone, currencySymbol],
+		[apiKey, isLoading, model, messages, portfolio, temperatureScore, temperatureZone, currencySymbol],
 	);
 
 	return {
 		messages,
 		sendMessage,
+		cancelRequest,
 		isLoading,
+		activeToolName,
 		error,
 		clearMessages,
 		apiKey,

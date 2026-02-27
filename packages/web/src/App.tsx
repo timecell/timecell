@@ -152,28 +152,29 @@ export default function App() {
 					<button
 						type="button"
 						onClick={() => setChatVisible(true)}
-						className={`flex-1 py-2.5 text-sm font-medium text-center transition-colors ${
+						className={`flex-1 min-h-[44px] py-3 text-sm font-medium text-center transition-colors ${
 							chatVisible
 								? "text-orange-400 border-b-2 border-orange-400 bg-slate-900/50"
 								: "text-slate-500 hover:text-slate-300"
 						}`}
 					>
-						💬 Chat
+						Chat
 					</button>
 					<button
 						type="button"
 						onClick={() => setChatVisible(false)}
-						className={`flex-1 py-2.5 text-sm font-medium text-center transition-colors ${
+						className={`flex-1 min-h-[44px] py-3 text-sm font-medium text-center transition-colors ${
 							!chatVisible
 								? "text-orange-400 border-b-2 border-orange-400 bg-slate-900/50"
 								: "text-slate-500 hover:text-slate-300"
 						}`}
 					>
-						📊 Dashboard
+						Dashboard
 					</button>
 				</div>
 
-				<div className="flex flex-1 overflow-hidden" style={{ height: "calc(100vh - 57px)" }}>
+				{/* Mobile: header(~57px) + tab bar(~44px) = ~101px. Desktop: header only (~57px). dvh fixes mobile Safari. */}
+				<div className="flex flex-1 overflow-hidden h-[calc(100dvh-101px)] lg:h-[calc(100dvh-57px)]">
 					{/* Chat Panel — left side */}
 					<div className={`${chatVisible ? "flex" : "hidden"} lg:flex flex-col w-full lg:w-[440px] lg:min-w-[440px] border-r border-slate-800 bg-slate-950`}>
 						<ChatPanel

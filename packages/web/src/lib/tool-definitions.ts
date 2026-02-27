@@ -100,11 +100,12 @@ export const TOOLS: ToolDefinition[] = [
 			properties: {
 				totalValueUsd: { type: "number", description: "Total portfolio value in USD" },
 				currentBtcPct: { type: "number", description: "Current BTC allocation percentage (0-100)" },
+				targetBtcPct: { type: "number", description: "Target BTC allocation percentage (0-100). Use the conviction ladder to determine: Observer 0%, Experimenter 1-3%, Diversifier 5-10%, High Conviction 10-25%, Owner-Class 25-50%, Single-Asset Core 50%+." },
 				monthlyBurnUsd: { type: "number", description: "Monthly expenses in USD" },
 				liquidReserveUsd: { type: "number", description: "Liquid cash reserve in USD" },
 				btcPriceUsd: { type: "number", description: "Current BTC price in USD" },
 			},
-			required: ["totalValueUsd", "currentBtcPct", "monthlyBurnUsd", "liquidReserveUsd", "btcPriceUsd"],
+			required: ["totalValueUsd", "currentBtcPct", "targetBtcPct", "monthlyBurnUsd", "liquidReserveUsd", "btcPriceUsd"],
 		},
 	},
 	{
@@ -175,6 +176,19 @@ export async function resolveToolCall(
 	name: string,
 	input: Record<string, unknown>,
 ): Promise<string> {
+	try {
+		return await resolveToolCallInner(name, input);
+	} catch (err) {
+		return JSON.stringify({
+			error: `Tool "${name}" failed: ${err instanceof Error ? err.message : "Unknown error"}`,
+		});
+	}
+}
+
+async function resolveToolCallInner(
+	name: string,
+	input: Record<string, unknown>,
+): Promise<string> {
 	switch (name) {
 		case "run_crash_survival": {
 			const portfolio: PortfolioInput = {
@@ -205,13 +219,13 @@ export async function resolveToolCall(
 		case "check_temperature": {
 			try {
 				const res = await fetch("/api/temperature");
-				if (!res.ok) {
-					return JSON.stringify({ error: "Temperature API unavailable. Try again later." });
-				}
+				if (!res.ok) throw new Error("API returned " + res.status);
 				const data = await res.json();
 				return JSON.stringify(data);
 			} catch {
-				return JSON.stringify({ error: "Failed to fetch temperature data. API may be offline." });
+				return JSON.stringify({
+					error: "Temperature API unavailable (standalone mode). Use the temperature score from the system prompt context, or ask the user for their estimate (0-100). Check Fear & Greed Index as a proxy.",
+				});
 			}
 		}
 
@@ -219,7 +233,7 @@ export async function resolveToolCall(
 			const sizingInput: PositionSizingInput = {
 				totalValueUsd: input.totalValueUsd as number,
 				currentBtcPct: input.currentBtcPct as number,
-				targetBtcPct: input.currentBtcPct as number, // default target = current (engine needs it)
+				targetBtcPct: input.targetBtcPct as number,
 				monthlyBurnUsd: input.monthlyBurnUsd as number,
 				liquidReserveUsd: input.liquidReserveUsd as number,
 				btcPriceUsd: input.btcPriceUsd as number,

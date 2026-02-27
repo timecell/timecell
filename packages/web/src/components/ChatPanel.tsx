@@ -275,20 +275,35 @@ function ToolCallCard({ tool }: { tool: { name: string; input: Record<string, un
 	);
 }
 
-function StreamingIndicator() {
+const TOOL_LABELS: Record<string, string> = {
+	run_crash_survival: "Analyzing crash scenarios",
+	generate_action_plan: "Building action plan",
+	check_temperature: "Checking market temperature",
+	calculate_position_sizing: "Calculating position size",
+	run_ruin_test: "Running ruin test",
+	run_sleep_test: "Running sleep test",
+	get_selling_rules: "Checking selling rules",
+	get_dca_recommendation: "Calculating DCA strategy",
+};
+
+function StreamingIndicator({ toolName }: { toolName?: string | null }) {
+	const label = toolName ? TOOL_LABELS[toolName] ?? `Running ${toolName}` : "Thinking";
 	return (
-		<div className="flex items-center gap-1.5 px-4 py-3">
+		<div className="flex items-center gap-2 px-4 py-3">
 			<Bot className="w-4 h-4 text-slate-500 flex-shrink-0" />
-			<div className="flex gap-1">
-				<span className="w-1.5 h-1.5 rounded-full bg-orange-400 animate-pulse" />
-				<span
-					className="w-1.5 h-1.5 rounded-full bg-orange-400 animate-pulse"
-					style={{ animationDelay: "0.2s" }}
-				/>
-				<span
-					className="w-1.5 h-1.5 rounded-full bg-orange-400 animate-pulse"
-					style={{ animationDelay: "0.4s" }}
-				/>
+			<div className="flex items-center gap-1.5">
+				<div className="flex gap-1">
+					<span className="w-1.5 h-1.5 rounded-full bg-orange-400 animate-pulse" />
+					<span
+						className="w-1.5 h-1.5 rounded-full bg-orange-400 animate-pulse"
+						style={{ animationDelay: "0.2s" }}
+					/>
+					<span
+						className="w-1.5 h-1.5 rounded-full bg-orange-400 animate-pulse"
+						style={{ animationDelay: "0.4s" }}
+					/>
+				</div>
+				<span className="text-xs text-slate-500">{label}...</span>
 			</div>
 		</div>
 	);
@@ -388,8 +403,10 @@ export function ChatPanel({
 		messages,
 		sendMessage,
 		isLoading,
+		activeToolName,
 		error,
 		clearMessages,
+		cancelRequest,
 		apiKey,
 		setApiKey,
 		model,
@@ -436,9 +453,10 @@ export function ChatPanel({
 
 	const handleSuggestion = useCallback(
 		(q: string) => {
-			sendMessage(q);
+			setInput(q);
+			textareaRef.current?.focus();
 		},
-		[sendMessage],
+		[],
 	);
 
 	const handleNewChat = useCallback(() => {
@@ -555,17 +573,13 @@ export function ChatPanel({
 						))}
 
 					{/* Loading indicator */}
-					{isLoading &&
-						(!messages.length ||
-							!messages[messages.length - 1]?.isStreaming) && (
-							<StreamingIndicator />
-						)}
+					{isLoading && <StreamingIndicator toolName={activeToolName} />}
 
 					<div ref={messagesEndRef} />
 				</div>
 
-				{/* ── Input area ── */}
-				<div className="border-t border-slate-800 px-4 py-3">
+				{/* ── Input area (hidden when no API key and no messages) ── */}
+				<div className={`border-t border-slate-800 px-4 py-3 ${!hasApiKey && !hasMessages ? "hidden" : ""}`}>
 					<div className="flex items-end gap-2">
 						<textarea
 							ref={textareaRef}
@@ -581,14 +595,27 @@ export function ChatPanel({
 							rows={1}
 							className="flex-1 resize-none rounded-xl bg-slate-800 border border-slate-700 focus:border-orange-500 focus:ring-1 focus:ring-orange-500 text-white text-sm py-2.5 px-4 outline-none transition-colors placeholder:text-slate-500 disabled:opacity-50 disabled:cursor-not-allowed"
 						/>
+						{isLoading ? (
+						<button
+							type="button"
+							onClick={cancelRequest}
+							className="flex-shrink-0 p-2.5 rounded-xl bg-red-500/80 hover:bg-red-500 text-white transition-colors"
+							title="Stop"
+						>
+							<div className="w-4 h-4 flex items-center justify-center">
+								<div className="w-3 h-3 rounded-sm bg-white" />
+							</div>
+						</button>
+					) : (
 						<button
 							type="button"
 							onClick={handleSend}
-							disabled={!input.trim() || !hasApiKey || isLoading}
+							disabled={!input.trim() || !hasApiKey}
 							className="flex-shrink-0 p-2.5 rounded-xl bg-orange-500 hover:bg-orange-400 disabled:bg-slate-700 disabled:text-slate-500 text-white transition-colors"
 						>
 							<Send className="w-4 h-4" />
 						</button>
+					)}
 					</div>
 					<p className="text-[10px] text-slate-600 mt-1.5 text-center">
 						AI-powered analysis based on the Bitcoin Investing Framework. Not

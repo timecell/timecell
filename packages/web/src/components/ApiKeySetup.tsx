@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { X, Eye, EyeOff, Key, Trash2, ExternalLink } from "lucide-react";
 
 export interface ApiKeySetupProps {
@@ -39,6 +39,15 @@ export function ApiKeySetup({
 	const [keyInput, setKeyInput] = useState(apiKey ?? "");
 	const [showKey, setShowKey] = useState(false);
 	const [confirmClear, setConfirmClear] = useState(false);
+
+	// Sync keyInput when modal opens or apiKey changes externally
+	useEffect(() => {
+		if (isOpen) {
+			setKeyInput(apiKey ?? "");
+			setConfirmClear(false);
+			setShowKey(false);
+		}
+	}, [isOpen, apiKey]);
 
 	const handleSave = useCallback(() => {
 		const trimmed = keyInput.trim();
