@@ -3,19 +3,521 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="TimeCell — Know if you survive the crash before it happens. A local-first crash survival calculator for Bitcoin investors." />
-  <title>TimeCell — Crash Survival Calculator</title>
+  <meta name="description" content="TimeCell — Your AI Bitcoin investing advisor. Chat-first. Framework-driven. Local-first. Know if you survive the crash before it happens." />
+  <title>TimeCell — AI Bitcoin Investing Advisor</title>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    /* ---- New sections added for v0.2 redesign ---- */
+
+    /* CTA group */
+    .hero-cta-group {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .cta-button--secondary {
+      display: inline-block;
+      background: transparent;
+      color: var(--text-secondary);
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      text-decoration: none;
+      padding: 13px 28px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      transition: border-color 0.15s ease, color 0.15s ease;
+    }
+
+    .cta-button--secondary:hover {
+      border-color: rgba(255, 255, 255, 0.2);
+      color: var(--text-primary);
+    }
+
+    /* Nav CTA */
+    .nav-cta {
+      display: inline-block;
+      background: var(--orange);
+      color: #000;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-decoration: none;
+      padding: 7px 16px;
+      border-radius: var(--radius);
+      transition: background 0.15s ease;
+    }
+
+    .nav-cta:hover {
+      background: #e8871a;
+    }
+
+    /* Trust strip */
+    .trust-strip {
+      padding: 28px 0;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-surface);
+    }
+
+    .trust-strip-inner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+
+    .trust-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .trust-item-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--orange);
+      opacity: 0.7;
+      flex-shrink: 0;
+    }
+
+    /* Chat demo section */
+    .chat-demo {
+      padding: var(--section-gap) 0;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+    }
+
+    .chat-demo-inner {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 64px;
+      align-items: center;
+    }
+
+    .chat-demo-copy .section-heading {
+      text-align: left;
+      margin-bottom: 20px;
+    }
+
+    .chat-demo-title {
+      font-size: clamp(26px, 4vw, 38px);
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      line-height: 1.2;
+      color: var(--text-primary);
+      margin-bottom: 16px;
+    }
+
+    .chat-demo-body {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.75;
+      margin-bottom: 28px;
+    }
+
+    .chat-demo-body strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .chat-window {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      background: var(--bg-code);
+      box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.03),
+        0 24px 80px rgba(0, 0, 0, 0.5),
+        0 0 60px rgba(247, 147, 26, 0.04);
+    }
+
+    .chat-titlebar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 18px;
+      background: #1a1a1a;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .chat-titlebar-text {
+      margin-left: 12px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-muted);
+      letter-spacing: 0.03em;
+    }
+
+    .chat-titlebar-badge {
+      margin-left: auto;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--green);
+      background: var(--green-dim);
+      border: 1px solid rgba(95, 207, 128, 0.2);
+      padding: 3px 8px;
+      border-radius: var(--radius);
+    }
+
+    .chat-messages {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .chat-msg {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    .chat-msg--user {
+      flex-direction: row-reverse;
+    }
+
+    .chat-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      flex-shrink: 0;
+      letter-spacing: 0.02em;
+    }
+
+    .chat-avatar--user {
+      background: var(--orange);
+      color: #000;
+      font-size: 11px;
+    }
+
+    .chat-avatar--ai {
+      background: rgba(247, 147, 26, 0.12);
+      border: 1px solid var(--border-orange);
+      color: var(--orange);
+      font-size: 10px;
+      letter-spacing: 0.04em;
+    }
+
+    .chat-bubble {
+      max-width: 82%;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .chat-bubble--user {
+      background: rgba(247, 147, 26, 0.1);
+      border: 1px solid rgba(247, 147, 26, 0.2);
+      color: var(--text-primary);
+    }
+
+    .chat-bubble--ai {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+    }
+
+    .chat-bubble--ai strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .chat-tool-result {
+      margin-top: 10px;
+      padding: 10px 12px;
+      background: var(--bg-code);
+      border: 1px solid var(--border);
+      border-left: 2px solid var(--orange);
+      border-radius: var(--radius);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.8;
+    }
+
+    .chat-tool-result-title {
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 6px;
+    }
+
+    .chat-tool-row {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .chat-tool-val--safe   { color: var(--green); }
+    .chat-tool-val--warn   { color: var(--yellow); }
+    .chat-tool-val--crit   { color: var(--red); }
+    .chat-tool-val--orange { color: var(--orange); }
+
+    .chat-input-bar {
+      padding: 12px 16px;
+      border-top: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.02);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .chat-input-fake {
+      flex: 1;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 8px 12px;
+      font-size: 13px;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    .chat-send-btn {
+      width: 30px;
+      height: 30px;
+      background: var(--orange);
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .chat-send-btn svg {
+      width: 14px;
+      height: 14px;
+      fill: #000;
+    }
+
+    /* What TimeCell covers */
+    .covers {
+      padding: var(--section-gap) 0;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+    }
+
+    .covers-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+
+    .covers-item {
+      background: var(--bg-surface);
+      padding: 28px 28px;
+      transition: background 0.15s ease;
+    }
+
+    .covers-item:hover {
+      background: var(--bg-elevated);
+    }
+
+    .covers-item-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+      letter-spacing: -0.01em;
+    }
+
+    .covers-item-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .covers-item-tag {
+      display: inline-block;
+      margin-bottom: 12px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--orange);
+      opacity: 0.8;
+    }
+
+    /* Install section v2 — two options */
+    .install-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      margin-top: 40px;
+      text-align: left;
+    }
+
+    .install-option {
+      background: var(--bg-surface);
+      padding: 32px;
+      transition: background 0.15s ease;
+    }
+
+    .install-option:hover {
+      background: var(--bg-elevated);
+    }
+
+    .install-option--primary {
+      border-left: 2px solid var(--orange);
+    }
+
+    .install-option-badge {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: var(--radius);
+      margin-bottom: 14px;
+    }
+
+    .install-option-badge--primary {
+      color: var(--orange);
+      background: var(--orange-glow);
+      border: 1px solid var(--border-orange);
+    }
+
+    .install-option-badge--secondary {
+      color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+    }
+
+    .install-option-title {
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .install-option-desc {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.65;
+      margin-bottom: 20px;
+    }
+
+    .install-option-action {
+      display: inline-block;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 10px 22px;
+      border-radius: var(--radius);
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+
+    .install-option-action--primary {
+      background: var(--orange);
+      color: #000;
+    }
+
+    .install-option-action--primary:hover {
+      background: #e8871a;
+    }
+
+    .install-option-action--secondary {
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+    }
+
+    .install-option-action--secondary:hover {
+      border-color: rgba(255, 255, 255, 0.2);
+      color: var(--text-primary);
+    }
+
+    /* Responsive additions */
+    @media (max-width: 768px) {
+      .chat-demo-inner {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .covers-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .install-options {
+        grid-template-columns: 1fr;
+      }
+
+      .trust-strip-inner {
+        gap: 24px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .covers-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-cta-group {
+        flex-direction: column;
+        align-items: stretch;
+        max-width: 280px;
+        margin: 0 auto;
+      }
+
+      .hero-cta-group .cta-button,
+      .hero-cta-group .cta-button--secondary {
+        text-align: center;
+      }
+
+      .chat-demo-copy .section-heading {
+        text-align: center;
+      }
+
+      .chat-demo-title {
+        text-align: center;
+      }
+
+      .chat-demo-body {
+        text-align: center;
+      }
+    }
+  </style>
 </head>
 <body>
 
   <header class="site-header">
     <div class="container header-flex">
-      <img src="logo.png" alt="TimeCell" class="logo-img" />
+      <a href="/" style="display:inline-flex;align-items:center;text-decoration:none;">
+        <img src="logo.png" alt="TimeCell" class="logo-img" />
+      </a>
       <nav class="header-nav">
-        <a href="#preview" class="nav-link">Preview</a>
-        <a href="#how-it-works" class="nav-link">How It Works</a>
-        <a href="#install" class="nav-link">Install</a>
+        <a href="/app" class="nav-link">App</a>
+        <a href="https://github.com/timecell" target="_blank" rel="noopener noreferrer" class="nav-link">GitHub</a>
+        <a href="https://twitter.com/timecellai" target="_blank" rel="noopener noreferrer" class="nav-link">@timecellai</a>
+        <a href="/app" class="nav-cta">Try It Free</a>
       </nav>
     </div>
   </header>
@@ -25,31 +527,231 @@
     <!-- Hero -->
     <section class="hero">
       <div class="container hero-inner">
-        <div class="hero-label">Bitcoin Portfolio Risk Analysis</div>
+        <div class="hero-label">AI-Powered &middot; Framework-Driven &middot; Local-First</div>
         <img src="logo.png" alt="TimeCell" class="hero-logo" />
-        <p class="hero-tagline">Know if you survive the crash before it happens.</p>
-        <a href="#install" class="cta-button">Get Started &rarr;</a>
+        <p class="hero-tagline">Your AI Bitcoin Investing Advisor</p>
+        <p class="hero-tagline" style="font-size:clamp(15px,2.2vw,18px);margin-top:-20px;max-width:580px;">
+          Ask anything about your portfolio. Get answers grounded in a rigorous 10-part investing framework — not vibes.
+        </p>
+        <div class="hero-cta-group">
+          <a href="/app" class="cta-button">Open App &rarr;</a>
+          <a href="https://github.com/timecell" target="_blank" rel="noopener noreferrer" class="cta-button--secondary">View on GitHub</a>
+        </div>
       </div>
     </section>
 
-    <!-- Dashboard Preview -->
+    <!-- Trust strip -->
+    <section class="trust-strip">
+      <div class="container trust-strip-inner">
+        <div class="trust-item">
+          <span class="trust-item-dot"></span>
+          Open Source
+        </div>
+        <div class="trust-item">
+          <span class="trust-item-dot"></span>
+          Local-First
+        </div>
+        <div class="trust-item">
+          <span class="trust-item-dot"></span>
+          No Cloud, No Accounts
+        </div>
+        <div class="trust-item">
+          <span class="trust-item-dot"></span>
+          Framework-Driven
+        </div>
+        <div class="trust-item">
+          <span class="trust-item-dot"></span>
+          241 Tests
+        </div>
+      </div>
+    </section>
+
+    <!-- Chat Demo -->
+    <section class="chat-demo" id="demo">
+      <div class="container chat-demo-inner">
+
+        <div class="chat-demo-copy">
+          <div class="section-heading">Chat-First Experience</div>
+          <h2 class="chat-demo-title">Talk to your portfolio like a friend who actually knows finance</h2>
+          <p class="chat-demo-body">
+            TimeCell uses <strong>Claude AI</strong> (BYOK &mdash; bring your own API key) to answer questions about your Bitcoin position in plain English.
+            Every response is grounded in the <strong>10-part Bitcoin Investing Framework</strong> &mdash; crash survival, temperature, conviction ladder, position sizing, and more.
+          </p>
+          <p class="chat-demo-body">
+            Your API key stays in your browser. Your portfolio stays on your machine.
+            Nothing leaves your device.
+          </p>
+          <a href="/app" class="cta-button">Start a conversation &rarr;</a>
+        </div>
+
+        <div class="chat-window">
+          <div class="chat-titlebar">
+            <span class="mockup-dot mockup-dot--red"></span>
+            <span class="mockup-dot mockup-dot--yellow"></span>
+            <span class="mockup-dot mockup-dot--green"></span>
+            <span class="chat-titlebar-text">timecell &mdash; ai advisor</span>
+            <span class="chat-titlebar-badge">Connected</span>
+          </div>
+          <div class="chat-messages">
+
+            <div class="chat-msg chat-msg--user">
+              <div class="chat-avatar chat-avatar--user">You</div>
+              <div class="chat-bubble chat-bubble--user">
+                Do I survive a crash? I've got $2M total, 40% in BTC, spending $12k/month.
+              </div>
+            </div>
+
+            <div class="chat-msg">
+              <div class="chat-avatar chat-avatar--ai">TC</div>
+              <div class="chat-bubble chat-bubble--ai">
+                Running crash survival analysis across four drawdown scenarios&hellip;
+                <div class="chat-tool-result">
+                  <div class="chat-tool-result-title">crash_survival &mdash; tool result</div>
+                  <div class="chat-tool-row"><span>&minus;30% drawdown</span><span class="chat-tool-val--safe">SAFE &middot; 64 mo runway</span></div>
+                  <div class="chat-tool-row"><span>&minus;50% drawdown</span><span class="chat-tool-val--safe">SAFE &middot; 43 mo runway</span></div>
+                  <div class="chat-tool-row"><span>&minus;70% drawdown</span><span class="chat-tool-val--warn">WARNING &middot; 22 mo runway</span></div>
+                  <div class="chat-tool-row"><span>&minus;80% drawdown</span><span class="chat-tool-val--crit">CRITICAL &middot; 11 mo runway</span></div>
+                  <div style="margin-top:6px;padding-top:6px;border-top:1px solid rgba(255,255,255,0.06);">
+                    <div class="chat-tool-row"><span>Max survivable crash</span><span class="chat-tool-val--orange">&minus;72%</span></div>
+                    <div class="chat-tool-row"><span>Ruin test (80% BTC + 40% other)</span><span class="chat-tool-val--crit">FAIL</span></div>
+                  </div>
+                </div>
+                <br>
+                <strong>You survive up to &minus;72%.</strong> At current allocation your ruin test fails &mdash; an 80% BTC crash combined with a 40% drop in your other assets would leave you with under 18 months runway. <strong>The framework recommends at least 2 years of expenses held entirely outside BTC before increasing conviction.</strong> Want me to show you what a hedge would cost to fix the ruin test?
+              </div>
+            </div>
+
+            <div class="chat-msg chat-msg--user">
+              <div class="chat-avatar chat-avatar--user">You</div>
+              <div class="chat-bubble chat-bubble--user">
+                What's the current temperature and should I be buying?
+              </div>
+            </div>
+
+            <div class="chat-msg">
+              <div class="chat-avatar chat-avatar--ai">TC</div>
+              <div class="chat-bubble chat-bubble--ai">
+                <div class="chat-tool-result">
+                  <div class="chat-tool-result-title">get_temperature &mdash; tool result</div>
+                  <div class="chat-tool-row"><span>MVRV composite</span><span class="chat-tool-val--orange">58 / 100</span></div>
+                  <div class="chat-tool-row"><span>RHODL ratio</span><span class="chat-tool-val--orange">neutral zone</span></div>
+                  <div class="chat-tool-row"><span>Market temperature</span><span class="chat-tool-val--orange">Neutral (58)</span></div>
+                </div>
+                <br>
+                Temperature is <strong>58 &mdash; neutral territory</strong>. Neither a screaming buy nor a red flag. The framework says this is a reasonable zone to maintain your current allocation but not to chase. If you're below your target BTC% from the conviction ladder, neutral is an acceptable entry window.
+              </div>
+            </div>
+
+          </div>
+          <div class="chat-input-bar">
+            <div class="chat-input-fake">Ask about your position&hellip;</div>
+            <div class="chat-send-btn">
+              <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 8l14-7-7 14V9L1 8z"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Features grid -->
+    <section class="features" id="features">
+      <div class="container">
+        <h2 class="section-heading">Why TimeCell</h2>
+        <div class="feature-grid">
+
+          <div class="feature-card">
+            <div class="feature-icon">&#9632;</div>
+            <h3 class="feature-title">AI Advisor (BYOK)</h3>
+            <p class="feature-body">
+              Powered by Claude. Bring your own Anthropic API key &mdash; it stays in your browser, never touches a server.
+              Ask anything: portfolio stress tests, allocation decisions, hedging strategy, market timing.
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">&#9632;</div>
+            <h3 class="feature-title">Crash Survival Analysis</h3>
+            <p class="feature-body">
+              Four drawdown scenarios (&minus;30%, &minus;50%, &minus;70%, &minus;80%). Runway in months.
+              Max survivable crash threshold. Ruin test pass/fail.
+              Know your number before the market finds it for you.
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">&#9632;</div>
+            <h3 class="feature-title">10-Part Framework</h3>
+            <p class="feature-body">
+              Every answer is grounded in the Bitcoin Investing Framework: conviction ladder, position sizing,
+              temperature gauge, downside insurance, geometric mean CAGR, and de-risk triggers.
+              Rigorous, not reactive.
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- How it works -->
+    <section class="how-it-works" id="how-it-works">
+      <div class="container">
+        <h2 class="section-heading">How it works</h2>
+        <div class="steps-grid">
+
+          <div class="step-card">
+            <div class="step-number">01</div>
+            <h3 class="step-title">Open the app &amp; enter your API key</h3>
+            <p class="step-body">
+              Go to timecell.ai/app. Paste your Anthropic API key (get one free at console.anthropic.com).
+              The key stays in your browser &mdash; TimeCell never sees it.
+            </p>
+          </div>
+
+          <div class="step-card">
+            <div class="step-number">02</div>
+            <h3 class="step-title">Enter your portfolio numbers</h3>
+            <p class="step-body">
+              Total portfolio value, BTC percentage, monthly expenses.
+              Three numbers. The dashboard populates instantly with crash scenarios,
+              temperature, and your conviction ladder position.
+            </p>
+          </div>
+
+          <div class="step-card">
+            <div class="step-number">03</div>
+            <h3 class="step-title">Ask anything</h3>
+            <p class="step-body">
+              Chat with the AI advisor. Ask about crash survival, whether to add more BTC,
+              when to sell, what hedge to buy, or how your allocation compares to the conviction ladder.
+              Answers in plain English, backed by the framework.
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Dashboard preview -->
     <section class="preview" id="preview">
       <div class="container">
         <h2 class="section-heading">Dashboard Preview</h2>
-        <p class="preview-sub">See your crash survival profile at a glance.</p>
+        <p class="preview-sub">Real-time crash analysis &mdash; always visible alongside the chat.</p>
         <div class="mockup-window">
           <div class="mockup-titlebar">
             <span class="mockup-dot mockup-dot--red"></span>
             <span class="mockup-dot mockup-dot--yellow"></span>
             <span class="mockup-dot mockup-dot--green"></span>
-            <span class="mockup-titlebar-text">timecell &mdash; crash scenarios</span>
+            <span class="mockup-titlebar-text">timecell &mdash; crash survival dashboard</span>
           </div>
           <div class="mockup-body">
             <div class="mockup-header-row">
-              <span class="mockup-label">SCENARIO</span>
-              <span class="mockup-label">PORTFOLIO VALUE</span>
-              <span class="mockup-label">RUNWAY</span>
-              <span class="mockup-label">STATUS</span>
+              <span class="mockup-label">Scenario</span>
+              <span class="mockup-label">Portfolio Value</span>
+              <span class="mockup-label">Runway</span>
+              <span class="mockup-label">Status</span>
             </div>
             <div class="mockup-row">
               <span class="mockup-cell mockup-cell--scenario">&minus;30% Drawdown</span>
@@ -81,125 +783,111 @@
               <span class="mockup-summary-sep">&middot;</span>
               <span class="mockup-summary-label">Ruin Test</span>
               <span class="mockup-summary-value mockup-summary-value--warn">FAIL</span>
+              <span class="mockup-summary-sep">&middot;</span>
+              <span class="mockup-summary-label">Temperature</span>
+              <span class="mockup-summary-value">58 &mdash; Neutral</span>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- How It Works -->
-    <section class="how-it-works" id="how-it-works">
+    <!-- What TimeCell covers -->
+    <section class="covers" id="covers">
       <div class="container">
-        <h2 class="section-heading">How it works</h2>
-        <div class="steps-grid">
+        <h2 class="section-heading">What TimeCell covers</h2>
+        <div class="covers-grid">
 
-          <div class="step-card">
-            <div class="step-number">01</div>
-            <h3 class="step-title">Enter your portfolio</h3>
-            <p class="step-body">
-              Total portfolio value, BTC allocation percentage, and monthly burn rate.
-              Three numbers. That is all TimeCell needs.
-            </p>
+          <div class="covers-item">
+            <div class="covers-item-tag">Framework Part 1&ndash;2</div>
+            <div class="covers-item-name">Temperature Gauge</div>
+            <p class="covers-item-desc">MVRV + RHODL composite. 0&ndash;100 scale. Zones: extreme fear to extreme greed. Context for every entry decision.</p>
           </div>
 
-          <div class="step-card">
-            <div class="step-number">02</div>
-            <h3 class="step-title">See crash scenarios</h3>
-            <p class="step-body">
-              Instantly view what happens to your portfolio at &minus;30%, &minus;50%, &minus;70%, and &minus;80% drawdowns.
-              Each scenario shows remaining value and runway.
-            </p>
+          <div class="covers-item">
+            <div class="covers-item-tag">Framework Part 3</div>
+            <div class="covers-item-name">Ruin Test</div>
+            <p class="covers-item-desc">BTC &minus;80% AND other assets &minus;40% simultaneously. One scenario. Pass or fail. No ambiguity.</p>
           </div>
 
-          <div class="step-card">
-            <div class="step-number">03</div>
-            <h3 class="step-title">Know your number</h3>
-            <p class="step-body">
-              The maximum crash you can survive, your runway in months, and a pass/fail ruin test.
-              One answer. No ambiguity.
-            </p>
+          <div class="covers-item">
+            <div class="covers-item-tag">Framework Part 4</div>
+            <div class="covers-item-name">Conviction Ladder</div>
+            <p class="covers-item-desc">Six rungs from Observer (0%) to Single-Asset Core (50%+). Gates and requirements for each level. Know exactly where you stand.</p>
+          </div>
+
+          <div class="covers-item">
+            <div class="covers-item-tag">Framework Part 5</div>
+            <div class="covers-item-name">Position Sizing</div>
+            <p class="covers-item-desc">Six-step process grounded in geometric mean CAGR. Hedged vs unhedged returns across cycle lengths. Break-even hedge analysis.</p>
+          </div>
+
+          <div class="covers-item">
+            <div class="covers-item-tag">Framework Part 6</div>
+            <div class="covers-item-name">Selling Rules &amp; De-Risk Triggers</div>
+            <p class="covers-item-desc">Pre-written triggers for when to take profits. Removes emotion from exit decisions. Defined in advance, not in the moment.</p>
+          </div>
+
+          <div class="covers-item">
+            <div class="covers-item-tag">Framework Part 7</div>
+            <div class="covers-item-name">DCA Calculator</div>
+            <p class="covers-item-desc">Dollar-cost averaging across temperature zones. Buy more in fear, less in greed. Systematic, not emotional.</p>
+          </div>
+
+          <div class="covers-item">
+            <div class="covers-item-tag">Framework Part 8</div>
+            <div class="covers-item-name">Sleep Test</div>
+            <p class="covers-item-desc">Scenario: BTC drops 80% tomorrow. Can you stay the course? The only metric that predicts whether you'll actually hold.</p>
+          </div>
+
+          <div class="covers-item">
+            <div class="covers-item-tag">Framework Part 9</div>
+            <div class="covers-item-name">Downside Insurance</div>
+            <p class="covers-item-desc">Hedge budget, payoff math, break-even cycle length. How much insurance is worth buying — and when it starts costing more than it protects.</p>
+          </div>
+
+          <div class="covers-item">
+            <div class="covers-item-tag">AI Layer</div>
+            <div class="covers-item-name">Action Plan</div>
+            <p class="covers-item-desc">AI-generated summary of your current position and recommended next steps. Grounded in all framework components. Personalized to your numbers.</p>
           </div>
 
         </div>
-      </div>
-    </section>
-
-    <!-- Features -->
-    <section class="features" id="features">
-      <div class="container">
-        <h2 class="section-heading">What TimeCell does</h2>
-        <div class="feature-grid">
-
-          <div class="feature-card">
-            <div class="feature-icon">&#9632;</div>
-            <h3 class="feature-title">Crash Survival Score</h3>
-            <p class="feature-body">
-              See exactly where your portfolio breaks across &minus;30%, &minus;50%, &minus;70%, and &minus;80% drawdowns.
-              Know your threshold before the market finds it for you.
-            </p>
-          </div>
-
-          <div class="feature-card">
-            <div class="feature-icon">&#9632;</div>
-            <h3 class="feature-title">Ruin Test</h3>
-            <p class="feature-body">
-              The framework question: if BTC drops 80% and everything else drops 40%, do you survive?
-              One scenario. One answer. No ambiguity.
-            </p>
-          </div>
-
-          <div class="feature-card">
-            <div class="feature-icon">&#9632;</div>
-            <h3 class="feature-title">Local-First</h3>
-            <p class="feature-body">
-              Your data stays on your machine. No cloud, no accounts, no tracking.
-              Built for people who treat privacy as a prerequisite, not a feature.
-            </p>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- Social Proof -->
-    <section class="social-proof">
-      <div class="container social-proof-inner">
-        <p class="social-proof-text">Built for YPO members and Bitcoin investors managing significant portfolios.</p>
       </div>
     </section>
 
     <!-- Install -->
     <section class="install" id="install">
-      <div class="container install-inner">
-        <h2 class="section-heading">Run it now</h2>
-        <p class="install-sub">No installation required. Runs locally in your terminal.</p>
-        <div class="code-block code-block--hero">
-          <div class="code-block-header">
-            <span class="code-block-label">Terminal</span>
-            <button class="copy-button" id="copyBtn" aria-label="Copy command to clipboard">
-              <span class="copy-icon">&square;</span> Copy
-            </button>
-          </div>
-          <pre class="code-content code-content--lg"><code id="installCmd">npx @timecell/cli</code></pre>
-        </div>
-        <p class="install-note">Requires Node.js 18+. Works on macOS, Linux, and Windows.</p>
-        <a href="#how-it-works" class="install-secondary-link">See how it works &darr;</a>
-      </div>
-    </section>
+      <div class="container install-inner" style="max-width:760px;">
+        <h2 class="section-heading" style="text-align:center;">Try it now</h2>
+        <p class="install-sub" style="text-align:center;">Zero setup. No accounts. Your data stays local.</p>
 
-    <!-- Why section -->
-    <section class="why">
-      <div class="container why-inner">
-        <h2 class="section-heading">Built for serious allocators</h2>
-        <p class="why-body">
-          Most portfolio tools are built for average market conditions. TimeCell is built for the tail.
-          It answers the question that matters: not how much you could make, but whether you can survive
-          the scenario that ends most investors.
-        </p>
-        <p class="why-body">
-          No dashboards. No subscriptions. No data leaving your machine. Open a terminal,
-          run the command, and know your number in under a minute.
-        </p>
+        <div class="install-options">
+
+          <div class="install-option install-option--primary">
+            <div class="install-option-badge install-option-badge--primary">Recommended</div>
+            <div class="install-option-title">Web App</div>
+            <p class="install-option-desc">Open in your browser. No installation required. Works on any device.</p>
+            <a href="/app" class="install-option-action install-option-action--primary">Open timecell.ai/app &rarr;</a>
+          </div>
+
+          <div class="install-option">
+            <div class="install-option-badge install-option-badge--secondary">CLI</div>
+            <div class="install-option-title">Run Locally</div>
+            <p class="install-option-desc">Full local install via npm. Runs the API + dashboard on your machine.</p>
+            <div class="code-block" style="margin-bottom:16px;">
+              <div class="code-block-header">
+                <span class="code-block-label">Terminal</span>
+                <button class="copy-button" id="copyBtn" aria-label="Copy command to clipboard">
+                  <span class="copy-icon">&square;</span> Copy
+                </button>
+              </div>
+              <pre class="code-content" style="font-size:16px;padding:20px;text-align:left;"><code id="installCmd">npx @timecell/cli</code></pre>
+            </div>
+            <p class="install-note" style="margin-top:0;">Requires Node.js 18+. macOS, Linux, Windows.</p>
+          </div>
+
+        </div>
       </div>
     </section>
 
@@ -260,7 +948,7 @@
       });
     });
 
-    // Smooth scroll for all anchor links (fallback for browsers without CSS smooth scroll)
+    // Smooth scroll for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       anchor.addEventListener('click', function(e) {
         const target = document.querySelector(this.getAttribute('href'));
