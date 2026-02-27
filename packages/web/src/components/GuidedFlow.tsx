@@ -213,13 +213,9 @@ export function GuidedFlow() {
 				?
 			</button>
 
-			{/* Desktop sidebar stepper */}
+			{/* Desktop sidebar stepper — hidden when chat panel is present (chat-first layout) */}
 			<div
-				className={`fixed z-40 transition-all duration-300 ${
-					collapsed
-						? "left-0 top-1/2 -translate-y-1/2"
-						: "left-4 top-1/2 -translate-y-1/2 hidden lg:block"
-				}`}
+				className="hidden"
 			>
 				{/* Collapse toggle for desktop */}
 				{!collapsed && (
@@ -357,8 +353,8 @@ export function GuidedFlow() {
 				)}
 			</div>
 
-			{/* Mobile top bar */}
-			<div className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-slate-900/95 backdrop-blur-sm border-b border-slate-700/50 shadow-lg">
+			{/* Mobile top bar — hidden; replaced by Chat/Dashboard tab bar in App.tsx */}
+			<div className="hidden">
 				<div className="flex items-center gap-1 px-3 py-2 max-w-full overflow-x-auto scrollbar-hide">
 					{STAGES.map((stage, i) => {
 						const status = stageStatus(i);
@@ -437,25 +433,16 @@ function StageCallout({
 		return () => clearTimeout(timer);
 	}, [stageIndex]);
 
-	// Position the callout near the section
-	useEffect(() => {
-		const target = document.getElementById(stage.sectionId);
-		if (target && calloutRef.current) {
-			const rect = target.getBoundingClientRect();
-			// We use fixed positioning, placed just above the section
-			calloutRef.current.style.top = `${Math.max(80, rect.top - 10)}px`;
-		}
-	}, [stage.sectionId, visible]);
+	// No manual positioning needed — callout uses sticky positioning within the dashboard scroll container
 
 	return (
 		<div
 			ref={calloutRef}
-			className={`fixed left-1/2 -translate-x-1/2 z-50 max-w-lg w-[calc(100%-2rem)] transition-all duration-300 ${
+			className={`sticky top-4 z-30 mx-auto max-w-lg w-[calc(100%-2rem)] transition-all duration-300 ${
 				visible
 					? "opacity-100 translate-y-0"
 					: "opacity-0 -translate-y-2"
 			}`}
-			style={{ top: "80px" }}
 		>
 			<div className="bg-slate-800/95 backdrop-blur-sm border border-orange-500/40 rounded-xl shadow-2xl shadow-orange-500/10 px-5 py-4">
 				<div className="flex items-start justify-between gap-3">
