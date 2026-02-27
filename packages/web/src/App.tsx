@@ -18,8 +18,12 @@ import { ConvictionGates } from "./components/ConvictionGates";
 import { DeRiskTriggers } from "./components/DeRiskTriggers";
 import { SellingRules } from "./components/SellingRules";
 import { DownsideInsurance } from "./components/DownsideInsurance";
+import { CustodyTracker } from "./components/CustodyTracker";
 import { MarketSentiment } from "./components/MarketSentiment";
+import { FourYearMA } from "./components/FourYearMA";
 import { InfoPanel } from "./components/InfoPanel";
+import { ThesisHealthCheck } from "./components/ThesisHealthCheck";
+import { DCACalculator } from "./components/DCACalculator";
 import { ReportCard } from "./components/ReportCard";
 import { WhatIfComparison } from "./components/WhatIfComparison";
 import { HistoricalCrashOverlay } from "./components/HistoricalCrashOverlay";
@@ -272,8 +276,24 @@ export default function App() {
 					currencyRate={currencyRate}
 				/>
 
+				{/* ZONE 3.65: DCA Calculator — temperature-aware buying strategy (Framework Part 4) */}
+				<DCACalculator
+					currentBtcPrice={portfolio.btcPriceUsd}
+					temperatureScore={temperatureScore}
+					currencySymbol={currencySymbol}
+					currencyRate={currencyRate}
+				/>
+
 				{/* ZONE 3.7: Downside Insurance — put option budgeting + break-even calculator (Framework Part 6) */}
 				<DownsideInsurance
+					totalBtcValueUsd={portfolio.totalValueUsd * (portfolio.btcPercentage / 100)}
+					btcPriceUsd={portfolio.btcPriceUsd}
+					currencySymbol={currencySymbol}
+					currencyRate={currencyRate}
+				/>
+
+				{/* ZONE 3.72: Custody Tracker — exchange vs self-custody risk (Framework Part 7) */}
+				<CustodyTracker
 					totalBtcValueUsd={portfolio.totalValueUsd * (portfolio.btcPercentage / 100)}
 					btcPriceUsd={portfolio.btcPriceUsd}
 					currencySymbol={currencySymbol}
@@ -285,6 +305,9 @@ export default function App() {
 						temperatureScore={temperatureScore}
 						temperatureZone={scoreToZone(temperatureScore)}
 					/>
+
+				{/* ZONE 3.8: 4-Year Moving Average — Framework Part 4.3, cycle timing */}
+				<FourYearMA btcPriceUsd={portfolio.btcPriceUsd} />
 
 					{/* ZONE 4: Crash details — collapsed by default */}
 					{result && !loading && (
@@ -325,6 +348,7 @@ export default function App() {
 						<JourneyTracker btcPercentage={portfolio.btcPercentage} />
 						<InfoPanel />
 					</div>
+					<ThesisHealthCheck />
 				</main>
 
 				{/* Footer */}

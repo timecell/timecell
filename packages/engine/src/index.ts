@@ -42,3 +42,7 @@ export { calculateSellingRules } from "./selling-rules.js";
 export type { SellingRulesInput, SellingSchedule, SellingRulesResult } from "./selling-rules.js";
 export { calculateDownsideInsurance } from "./downside-insurance.js";
 export type { InsuranceInput, InsuranceResult } from "./downside-insurance.js";
+export { calculateDCA, calculateTemperatureAdjustedDCA, calculateDCASummary, getDCASummaryMultiplier } from "./dca-calculator.js";
+export type { DCAInput, DCAResult, DCAMonth, DCASummaryInput, DCASummaryResult } from "./dca-calculator.js";
+export { calculateCustodyRisk } from "./custody-risk.js";
+export type { CustodyInput, CustodyResult, CustodyRiskLevel } from "./custody-risk.js";

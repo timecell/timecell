@@ -16,8 +16,24 @@ function formatCurrency(value: number, symbol = "$"): string {
 }
 
 function parseInput(raw: string): number {
-	const cleaned = raw.replace(/[^0-9.]/g, "");
-	return Number.parseFloat(cleaned) || 0;
+	const trimmed = raw.trim().toLowerCase().replace(/,/g, "");
+	// Support shorthand: 8m, 1.5m, 500k, 2b, 50cr, 10l, 5lk
+	const match = trimmed.match(/^(\d+(?:\.\d+)?)\s*(m|mm|mil|million|k|thousand|b|billion|cr|crore|l|lakh|lk)?$/);
+	if (!match) {
+		const cleaned = trimmed.replace(/[^0-9.]/g, "");
+		return Number.parseFloat(cleaned) || 0;
+	}
+	const num = Number.parseFloat(match[1]);
+	const suffix = match[2];
+	if (!suffix) return num;
+	const multipliers: Record<string, number> = {
+		k: 1_000, thousand: 1_000,
+		l: 100_000, lakh: 100_000, lk: 100_000,
+		m: 1_000_000, mm: 1_000_000, mil: 1_000_000, million: 1_000_000,
+		cr: 10_000_000, crore: 10_000_000,
+		b: 1_000_000_000, billion: 1_000_000_000,
+	};
+	return num * (multipliers[suffix] || 1);
 }
 
 function formatInput(value: number): string {

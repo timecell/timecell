@@ -10,6 +10,7 @@ import { priceRoutes } from "./routes/price.js";
 import { temperatureRoutes } from "./routes/temperature.js";
 import { positionSizingRoutes } from "./routes/position-sizing.js";
 import { actionPlanRoutes } from "./routes/action-plan.js";
+import { custodyRiskRoutes } from "./routes/custody-risk.js";
 
 function findWebDist(): string | null {
 	const candidates = [
@@ -38,6 +39,7 @@ export async function buildServer() {
 	await fastify.register(temperatureRoutes, { prefix: "/api" });
 	await fastify.register(positionSizingRoutes, { prefix: "/api" });
 	await fastify.register(actionPlanRoutes, { prefix: "/api" });
+	await fastify.register(custodyRiskRoutes, { prefix: "/api" });
 
 	// Health check
 	fastify.get("/api/health", async () => ({ status: "ok", version: "0.2.0" }));
