@@ -6,6 +6,8 @@ interface BtcPriceTickerProps {
 	fallbackPrice?: number;
 	/** Currency symbol to display (e.g. "$", "₹", "€") */
 	currencySymbol?: string;
+	/** Exchange rate — multiply USD values by this to display in local currency */
+	currencyRate?: number;
 }
 
 type FlashDirection = "up" | "down" | null;
@@ -36,14 +38,16 @@ function useSecondsAgo(lastUpdated: Date | null): number | null {
 export function BtcPriceTicker({
 	fallbackPrice,
 	currencySymbol = "$",
+	currencyRate = 1,
 }: BtcPriceTickerProps) {
 	const { price, loading, lastUpdated, source } = useBtcPrice(fallbackPrice);
+	const displayPrice = price !== null ? price * currencyRate : null;
 	const prevPriceRef = useRef<number | null>(null);
 	const [flash, setFlash] = useState<FlashDirection>(null);
 	const flashTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 	const secs = useSecondsAgo(lastUpdated);
 
-	// Detect price direction change and trigger flash
+	// Detect price direction change and trigger flash (based on raw USD price)
 	useEffect(() => {
 		if (price === null) return;
 		const prev = prevPriceRef.current;
@@ -101,10 +105,10 @@ export function BtcPriceTicker({
 				<span
 					className={`tabular-nums text-sm font-semibold transition-colors duration-700 ${priceColorClass}`}
 				>
-					{loading && price === null ? (
+					{loading && displayPrice === null ? (
 						<span className="inline-block h-4 w-20 animate-pulse rounded bg-slate-700" />
-					) : price !== null ? (
-						formatPrice(price, currencySymbol)
+					) : displayPrice !== null ? (
+						formatPrice(displayPrice, currencySymbol)
 					) : (
 						<span className="text-slate-500">—</span>
 					)}

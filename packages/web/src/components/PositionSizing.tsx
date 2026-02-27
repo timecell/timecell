@@ -43,11 +43,12 @@ function fmt(n: number, decimals = 0): string {
 	});
 }
 
-function fmtUsd(n: number, symbol = "$"): string {
-	const abs = Math.abs(n);
-	if (abs >= 1_000_000) return `${symbol}${fmt(n / 1_000_000, 2)}M`;
-	if (abs >= 1_000) return `${symbol}${fmt(n / 1_000, 1)}K`;
-	return `${symbol}${fmt(n)}`;
+function fmtUsd(n: number, symbol = "$", rate = 1): string {
+	const converted = n * rate;
+	const abs = Math.abs(converted);
+	if (abs >= 1_000_000) return `${symbol}${fmt(converted / 1_000_000, 2)}M`;
+	if (abs >= 1_000) return `${symbol}${fmt(converted / 1_000, 1)}K`;
+	return `${symbol}${fmt(converted)}`;
 }
 
 function fmtBtc(n: number): string {
@@ -94,9 +95,7 @@ function AllocationBar({
 				{/* Label inside bar */}
 				<div className="absolute inset-0 flex items-center px-2 gap-1">
 					{btcPct >= 12 && (
-						<span className="text-xs font-semibold text-orange-100 drop-shadow">
-							BTC
-						</span>
+						<span className="text-xs font-semibold text-orange-100 drop-shadow">BTC</span>
 					)}
 				</div>
 			</div>
@@ -159,6 +158,7 @@ export interface PositionSizingProps {
 	liquidReserveUsd: number;
 	btcPriceUsd: number;
 	currencySymbol?: string;
+	currencyRate?: number;
 }
 
 const DCA_OPTIONS = [1, 3, 6, 12, 24] as const;
@@ -170,6 +170,7 @@ export function PositionSizing({
 	liquidReserveUsd,
 	btcPriceUsd,
 	currencySymbol = "$",
+	currencyRate = 1,
 }: PositionSizingProps) {
 	const [targetBtcPct, setTargetBtcPct] = useState(() => Math.min(currentBtcPct + 5, 100));
 	const [dcaMonths, setDcaMonths] = useState<(typeof DCA_OPTIONS)[number]>(6);
@@ -219,9 +220,7 @@ export function PositionSizing({
 			<CardContent className="p-4 sm:p-6 space-y-6">
 				{/* Header */}
 				<div>
-					<h3 className="text-base sm:text-lg font-semibold text-white mb-0.5">
-						Position Sizing
-					</h3>
+					<h3 className="text-base sm:text-lg font-semibold text-white mb-0.5">Position Sizing</h3>
 					<p className="text-xs text-slate-400">
 						Plan your path from current to target Bitcoin allocation
 					</p>
@@ -254,18 +253,14 @@ export function PositionSizing({
 						}`}
 					>
 						<div className="flex items-start gap-3">
-							<span
-								className={`text-2xl mt-0.5 ${isBuying ? "text-emerald-400" : "text-amber-400"}`}
-							>
+							<span className={`text-2xl mt-0.5 ${isBuying ? "text-emerald-400" : "text-amber-400"}`}>
 								{isBuying ? "\u2191" : "\u2193"}
 							</span>
 							<div className="flex-1 min-w-0">
 								<p
 									className={`text-sm font-semibold ${isBuying ? "text-emerald-400" : "text-amber-400"}`}
 								>
-									{isBuying ? "Buy" : "Sell"}{" "}
-									{fmtUsd(gapAbs, currencySymbol)}{" "}
-									of Bitcoin
+									{isBuying ? "Buy" : "Sell"} {fmtUsd(gapAbs, currencySymbol, currencyRate)} of Bitcoin
 								</p>
 								<p className="text-xs text-slate-400 mt-0.5">
 									{fmtBtc(Math.abs(result.gapBtc))} at current price
@@ -284,9 +279,7 @@ export function PositionSizing({
 
 				{/* DCA breakdown */}
 				<div className="space-y-3">
-					<p className="text-xs font-medium text-slate-400 uppercase tracking-wider">
-						DCA Schedule
-					</p>
+					<p className="text-xs font-medium text-slate-400 uppercase tracking-wider">DCA Schedule</p>
 					{/* Month selector */}
 					<div className="flex gap-2">
 						{DCA_OPTIONS.map((m) => (
@@ -311,7 +304,7 @@ export function PositionSizing({
 							<div className="rounded-lg bg-slate-900/60 px-3 py-2.5 border border-slate-700/60">
 								<p className="text-xs text-slate-500">Monthly {isBuying ? "buy" : "sell"}</p>
 								<p className="text-lg font-bold font-mono text-white mt-0.5">
-									{fmtUsd(Math.abs(result.dcaMonthlyUsd), currencySymbol)}
+									{fmtUsd(Math.abs(result.dcaMonthlyUsd), currencySymbol, currencyRate)}
 								</p>
 								<p className="text-xs text-slate-500 mt-0.5">
 									{fmtBtc(Math.abs(result.dcaMonthlyBtc))} / mo
@@ -323,7 +316,7 @@ export function PositionSizing({
 									{result.dcaMonths} months
 								</p>
 								<p className="text-xs text-slate-500 mt-0.5">
-									Total {fmtUsd(gapAbs, currencySymbol)}
+									Total {fmtUsd(gapAbs, currencySymbol, currencyRate)}
 								</p>
 							</div>
 						</div>
@@ -352,8 +345,7 @@ export function PositionSizing({
 									result.postReallocationRuinTest ? "text-emerald-400" : "text-red-400"
 								}`}
 							>
-								Ruin Test After Reallocation:{" "}
-								{result.postReallocationRuinTest ? "PASS" : "FAIL"}
+								Ruin Test After Reallocation: {result.postReallocationRuinTest ? "PASS" : "FAIL"}
 							</p>
 							<p className="text-xs text-slate-400 mt-0.5">
 								{result.postReallocationRunwayMonths === Infinity

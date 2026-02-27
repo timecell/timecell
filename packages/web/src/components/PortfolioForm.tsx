@@ -8,12 +8,14 @@ interface Props {
 	onUpdate: (updates: Partial<PortfolioInput>) => void;
 	savedAt?: number | null;
 	currencySymbol?: string;
+	currencyRate?: number;
 }
 
-function formatLabel(value: number, symbol = "$"): string {
-	if (value >= 1_000_000) return `${symbol}${(value / 1_000_000).toFixed(1)}M`;
-	if (value >= 1_000) return `${symbol}${(value / 1_000).toFixed(0)}K`;
-	return `${symbol}${value.toFixed(0)}`;
+function formatLabel(value: number, symbol = "$", rate = 1): string {
+	const converted = value * rate;
+	if (converted >= 1_000_000) return `${symbol}${(converted / 1_000_000).toFixed(1)}M`;
+	if (converted >= 1_000) return `${symbol}${(converted / 1_000).toFixed(0)}K`;
+	return `${symbol}${converted.toFixed(0)}`;
 }
 
 function InputField({
@@ -37,9 +39,9 @@ function InputField({
 }) {
 	return (
 		<div>
-			<div className="flex justify-between mb-2 sm:mb-1.5">
-				<label className="text-xs sm:text-sm text-slate-300">{label}</label>
-				<span className="text-xs sm:text-sm font-mono text-white">
+			<div className="flex items-center justify-between mb-2 gap-2">
+				<label className="text-sm text-slate-300 leading-tight">{label}</label>
+				<span className="text-sm font-mono text-white tabular-nums flex-shrink-0">
 					{format ? format(value) : value}
 					{suffix}
 				</span>
@@ -55,7 +57,7 @@ function InputField({
 	);
 }
 
-export function PortfolioForm({ portfolio, onUpdate, savedAt, currencySymbol = "$" }: Props) {
+export function PortfolioForm({ portfolio, onUpdate, savedAt, currencySymbol = "$", currencyRate = 1 }: Props) {
 	const [visible, setVisible] = useState(false);
 
 	useEffect(() => {
@@ -78,7 +80,7 @@ export function PortfolioForm({ portfolio, onUpdate, savedAt, currencySymbol = "
 				</div>
 			</CardHeader>
 
-			<CardContent className="p-4 sm:p-6 pt-4 sm:pt-5 space-y-4 sm:space-y-5">
+			<CardContent className="p-4 sm:p-6 pt-4 sm:pt-5 space-y-5 sm:space-y-5">
 				<InputField
 					label="Total Value"
 					value={portfolio.totalValueUsd}
@@ -86,7 +88,7 @@ export function PortfolioForm({ portfolio, onUpdate, savedAt, currencySymbol = "
 					min={100_000}
 					max={50_000_000}
 					step={100_000}
-					format={(v) => formatLabel(v, currencySymbol)}
+					format={(v) => formatLabel(v, currencySymbol, currencyRate)}
 				/>
 
 				<InputField
@@ -106,7 +108,7 @@ export function PortfolioForm({ portfolio, onUpdate, savedAt, currencySymbol = "
 					min={0}
 					max={500_000}
 					step={1_000}
-					format={(v) => formatLabel(v, currencySymbol)}
+					format={(v) => formatLabel(v, currencySymbol, currencyRate)}
 				/>
 
 				<InputField
@@ -116,7 +118,7 @@ export function PortfolioForm({ portfolio, onUpdate, savedAt, currencySymbol = "
 					min={0}
 					max={5_000_000}
 					step={10_000}
-					format={(v) => formatLabel(v, currencySymbol)}
+					format={(v) => formatLabel(v, currencySymbol, currencyRate)}
 				/>
 
 				<InputField
@@ -126,7 +128,7 @@ export function PortfolioForm({ portfolio, onUpdate, savedAt, currencySymbol = "
 					min={10_000}
 					max={200_000}
 					step={1_000}
-					format={(v) => formatLabel(v, currencySymbol)}
+					format={(v) => formatLabel(v, currencySymbol, currencyRate)}
 				/>
 			</CardContent>
 		</Card>

@@ -2,16 +2,13 @@ import type { CrashScenario } from "../hooks/usePortfolio";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import {
-	Tooltip,
-	TooltipTrigger,
-	TooltipContent,
-} from "@/components/ui/tooltip";
+import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 
-function formatCurrency(value: number, symbol = "$"): string {
-	if (value >= 1_000_000) return `${symbol}${(value / 1_000_000).toFixed(1)}M`;
-	if (value >= 1_000) return `${symbol}${(value / 1_000).toFixed(0)}K`;
-	return `${symbol}${value.toFixed(0)}`;
+function formatCurrency(value: number, symbol = "$", rate = 1): string {
+	const converted = value * rate;
+	if (converted >= 1_000_000) return `${symbol}${(converted / 1_000_000).toFixed(1)}M`;
+	if (converted >= 1_000) return `${symbol}${(converted / 1_000).toFixed(0)}K`;
+	return `${symbol}${converted.toFixed(0)}`;
 }
 
 function formatMonths(months: number): string {
@@ -90,7 +87,15 @@ function getSeverityStyle(scenario: CrashScenario) {
 	};
 }
 
-export function CrashCard({ scenario, currencySymbol = "$" }: { scenario: CrashScenario; currencySymbol?: string }) {
+export function CrashCard({
+	scenario,
+	currencySymbol = "$",
+	currencyRate = 1,
+}: {
+	scenario: CrashScenario;
+	currencySymbol?: string;
+	currencyRate?: number;
+}) {
 	const style = getSeverityStyle(scenario);
 
 	return (
@@ -112,13 +117,13 @@ export function CrashCard({ scenario, currencySymbol = "$" }: { scenario: CrashS
 					<div className="flex justify-between gap-2">
 						<span className="text-slate-300 text-xs sm:text-sm flex-shrink-0">BTC Price</span>
 						<span className="text-white font-mono text-xs sm:text-sm text-right">
-							{formatCurrency(scenario.btcPriceAtCrash, currencySymbol)}
+							{formatCurrency(scenario.btcPriceAtCrash, currencySymbol, currencyRate)}
 						</span>
 					</div>
 					<div className="flex justify-between gap-2">
 						<span className="text-slate-300 text-xs sm:text-sm flex-shrink-0">Portfolio Value</span>
 						<span className={`font-mono text-xs sm:text-sm ${style.text} text-right`}>
-							{formatCurrency(scenario.portfolioValueAfterCrash, currencySymbol)}
+							{formatCurrency(scenario.portfolioValueAfterCrash, currencySymbol, currencyRate)}
 						</span>
 					</div>
 					{scenario.hedgePayoff > 0 && (
@@ -134,7 +139,7 @@ export function CrashCard({ scenario, currencySymbol = "$" }: { scenario: CrashS
 								</TooltipContent>
 							</Tooltip>
 							<span className="text-emerald-400 font-mono text-xs sm:text-sm text-right">
-								+{formatCurrency(scenario.hedgePayoff, currencySymbol)}
+								+{formatCurrency(scenario.hedgePayoff, currencySymbol, currencyRate)}
 							</span>
 						</div>
 					)}
@@ -150,7 +155,7 @@ export function CrashCard({ scenario, currencySymbol = "$" }: { scenario: CrashS
 							</TooltipContent>
 						</Tooltip>
 						<span className="text-white font-mono text-xs sm:text-sm font-bold text-right">
-							{formatCurrency(scenario.netPosition, currencySymbol)}
+							{formatCurrency(scenario.netPosition, currencySymbol, currencyRate)}
 						</span>
 					</div>
 					<Separator className="bg-slate-700" />
@@ -164,7 +169,7 @@ export function CrashCard({ scenario, currencySymbol = "$" }: { scenario: CrashS
 							<TooltipContent>
 								<p>
 									{isFinite(scenario.runwayMonths) && scenario.runwayMonths > 0
-										? `Months of ${formatCurrency(Math.round(scenario.netPosition / scenario.runwayMonths), currencySymbol)}/mo burn covered by remaining assets`
+										? `Months of ${formatCurrency(Math.round(scenario.netPosition / scenario.runwayMonths), currencySymbol, currencyRate)}/mo burn covered by remaining assets`
 										: "Months of expenses covered by remaining assets"}
 								</p>
 							</TooltipContent>

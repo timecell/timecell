@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import type { SurvivalResult, PortfolioInput } from "../hooks/usePortfolio";
 import { generateActionPlanLocally } from "../lib/engine-standalone";
+import { exportReportCardPdf } from "../utils/exportPdf";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -75,11 +76,12 @@ function temperatureTextClass(zone: TemperatureZone): string {
 // Formatting helpers
 // ---------------------------------------------------------------------------
 
-function fmtCurrency(n: number, symbol = "$"): string {
-	const abs = Math.abs(n);
-	if (abs >= 1_000_000) return `${symbol}${(n / 1_000_000).toFixed(2)}M`;
-	if (abs >= 1_000) return `${symbol}${(n / 1_000).toFixed(1)}K`;
-	return `${symbol}${n.toLocaleString("en-US", { maximumFractionDigits: 0 })}`;
+function fmtCurrency(n: number, symbol = "$", rate = 1): string {
+	const converted = n * rate;
+	const abs = Math.abs(converted);
+	if (abs >= 1_000_000) return `${symbol}${(converted / 1_000_000).toFixed(2)}M`;
+	if (abs >= 1_000) return `${symbol}${(converted / 1_000).toFixed(1)}K`;
+	return `${symbol}${Math.round(converted).toLocaleString("en-US")}`;
 }
 
 function formatMonths(months: number): string {
@@ -129,14 +131,27 @@ export interface ReportCardProps {
 	result: SurvivalResult | null;
 	temperatureScore: number;
 	currencySymbol: string;
+	currencyRate?: number;
 }
 
 // ---------------------------------------------------------------------------
 // Main component
 // ---------------------------------------------------------------------------
 
-export function ReportCard({ portfolio, result, temperatureScore, currencySymbol }: ReportCardProps) {
+export function ReportCard({ portfolio, result, temperatureScore, currencySymbol, currencyRate = 1 }: ReportCardProps) {
 	const [actionItems, setActionItems] = useState<ActionItem[]>([]);
+	const [exporting, setExporting] = useState(false);
+	const containerRef = useRef<HTMLDivElement>(null);
+
+	const handleExport = useCallback(async () => {
+		if (!containerRef.current) return;
+		setExporting(true);
+		try {
+			await exportReportCardPdf(containerRef.current);
+		} finally {
+			setExporting(false);
+		}
+	}, []);
 
 	// Calculate action plan items locally
 	useEffect(() => {
@@ -186,14 +201,72 @@ export function ReportCard({ portfolio, result, temperatureScore, currencySymbol
 	const topActions = sortedActions.slice(0, 3);
 
 	return (
-		<div className="rounded-2xl border border-slate-700 bg-slate-900/80 backdrop-blur-sm overflow-hidden">
+		<div ref={containerRef} className="rounded-2xl border border-slate-700 bg-slate-900/80 backdrop-blur-sm overflow-hidden">
 			{/* Header bar */}
 			<div className="flex items-center justify-between px-5 sm:px-6 py-4 border-b border-slate-800 bg-slate-900/60">
 				<div className="flex items-center gap-3">
 					<img src="/logo.png" alt="TimeCell" className="h-6 brightness-110" />
 					<span className="text-sm font-semibold text-slate-300">Portfolio Report Card</span>
 				</div>
-				<span className="text-xs text-slate-500">{dateStr}</span>
+				<div className="flex items-center gap-3">
+					<span className="text-xs text-slate-500">{dateStr}</span>
+					{/* Export PDF button */}
+					<button
+						type="button"
+						onClick={handleExport}
+						disabled={exporting}
+						className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border border-slate-700 bg-slate-800 text-slate-400 hover:border-slate-600 hover:text-slate-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+					>
+						{exporting ? (
+							<>
+								{/* Spinner */}
+								<svg
+									className="animate-spin h-3.5 w-3.5"
+									xmlns="http://www.w3.org/2000/svg"
+									fill="none"
+									viewBox="0 0 24 24"
+									aria-hidden="true"
+								>
+									<circle
+										className="opacity-25"
+										cx="12"
+										cy="12"
+										r="10"
+										stroke="currentColor"
+										strokeWidth="4"
+									/>
+									<path
+										className="opacity-75"
+										fill="currentColor"
+										d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+									/>
+								</svg>
+								Generating…
+							</>
+						) : (
+							<>
+								{/* Download icon */}
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="14"
+									height="14"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									strokeWidth="2"
+									strokeLinecap="round"
+									strokeLinejoin="round"
+									aria-hidden="true"
+								>
+									<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+									<polyline points="7 10 12 15 17 10" />
+									<line x1="12" x2="12" y1="3" y2="15" />
+								</svg>
+								Export PDF
+							</>
+						)}
+					</button>
+				</div>
 			</div>
 
 			{/* Content grid */}
@@ -257,12 +330,12 @@ export function ReportCard({ portfolio, result, temperatureScore, currencySymbol
 									: worstCaseLoss > portfolio.totalValueUsd * 0.5 ? "text-amber-400"
 									: "text-emerald-400"
 								}`}>
-									{fmtCurrency(worstCaseLoss, currencySymbol)}
+									{fmtCurrency(worstCaseLoss, currencySymbol, currencyRate)}
 								</span>
 							</p>
 							<p className="text-xs text-slate-500 mt-1">
-								Portfolio drops from {fmtCurrency(portfolio.totalValueUsd, currencySymbol)} to{" "}
-								{fmtCurrency(worstCase.netPosition, currencySymbol)} in an 80% crash
+								Portfolio drops from {fmtCurrency(portfolio.totalValueUsd, currencySymbol, currencyRate)} to{" "}
+								{fmtCurrency(worstCase.netPosition, currencySymbol, currencyRate)} in an 80% crash
 							</p>
 						</div>
 					</div>
@@ -332,7 +405,7 @@ export function ReportCard({ portfolio, result, temperatureScore, currencySymbol
 					<div className="rounded-lg bg-slate-800/40 border border-slate-700/40 px-3 py-2.5 text-center">
 						<p className="text-xs text-slate-500">Portfolio</p>
 						<p className="text-sm font-bold text-slate-200 mt-0.5">
-							{fmtCurrency(portfolio.totalValueUsd, currencySymbol)}
+							{fmtCurrency(portfolio.totalValueUsd, currencySymbol, currencyRate)}
 						</p>
 					</div>
 					<div className="rounded-lg bg-slate-800/40 border border-slate-700/40 px-3 py-2.5 text-center">
@@ -344,13 +417,13 @@ export function ReportCard({ portfolio, result, temperatureScore, currencySymbol
 					<div className="rounded-lg bg-slate-800/40 border border-slate-700/40 px-3 py-2.5 text-center">
 						<p className="text-xs text-slate-500">Monthly Burn</p>
 						<p className="text-sm font-bold text-slate-200 mt-0.5">
-							{fmtCurrency(portfolio.monthlyBurnUsd, currencySymbol)}
+							{fmtCurrency(portfolio.monthlyBurnUsd, currencySymbol, currencyRate)}
 						</p>
 					</div>
 					<div className="rounded-lg bg-slate-800/40 border border-slate-700/40 px-3 py-2.5 text-center">
 						<p className="text-xs text-slate-500">Reserves</p>
 						<p className="text-sm font-bold text-slate-200 mt-0.5">
-							{fmtCurrency(portfolio.liquidReserveUsd, currencySymbol)}
+							{fmtCurrency(portfolio.liquidReserveUsd, currencySymbol, currencyRate)}
 						</p>
 					</div>
 				</div>

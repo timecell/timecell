@@ -47,6 +47,7 @@ export interface CapacityGateProps {
 	currentBtcPct: number;
 	convictionRungMax: number; // max % allowed by current rung
 	currencySymbol?: string;
+	currencyRate?: number;
 }
 
 // ---------------------------------------------------------------------------
@@ -65,11 +66,12 @@ function fmt(n: number, decimals = 0): string {
 	});
 }
 
-function fmtCurrency(n: number, symbol = "$"): string {
-	const abs = Math.abs(n);
-	if (abs >= 1_000_000) return `${symbol}${fmt(n / 1_000_000, 2)}M`;
-	if (abs >= 1_000) return `${symbol}${fmt(n / 1_000, 1)}K`;
-	return `${symbol}${fmt(n)}`;
+function fmtCurrency(n: number, symbol = "$", rate = 1): string {
+	const converted = n * rate;
+	const abs = Math.abs(converted);
+	if (abs >= 1_000_000) return `${symbol}${fmt(converted / 1_000_000, 2)}M`;
+	if (abs >= 1_000) return `${symbol}${fmt(converted / 1_000, 1)}K`;
+	return `${symbol}${fmt(converted)}`;
 }
 
 function loadStored(): StoredInputs {
@@ -206,6 +208,7 @@ export function CapacityGate({
 	currentBtcPct,
 	convictionRungMax,
 	currencySymbol = "$",
+	currencyRate = 1,
 }: CapacityGateProps) {
 	const [inputs, setInputs] = useState<StoredInputs>(loadStored);
 	const [inputsOpen, setInputsOpen] = useState(false);
@@ -495,7 +498,7 @@ export function CapacityGate({
 									<span className="text-slate-600">(from portfolio form)</span>
 								</label>
 								<div className="rounded-lg bg-slate-800/60 border border-slate-700/40 px-3 py-2 text-sm text-slate-300 font-mono">
-									{fmtCurrency(totalValueUsd, currencySymbol)}
+									{fmtCurrency(totalValueUsd, currencySymbol, currencyRate)}
 								</div>
 							</div>
 						</div>

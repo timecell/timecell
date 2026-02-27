@@ -5,18 +5,20 @@ import { calculateSleepTest, type SleepTestResult } from "@timecell/engine";
 // Helpers
 // ---------------------------------------------------------------------------
 
-function formatMoney(value: number, symbol: string): string {
-	if (value >= 1_000_000) {
-		return `${symbol}${(value / 1_000_000).toFixed(1)}M`;
+function formatMoney(value: number, symbol: string, rate: number): string {
+	const converted = value * rate;
+	if (converted >= 1_000_000) {
+		return `${symbol}${(converted / 1_000_000).toFixed(1)}M`;
 	}
-	if (value >= 1_000) {
-		return `${symbol}${(value / 1_000).toFixed(0)}k`;
+	if (converted >= 1_000) {
+		return `${symbol}${(converted / 1_000).toFixed(0)}k`;
 	}
-	return `${symbol}${Math.round(value).toLocaleString("en-US")}`;
+	return `${symbol}${Math.round(converted).toLocaleString("en-US")}`;
 }
 
-function formatMoneyFull(value: number, symbol: string): string {
-	return `${symbol}${Math.round(value).toLocaleString("en-US")}`;
+function formatMoneyFull(value: number, symbol: string, rate: number): string {
+	const converted = value * rate;
+	return `${symbol}${Math.round(converted).toLocaleString("en-US")}`;
 }
 
 type Severity = "green" | "amber" | "red";
@@ -27,29 +29,30 @@ function getSeverity(lossPercentage: number): Severity {
 	return "red";
 }
 
-const severityStyles: Record<Severity, { border: string; bg: string; lossText: string; glow: string; label: string }> = {
-	green: {
-		border: "border-emerald-500/30",
-		bg: "from-emerald-950/60 to-slate-900/80",
-		lossText: "text-emerald-400",
-		glow: "shadow-emerald-500/10",
-		label: "Manageable",
-	},
-	amber: {
-		border: "border-amber-500/30",
-		bg: "from-amber-950/60 to-slate-900/80",
-		lossText: "text-amber-400",
-		glow: "shadow-amber-500/10",
-		label: "Painful",
-	},
-	red: {
-		border: "border-red-500/40",
-		bg: "from-red-950/70 to-slate-900/80",
-		lossText: "text-red-400",
-		glow: "shadow-red-500/20",
-		label: "Devastating",
-	},
-};
+const severityStyles: Record<Severity, { border: string; bg: string; lossText: string; glow: string; label: string }> =
+	{
+		green: {
+			border: "border-emerald-500/30",
+			bg: "from-emerald-950/60 to-slate-900/80",
+			lossText: "text-emerald-400",
+			glow: "shadow-emerald-500/10",
+			label: "Manageable",
+		},
+		amber: {
+			border: "border-amber-500/30",
+			bg: "from-amber-950/60 to-slate-900/80",
+			lossText: "text-amber-400",
+			glow: "shadow-amber-500/10",
+			label: "Painful",
+		},
+		red: {
+			border: "border-red-500/40",
+			bg: "from-red-950/70 to-slate-900/80",
+			lossText: "text-red-400",
+			glow: "shadow-red-500/20",
+			label: "Devastating",
+		},
+	};
 
 // ---------------------------------------------------------------------------
 // Props
@@ -59,13 +62,14 @@ export interface SleepTestProps {
 	totalValueUsd: number;
 	btcPercentage: number;
 	currencySymbol: string;
+	currencyRate?: number;
 }
 
 // ---------------------------------------------------------------------------
 // Component
 // ---------------------------------------------------------------------------
 
-export function SleepTest({ totalValueUsd, btcPercentage, currencySymbol }: SleepTestProps) {
+export function SleepTest({ totalValueUsd, btcPercentage, currencySymbol, currencyRate = 1 }: SleepTestProps) {
 	const result: SleepTestResult = useMemo(
 		() =>
 			calculateSleepTest({
@@ -92,32 +96,32 @@ export function SleepTest({ totalValueUsd, btcPercentage, currencySymbol }: Slee
 			<div className="relative">
 				{/* Header */}
 				<div className="flex items-center gap-2 mb-1">
-					<span className="text-xs uppercase tracking-widest text-slate-400 font-medium">
-						Sleep Test
-					</span>
-					<span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-						severity === "green"
-							? "bg-emerald-500/10 text-emerald-400"
-							: severity === "amber"
-								? "bg-amber-500/10 text-amber-400"
-								: "bg-red-500/10 text-red-400"
-					}`}>
+					<span className="text-xs uppercase tracking-widest text-slate-400 font-medium">Sleep Test</span>
+					<span
+						className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+							severity === "green"
+								? "bg-emerald-500/10 text-emerald-400"
+								: severity === "amber"
+									? "bg-amber-500/10 text-amber-400"
+									: "bg-red-500/10 text-red-400"
+						}`}
+					>
 						{styles.label}
 					</span>
 				</div>
 
-				<p className="text-sm text-slate-400 mb-5">
-					If BTC drops 80% tomorrow, you lose:
-				</p>
+				<p className="text-sm text-slate-400 mb-5">If BTC drops 80% tomorrow, you lose:</p>
 
 				{/* The Big Number */}
 				<div className="mb-6">
 					<span
 						className={`text-5xl sm:text-6xl lg:text-7xl font-black tabular-nums tracking-tight ${styles.lossText} transition-colors duration-500`}
 					>
-						{formatMoney(result.totalLoss, currencySymbol)}
+						{formatMoney(result.totalLoss, currencySymbol, currencyRate)}
 					</span>
-					<span className={`block sm:inline sm:ml-3 text-lg sm:text-xl font-medium ${styles.lossText} opacity-70`}>
+					<span
+						className={`block sm:inline sm:ml-3 text-lg sm:text-xl font-medium ${styles.lossText} opacity-70`}
+					>
 						({result.lossPercentage.toFixed(0)}% of portfolio)
 					</span>
 				</div>
@@ -127,40 +131,40 @@ export function SleepTest({ totalValueUsd, btcPercentage, currencySymbol }: Slee
 					<div>
 						<p className="text-xs text-slate-500 uppercase tracking-wider mb-1">BTC Loss</p>
 						<p className="text-lg font-bold text-red-400 tabular-nums">
-							{formatMoneyFull(result.btcLoss, currencySymbol)}
+							{formatMoneyFull(result.btcLoss, currencySymbol, currencyRate)}
 						</p>
 					</div>
 					<div>
 						<p className="text-xs text-slate-500 uppercase tracking-wider mb-1">Other Assets Loss</p>
 						<p className="text-lg font-bold text-red-300/80 tabular-nums">
-							{formatMoneyFull(result.otherAssetsLoss, currencySymbol)}
+							{formatMoneyFull(result.otherAssetsLoss, currencySymbol, currencyRate)}
 						</p>
 					</div>
 					<div>
 						<p className="text-xs text-slate-500 uppercase tracking-wider mb-1">Total Loss</p>
 						<p className={`text-lg font-bold tabular-nums ${styles.lossText}`}>
-							{formatMoneyFull(result.totalLoss, currencySymbol)}
+							{formatMoneyFull(result.totalLoss, currencySymbol, currencyRate)}
 						</p>
 					</div>
 					<div>
 						<p className="text-xs text-slate-500 uppercase tracking-wider mb-1">Post-Crash Value</p>
 						<p className="text-lg font-bold text-slate-300 tabular-nums">
-							{formatMoneyFull(result.postCrashValue, currencySymbol)}
+							{formatMoneyFull(result.postCrashValue, currencySymbol, currencyRate)}
 						</p>
 					</div>
 				</div>
 
 				{/* The prompt */}
-				<div className={`rounded-xl px-4 py-3 border ${
-					severity === "red"
-						? "bg-red-500/5 border-red-500/20"
-						: severity === "amber"
-							? "bg-amber-500/5 border-amber-500/20"
-							: "bg-emerald-500/5 border-emerald-500/20"
-				}`}>
-					<p className={`text-sm font-semibold ${styles.lossText}`}>
-						Does your life change?
-					</p>
+				<div
+					className={`rounded-xl px-4 py-3 border ${
+						severity === "red"
+							? "bg-red-500/5 border-red-500/20"
+							: severity === "amber"
+								? "bg-amber-500/5 border-amber-500/20"
+								: "bg-emerald-500/5 border-emerald-500/20"
+					}`}
+				>
+					<p className={`text-sm font-semibold ${styles.lossText}`}>Does your life change?</p>
 					<p className="text-xs text-slate-400 mt-1">
 						{severity === "green"
 							? "If you can say this number out loud without flinching, your allocation is sized right."
