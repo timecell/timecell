@@ -1,96 +1,131 @@
-# TimeCell — Project Board
+# TimeCell — Product Roadmap
 
-**Last updated:** 2026-02-27 12:15 IST
-**Next milestone:** YPO Delhi Demo — Feb 28, 2:30 PM IST
-
----
-
-## IN PROGRESS
-
-- [ ] **Dashboard UX redesign** — too much data, needs hierarchy: hero survival score > sliders+chart > details below fold
-- [ ] **Rebuild + republish to npm** (v0.1.2) — bundle all new features from this session
-- [ ] **Verify new components** — conviction ladder, info panel, saved indicator, currency support render correctly
+**Last updated:** 2026-02-28 10:00 IST
+**Source of truth:** Bitcoin Investing Framework v2 (`docs/bitcoin-investing-framework-v2.md`)
+**Vision:** Turn the framework's decision tree into an interactive product. Data → Understanding → Action.
 
 ---
 
-## PLANNED (Demo-Critical)
+## Guiding Principle
 
-- [ ] **Demo dry run** — full walkthrough per demo-checklist.md, on projector, timed
-- [ ] **Logo deploy to Vercel** — push site/ changes so timecell.ai shows logo
-- [ ] **Currency default to INR for demo** — audience thinks in crores, show ₹ symbol
-- [ ] **Hosted web version** (timecell.ai/app) — deploy dashboard to Vercel so YPO members can try with zero install. Static Vite build + serverless API. **Highest priority for post-demo distribution** — "open this URL on your phone" beats "install Node.js"
+The framework is a 10-part decision system. The product should walk users through it:
+1. **Where am I?** (crash survival, temperature, conviction rung)
+2. **Am I safe?** (ruin test, runway, capacity gate)
+3. **What should I do?** (action plan based on all inputs)
 
----
-
-## DONE (This Session — Feb 27)
-
-- [x] Logo integrated — dashboard header + landing page HTML/CSS (logo-v3-3, orange circle+dot)
-- [x] Shorthand number parsing — CLI accepts `80m`, `5cr`, `25k`, `10l`, `1.5b`
-- [x] "How it works" explainer panel — collapsible, explains crash model, survival threshold, ruin test, runway
-- [x] Conviction Ladder — 6-rung display, highlights current allocation, gates warning at 25%+
-- [x] Currency support — CLI wizard currency picker (USD/INR/EUR/GBP/SGD), dashboard shows selected symbol
-- [x] "Saved" persistence indicator — green checkmark fades in/out after slider changes
-- [x] Missing Radix UI deps fixed — @radix-ui/react-tooltip, slider, separator installed
-- [x] npx @timecell/cli@0.1.1 tested — wizard starts, BTC price fetches, prompts work
-- [x] Engine tests — 17/17 passing
-- [x] API dist tested — dashboard serves, crash-survival endpoint returns correct data
-- [x] Landing page verified — timecell.ai live, `npx @timecell/cli` command correct
-
-## DONE (Previous Sessions)
-
-- [x] All packages published to npm v0.1.1 (@timecell/engine, @timecell/api, @timecell/cli)
-- [x] Dashboard: shadcn/ui, recharts crash chart, dark theme, favicon, mobile responsive
-- [x] CLI: auto-fetches BTC price, accepts commas, finds available port, privacy message
-- [x] API serves built web dashboard via @fastify/static (bundled in dist/web/)
-- [x] Engine: crash survival, ruin test, runway calc, hedge payoff, CAGR
-- [x] Landing page: timecell.ai deployed on Vercel
-- [x] GitHub: github.com/timecell/timecell
+Every screen should end with an ACTION, not just a number.
 
 ---
 
-## ICEBOX (Post-Demo / v0.2+)
+## NOW — Integrate & Ship (v0.2)
 
-### Product — Framework Features
-- [ ] Temperature gauge — MVRV/RHODL 0-100, engine has it, needs dashboard UI
-- [ ] Position sizing steps — framework Part 3, 6 steps from current to target allocation
-- [ ] De-risk triggers — written rules: "if temperature > 80, reduce by X%"
-- [ ] Hedge position UI — configure put options (engine supports it, no UI)
-- [ ] Rebalancing calculator — from current to target allocation, with tax-aware suggestions
-- [ ] Cycle tracker — which part of the cycle are we in? historical overlay
+Components are built but not wired together. Priority: integrate into dashboard, deploy hosted version.
 
-### Product — User Experience
-- [ ] Empty state / first-run wizard — "Enter YOUR portfolio" guidance in dashboard
-- [ ] Portfolio persistence feedback — "Saved" indicator more prominent
-- [ ] Mobile slider UX — larger touch targets, better thumb controls
-- [ ] Onboarding flow — guided tour of dashboard sections
-- [ ] Export/share — PDF report of crash survival analysis
-- [ ] Multiple portfolios — save/compare different allocation strategies
-- [ ] "What should I do?" panel — actionable recommendations based on current position
+- [ ] **Integrate new components into App.tsx** — wire temperature gauge, position sizing, BTC ticker, into the 4-zone layout
+- [ ] **Deploy hosted web app** — Vercel config is ready, just needs deploy. timecell.ai/app = zero install
+- [ ] **"What Should I Do?" action plan engine** — THE differentiator. Based on all inputs (portfolio, conviction, temperature, ruin test), output 3-5 personalized action bullets. Framework decision tree as code. (See Architecture section below)
+- [ ] **One-page report card** — single summary view: survival score, ruin test, conviction rung, temperature, action plan. Screenshot-friendly, PDF-exportable, shareable with advisors.
 
-### Product — Data & Intelligence
-- [ ] Live BTC price feed in dashboard — auto-refresh, show last updated
-- [ ] Historical crash overlay — show where current scenario maps to 2018, 2022 crashes
-- [ ] Currency conversion with live rates — INR/USD/EUR with auto-fetch
-- [ ] Market sentiment integration — Fear & Greed index alongside temperature
+---
 
-### Distribution & Access (Make it easy for non-tech users)
-- [ ] **Hosted web app** (timecell.ai/app) — zero install, just open URL. Vite static build + Vercel serverless API. **Recommended first priority post-demo.** Nikesh-friendly.
-- [ ] **Desktop app** (Electron or Tauri) — download .dmg/.exe, double-click, no terminal. High effort but best UX for recurring use.
-- [ ] **One-line install script** — `curl timecell.ai/install | sh` installs Node + runs npx. Still needs terminal.
-- [ ] **Install instructions page** — timecell.ai/install with step-by-step screenshots for Mac/Windows. Minimum viable for CLI distribution.
-- [ ] npm package README with screenshots
+## NEXT — Framework Depth (v0.3)
+
+Make the product cover the full position sizing process (Framework Part 3).
+
+- [ ] **Guided first-run flow** — Questions not sliders: "What's your net worth?" → "How much is liquid?" → "What % is BTC?" → reveal dashboard with YOUR numbers. Sliders become "what if" tools after the reveal.
+- [ ] **Capacity gate inputs** — Framework Part 3 Step 2. Age/income proxy, withdrawal horizon, liability schedule. `Effective Allocation = min(Conviction Rung, Capacity Ceiling)`
+- [ ] **Interactive conviction gates** — At 25%+, show checkboxes: multi-cycle experience? 2yr expenses outside BTC? No forced-sale liabilities? Sleep test? Written triggers? If gates aren't met, warn clearly.
+- [ ] **Sleep test display** — "If BTC drops 80% tomorrow, you lose $X. Does your life change?" Big, visceral number.
+- [ ] **De-risk triggers** — Written rules UI: "If temperature > 80, sell X%. If ruin test fails, reduce to Y%." Framework Part 3 Step 5.
+- [ ] **Temperature action labels** — Not just "55 — Neutral" but "Continue DCA at normal pace. Don't try to be clever."
+- [ ] **"What If" comparison mode** — Split screen: current allocation vs proposed. See both crash survival states side by side.
+
+---
+
+## LATER — Polish & Distribution (v0.4+)
+
+- [ ] **Desktop app** (Electron or Tauri) — download .dmg/.exe, no terminal
+- [ ] **Export/share PDF** — one-page report card as downloadable PDF
+- [ ] **Live MVRV/RHODL data** — replace mock temperature with real on-chain feeds
+- [ ] **Currency conversion with live rates** — auto-fetch INR/USD/EUR
+- [ ] **Historical crash overlay** — show where current scenario maps to 2018, 2022
+- [ ] **DCA calculator** — Framework Part 4: model regular buying outcomes
+- [ ] **4-year moving average chart** — Framework Part 4.3: price floor visualization
+- [ ] **Hedge/insurance configuration UI** — Framework Part 6: set put option parameters, see budget impact
+- [ ] **Portfolio history** — SQLite persistence, "what changed since last visit"
+- [ ] **Multiple portfolios** — save/compare different allocation strategies
+- [ ] **Market sentiment** — Fear & Greed index alongside temperature
+- [ ] **Mobile-optimized UX** — larger touch targets, better slider controls
+
+---
+
+## ICEBOX — Distribution & Marketing
+
 - [ ] Product Hunt launch
 - [ ] Twitter/X content — demo GIF, thread explaining the framework
 - [ ] Blog post — "Why crash survival matters more than returns"
-- [ ] YPO follow-up email template with personalized results
-
-### Technical
-- [ ] SQLite persistence — save portfolio history, track changes over time
-- [ ] Better CLI error messages for non-technical users
-- [ ] WASM compilation of engine — run in browser without API
-- [ ] Test coverage for API routes
+- [ ] Install instructions page — timecell.ai/install with screenshots
+- [ ] npm package README with screenshots
 - [ ] CI/CD pipeline — GitHub Actions for test + publish
-- [ ] Hosted mode — optional cloud deployment for teams (Postgres, auth)
+- [ ] WASM compilation of engine — pure browser, no API at all
+
+---
+
+## "What Should I Do?" Engine — Architecture
+
+The action plan engine is the core differentiator. It reads ALL inputs and produces personalized recommendations.
+
+### Inputs
+- Portfolio: total value, BTC %, monthly burn, liquid reserve
+- Temperature: current score and zone
+- Conviction: current rung, gates status (at 25%+)
+- Capacity: withdrawal horizon, liability schedule (when available)
+- Crash survival: max survivable drawdown, ruin test result
+
+### Rules (from Framework)
+1. **Ruin test failed** → "Reduce BTC allocation until ruin test passes. Current: X%, suggested: Y%"
+2. **Allocation exceeds conviction** → "Your X% allocation is Rung N, but gates for that rung aren't met"
+3. **Temperature < 20** → "Extreme fear zone. Historically the best time to accumulate. Consider lump sum."
+4. **Temperature 20-40** → "Fear zone. DCA aggressively."
+5. **Temperature 40-60** → "Neutral. Continue DCA at normal pace."
+6. **Temperature 60-75** → "Greed zone. Slow down buying. Review risk management."
+7. **Temperature > 75** → "Extreme greed. Stop buying. Activate selling rules."
+8. **No liquid reserve** → "Build a safety net: 2+ years of expenses outside BTC"
+9. **Runway < 18 months at 80% crash** → "Insufficient runway. Increase liquid reserve or reduce allocation."
+10. **25%+ without gates** → "At this concentration, you need: [missing gates list]"
+11. **50%+ without insurance** → "Downside insurance is required at this allocation (Framework Part 6)"
+
+### Output
+3-5 bullet points, prioritized by urgency:
+- Red (act now): ruin test failing, insufficient runway
+- Amber (consider): gates not met, temperature extreme
+- Green (on track): allocation matches conviction, ruin test passes
+
+---
+
+## DONE
+
+### Session 4 — Feb 28
+- [x] Dashboard UX redesign — hero survival score, 4-zone layout, collapsible details
+- [x] Hosted web app infrastructure — standalone mode, Vercel config, engine runs client-side
+- [x] Temperature gauge — engine function + API route + SVG gauge component
+- [x] Position sizing — engine function + 20 tests + API route + UI with sliders
+- [x] Live BTC price — hook + ticker component, auto-refresh, price flash
+- [x] Framework reference — Bitcoin Investing Framework v2 in docs/
+- [x] npm automation token — passkey-free publishing
+- [x] Fastify logger cleanup — no more JSON spam in terminal
+- [x] All packages published v0.1.2
+- [x] Engine: 37 tests passing (17 crash + 20 position sizing)
+
+### Session 3 — Feb 27
+- [x] Logo, conviction ladder, currency support, shorthand numbers, info panel, saved indicator
+
+### Sessions 1-2 — Feb 27
+- [x] Full monorepo scaffolding, all packages published v0.1.1
+- [x] Engine: crash survival, ruin test, runway, hedge payoff, CAGR
+- [x] Dashboard: shadcn/ui, recharts, dark theme, responsive
+- [x] CLI: wizard, auto BTC price, port handling
+- [x] Landing page: timecell.ai on Vercel
 
 ---
 
@@ -98,8 +133,9 @@
 
 | Date | Decision | Context |
 |------|----------|---------|
+| 2026-02-28 | "What Should I Do?" engine is the product differentiator | Framework audit: product shows data but doesn't give answers. Action plan closes the loop. |
+| 2026-02-28 | Framework v2 is the source of truth for all product logic | Copied to docs/, referenced in CLAUDE.md. All features trace back to framework parts. |
+| 2026-02-28 | Capacity gate is critical input, not nice-to-have | Framework Part 3 Step 2: Effective Allocation = min(Conviction, Capacity). Without it, position sizing is incomplete. |
 | 2026-02-27 | Currency: option 2 (with conversion) for long-term | Math is currency-agnostic, but INR users need ₹ display + live conversion |
-| 2026-02-27 | Logo: v3-3 (orange circle+dot + wordmark) | Finalized after 5 rounds of iterations |
-| 2026-02-27 | Number shorthand: simple suffix parsing, no AI | k/m/b/cr/l covers Western + Indian notation |
-| 2026-02-27 | Dashboard UX: needs redesign — too data-heavy | Prioritize emotional impact for demo: survival score hero > interactive sliders > details |
-| 2026-02-27 | Distribution: hosted web app is priority over CLI for non-tech users | Only dep for CLI is Node.js 18+ — blocker for YPO audience. timecell.ai/app = zero install |
+| 2026-02-27 | Logo: v3-3 (orange circle+dot + wordmark) | Finalized after 5 rounds |
+| 2026-02-27 | Distribution: hosted web app > CLI for non-tech users | timecell.ai/app = zero install |
