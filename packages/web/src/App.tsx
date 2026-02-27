@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import { usePortfolio } from "./hooks/usePortfolio";
 import type { PortfolioInput } from "./hooks/usePortfolio";
 import { SurvivalHero } from "./components/SurvivalHero";
@@ -9,12 +9,16 @@ import { BtcPriceTicker } from "./components/BtcPriceTicker";
 import { TemperatureGauge } from "./components/TemperatureGauge";
 import { PositionSizing } from "./components/PositionSizing";
 import { ActionPlan } from "./components/ActionPlan";
+import { CapacityGate } from "./components/CapacityGate";
 import { SleepTest } from "./components/SleepTest";
 import { ConvictionLadder } from "./components/ConvictionLadder";
+import { ConvictionGates } from "./components/ConvictionGates";
+import { DeRiskTriggers } from "./components/DeRiskTriggers";
 import { InfoPanel } from "./components/InfoPanel";
 import { ReportCard } from "./components/ReportCard";
 import { OnboardingModal, useOnboarding } from "./components/OnboardingModal";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { calculateSleepTest } from "@timecell/engine";
 
 export default function App() {
 	const { portfolio, currencySymbol, result, loading, error, savedAt, loadPortfolio, updatePortfolio } = usePortfolio();
@@ -23,6 +27,28 @@ export default function App() {
 	const [temperatureScore, setTemperatureScore] = useState(55);
 	const reportCardRef = useRef<HTMLDivElement>(null);
 	const { showOnboarding, dismiss: dismissOnboarding } = useOnboarding();
+
+	// Derive conviction rung max allocation from current BTC%
+	const convictionRungMax = useMemo((): number => {
+		const pct = portfolio.btcPercentage;
+		if (pct >= 50) return 100; // Single-Asset Core
+		if (pct >= 25) return 50;  // Owner-Class
+		if (pct >= 10) return 25;  // High Conviction
+		if (pct >= 5)  return 10;  // Diversifier
+		if (pct >= 1)  return 3;   // Experimenter
+		return 0;                  // Observer
+	}, [portfolio.btcPercentage]);
+
+	// Derive sleep test severity from portfolio (same thresholds as SleepTest component)
+	const sleepTestSeverity = useMemo((): "manageable" | "painful" | "devastating" => {
+		const { lossPercentage } = calculateSleepTest({
+			totalPortfolioValue: portfolio.totalValueUsd,
+			btcPercentage: portfolio.btcPercentage,
+		});
+		if (lossPercentage < 20) return "manageable";
+		if (lossPercentage <= 50) return "painful";
+		return "devastating";
+	}, [portfolio.totalValueUsd, portfolio.btcPercentage]);
 
 	useEffect(() => {
 		loadPortfolio();
@@ -151,8 +177,8 @@ export default function App() {
 					currencySymbol={currencySymbol}
 				/>
 
-				{/* ZONE 3: Market Intelligence — Temperature + Position Sizing + Action Plan */}
-				<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+				{/* ZONE 3: Market Intelligence — Temperature + Position Sizing + Capacity Gate + Action Plan */}
+				<div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
 					<TemperatureGauge onTemperatureChange={setTemperatureScore} />
 					<PositionSizing
 						totalValueUsd={portfolio.totalValueUsd}
@@ -160,6 +186,12 @@ export default function App() {
 						monthlyBurnUsd={portfolio.monthlyBurnUsd}
 						liquidReserveUsd={portfolio.liquidReserveUsd}
 						btcPriceUsd={portfolio.btcPriceUsd}
+						currencySymbol={currencySymbol}
+					/>
+					<CapacityGate
+						totalValueUsd={portfolio.totalValueUsd}
+						currentBtcPct={portfolio.btcPercentage}
+						convictionRungMax={convictionRungMax}
 						currencySymbol={currencySymbol}
 					/>
 					<ActionPlan
@@ -171,7 +203,22 @@ export default function App() {
 						monthlyBurnUsd={portfolio.monthlyBurnUsd}
 						totalValueUsd={portfolio.totalValueUsd}
 					/>
+					{/* ConvictionGates — only renders when btcPercentage >= 25 */}
+					<div className="sm:col-span-2">
+						<ConvictionGates
+							btcPercentage={portfolio.btcPercentage}
+							ruinTestPassed={result?.ruinTestPassed ?? true}
+							sleepTestSeverity={sleepTestSeverity}
+						/>
+					</div>
 				</div>
+
+				{/* ZONE 3.5: De-Risk Triggers — written rules committed before emotions take over */}
+				<DeRiskTriggers
+					temperatureScore={temperatureScore}
+					ruinTestPassed={result?.ruinTestPassed ?? true}
+					runwayMonths={result?.scenarios?.[result.scenarios.length - 1]?.runwayMonths ?? Infinity}
+				/>
 
 				{/* ZONE 4: Crash details — collapsed by default */}
 				{result && !loading && (

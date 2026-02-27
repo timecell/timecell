@@ -29,3 +29,5 @@ export { calculateSleepTest } from "./sleep-test.js";
 export type { SleepTestInput, SleepTestResult } from "./sleep-test.js";
 export { calculateCapacityGate } from "./capacity-gate.js";
 export type { CapacityGateInput, CapacityGateResult } from "./capacity-gate.js";
+export { calculateAllocationDrift } from "./allocation-drift.js";
+export type { AllocationDriftInput, AllocationDriftResult } from "./allocation-drift.js";

@@ -45,18 +45,18 @@ These three releases collectively prove the **habit loop**: trigger → recommen
 
 Complete the Position Sizing Process (Framework Part 3). Every screen ends with an action, not just a number. Sliders become "what if" tools after you enter YOUR numbers.
 
-- [ ] **Guided first-run flow** — Questions not sliders: "What's your net worth?" → "How much is liquid?" → "What % is BTC?" → reveal dashboard with YOUR numbers
-- [ ] **Sleep test display** — "If BTC drops 80% tomorrow, you lose $X. Does your life change?" Big, visceral number. Framework Part 3 Step 6.
+- [x] **Guided first-run flow** — Questions not sliders: "What's your net worth?" → "How much is liquid?" → "What % is BTC?" → reveal dashboard with YOUR numbers
+- [x] **Sleep test display** — "If BTC drops 80% tomorrow, you lose $X. Does your life change?" Big, visceral number. Framework Part 3 Step 6.
 - [ ] **Capacity gate inputs** — Age/income proxy, withdrawal horizon, liability schedule. `Effective Allocation = min(Conviction Rung, Capacity Ceiling)`. Framework Part 3 Step 2.
 - [ ] **Interactive conviction gates** — At 25%+, show checkboxes: multi-cycle experience? 2yr expenses outside BTC? No forced-sale liabilities? Sleep test? Written triggers? Warn clearly if gates aren't met.
 - [ ] **De-risk triggers** — Written rules UI: "If temperature > 80, sell X%. If ruin test fails, reduce to Y%." Framework Part 3 Step 5.
-- [ ] **One-page report card** — Single summary: survival score, ruin test, conviction rung, temperature, action plan. Screenshot-friendly, shareable with advisors.
+- [x] **One-page report card** — Single summary: survival score, ruin test, conviction rung, temperature, action plan. Screenshot-friendly, shareable with advisors.
 
 ## v0.4 — "Stay informed"
 
 Live data and ongoing awareness. Replace mock data with real feeds. Establish the three daily loops: portfolio health snapshot → crash survival check → exposure-weighted alerts.
 
-- [ ] **Live MVRV/RHODL temperature** — Pulling forward — connecting to existing Turso live feed from fo-web project. Replace mock temperature with real on-chain data feeds. Credibility-critical: mock data breaks trust.
+- [x] **Live MVRV/RHODL temperature** — Pulling forward — connecting to existing Turso live feed from fo-web project. Replace mock temperature with real on-chain data feeds. Credibility-critical: mock data breaks trust.
 - [ ] **Live currency conversion** — Auto-fetch INR/USD/EUR/GBP/SGD rates
 - [ ] **Portfolio history** — SQLite persistence, "what changed since last visit"
 - [ ] **Allocation drift detection** — Alert when portfolio drifts outside chosen conviction rung due to price movement
@@ -200,6 +200,13 @@ OSS-first distribution — no paid channels, no sales team.
 ---
 
 ## Build History
+
+### v0.3 (partial) — Session 6 (Feb 28)
+- Temperature v3.0 (MVRV z-score CDF + RHODL log-scale, 6-tier zones), live Turso connection
+- Sleep test engine (8 tests) + capacity gate engine (23 tests), 86 total tests
+- OnboardingModal (4-step wizard), SleepTest (visceral loss display), ReportCard (screenshot-friendly)
+- Framework generalizability analysis (4-AI second opinion), ROADMAP rewritten with adapter architecture
+- Financial disclaimer, standalone mode fix, action plan 6-tier thresholds
 
 ### v0.2 — Sessions 4-5 (Feb 28)
 - Action plan engine (11 rules, 17 tests), temperature gauge, position sizing (20 tests)
