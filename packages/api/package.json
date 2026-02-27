@@ -1,0 +1,19 @@
+{
+  "name": "@timecell/api",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "TimeCell API server",
+  "main": "dist/server.js",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@timecell/engine": "*",
+    "fastify": "^5",
+    "@fastify/cors": "latest"
+  },
+  "devDependencies": {
+    "tsx": "latest"
+  }
+}

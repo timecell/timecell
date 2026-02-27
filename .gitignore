@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.env
+.env.local
+*.tsbuildinfo
+.turbo/
+.DS_Store
+coverage/
+.timecell/
+.claude/
+notes/
+NOW.md
