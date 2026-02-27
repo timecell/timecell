@@ -57,17 +57,17 @@ Complete the Position Sizing Process (Framework Part 3). Every screen ends with 
 Live data and ongoing awareness. Replace mock data with real feeds. Establish the three daily loops: portfolio health snapshot → crash survival check → exposure-weighted alerts.
 
 - [x] **Live MVRV/RHODL temperature** — Pulling forward — connecting to existing Turso live feed from fo-web project. Replace mock temperature with real on-chain data feeds. Credibility-critical: mock data breaks trust.
-- [ ] **Live currency conversion** — Auto-fetch INR/USD/EUR/GBP/SGD rates
+- [x] **Live currency conversion** — Auto-fetch INR/USD/EUR/GBP/SGD rates, display-only conversion, cached with 1hr TTL
 - [ ] **Portfolio history** — SQLite persistence, "what changed since last visit"
 - [x] **Allocation drift detection** — Alert when portfolio drifts outside chosen conviction rung due to price movement
-- [ ] **PDF export** — One-page report card as downloadable PDF
-- [ ] **Mobile-optimized UX** — Larger touch targets, better slider controls on phone
+- [x] **PDF export** — One-page report card as downloadable PDF (html2canvas + jspdf)
+- [x] **Mobile-optimized UX** — Larger touch targets, better slider controls on phone, responsive breakpoints
 
 ## v0.5 — "Compare and decide"
 
 Advanced analysis tools for experienced investors making allocation decisions.
 
-- [ ] **"What if" comparison mode** — Split screen: current allocation vs proposed, both crash survival states side by side
+- [x] **"What if" comparison mode** — Split screen: current allocation vs proposed, both crash survival states side by side, delta row
 - [ ] **Exchange vs self-custody tracking** — What's on exchange vs cold storage. Risk profile differs (Framework Part 7).
 - [ ] **Historical crash overlay** — Map current scenario to 2018, 2022 actual drawdowns
 - [ ] **Market sentiment** — Fear & Greed index alongside temperature for cross-validation
