@@ -3,8 +3,15 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 
+const isVercel = process.env.VERCEL === "1";
+
 export default defineConfig({
 	plugins: [react(), tailwindcss()],
+	base: isVercel ? "/app/" : "/",
+	define: {
+		// Expose standalone flag to client code
+		"import.meta.env.VITE_STANDALONE": JSON.stringify(isVercel ? "true" : "false"),
+	},
 	resolve: {
 		alias: {
 			"@": path.resolve(__dirname, "./src"),
