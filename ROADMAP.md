@@ -1,16 +1,16 @@
 # TimeCell — Product Roadmap
 
-**What:** An open-source, local-first framework for managing money and investments using AI. Part of the AI Labs project — money is the first domain.
+**What:** Your AI Chief Investment Officer. A local-first, open-source tool that gives anyone — regardless of investing experience — a trusted CIO they can talk to about their money. Built on a rigorous 10-part framework, powered by Claude AI (BYOK).
 
-**Why:** Help individuals and family offices make better investment decisions through deterministic computation + actionable guidance. Not a commercial product — an open-source tool for impact, like OpenClaw for code.
+**Why:** Most people don't have access to a CIO who knows their complete financial picture, thinks in frameworks, and gives direct actionable guidance. TimeCell is that CIO — not a dashboard to stare at, but an advisor to talk to. The dashboard is proof; the conversation is the product.
 
 **Product arc:**
-1. **Bitcoin wedge** (v0.1-v0.3) — Prove the pattern: framework → engine → interactive guidance
-2. **Daily habit** (v0.4-v0.5) — Live data, monitoring, three loops: snapshot → survival → alerts
-3. **Full portfolio** (v1.0+) — Multi-asset, connectors, net worth, the money command center
-4. **Platform** (v2.0+) — Family office mode, role-scoped agents, execution layer, plugins
+1. **Bitcoin CIO** (v0.1-v0.3) — Prove the pattern: framework → engine → conversational advisor
+2. **Daily habit** (v0.4-v0.5) — Proactive CIO: live data, monitoring, "here's what changed and what you should do"
+3. **Full portfolio** (v1.0+) — Multi-asset CIO: stocks, bonds, real estate — one advisor for everything
+4. **Platform** (v2.0+) — Family office CIO: role-scoped agents, governance, execution
 
-**Architecture principle:** One shared engine, multiple surfaces. Individual mode hides complexity; family office mode exposes governance. Computation is deterministic and auditable; personality/rendering is separate.
+**Architecture principle:** One shared engine, multiple surfaces. Chat is the primary surface — dashboard is visual proof. Individual mode hides complexity; family office mode exposes governance. Computation is deterministic and auditable; personality/rendering is separate.
 
 **Source of truth:** Bitcoin Investing Framework v2 (`docs/bitcoin-investing-framework-v2.md`)
 **Last updated:** 2026-02-28
