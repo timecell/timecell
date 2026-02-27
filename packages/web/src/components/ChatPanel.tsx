@@ -635,20 +635,11 @@ export function ChatPanel({
 						</div>
 					)}
 
-					{/* Empty state with suggestions */}
+					{/* Welcome message + suggestions (API key set, no messages yet) */}
 					{hasApiKey && !hasMessages && (
-						<div className="flex flex-col items-center justify-center h-full text-center px-4">
-							<div className="w-12 h-12 rounded-2xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center mb-4">
-								<Sparkles className="w-6 h-6 text-orange-400" />
-							</div>
-							<h3 className="text-base font-semibold text-white mb-1">
-								Ask me anything
-							</h3>
-							<p className="text-sm text-slate-400 mb-6 max-w-xs">
-								I can analyze your portfolio, run crash simulations, and give
-								you personalized investing guidance.
-							</p>
-							<div className="grid grid-cols-1 gap-2 w-full max-w-xs">
+						<div className="flex flex-col gap-4 pt-2">
+							<MessageBubble message={WELCOME_MESSAGE} />
+							<div className="grid grid-cols-1 gap-2 px-1 pb-2">
 								{SUGGESTED_QUESTIONS.map((q) => (
 									<button
 										key={q}

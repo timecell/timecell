@@ -12,6 +12,8 @@
 
 **Architecture principle:** One shared engine, multiple surfaces. Chat is the primary surface — dashboard is visual proof. Individual mode hides complexity; family office mode exposes governance. Computation is deterministic and auditable; personality/rendering is separate.
 
+**UX principle (from OpenClaw):** Tools are invisible infrastructure. The CIO uses crash_survival, temperature, position_sizing behind the scenes — users see the judgment, not the plumbing. Tool status shown briefly during execution, results collapsed by default. Progressive context: the CIO builds understanding over the conversation, remembers across sessions, and proactively references what changed.
+
 **Source of truth:** Bitcoin Investing Framework v2 (`docs/bitcoin-investing-framework-v2.md`)
 **Last updated:** 2026-02-28
 
@@ -58,10 +60,12 @@ Chat IS the product. The AI advisor is the primary experience — users ask ques
 - [ ] **Conversational onboarding** — Replace GuidedFlow 4-step walkthrough with AI-driven onboarding in chat. New users see "Welcome! Tell me about your portfolio" instead of a wizard. Remove WelcomeHero and StageCallout.
 - [ ] **Dashboard sidebar** — Dashboard becomes a collapsible panel: key metrics (survival score, temperature, action items) visible at a glance. Expands for detail. Collapses to just icons.
 - [ ] **Streaming responses** — Switch from blocking to incremental text display. Critical for chat-dominant UX — users stare at the chat, perceived latency matters.
+- [ ] **Tool calls UX** — Collapse tool call cards by default. Show brief inline status ("Analyzing crash scenarios...") then fold into the response. Users see "Your ruin test shows 1.8%" — not a prominent card with raw JSON. Tools are invisible infrastructure.
 - [ ] **Additional AI tools** — Capacity gate, allocation drift, historical crash simulation, downside insurance, custody risk, geometric CAGR (6 engine functions not yet exposed)
 - [ ] **Landing page v2** — Reflects chat-first product: hero shows chat demo, not dashboard table. "Open App" is primary CTA.
 
 **Deferred:**
+- [ ] CIO memory across sessions — Persist portfolio context + conversation insights in localStorage. On return: "Welcome back. Last time we discussed your 15% allocation. Temperature moved from 55 to 62 — want me to review?" (v0.4)
 - [ ] Conversation persistence / multi-conversation (v0.4)
 - [ ] Embed dashboard widgets inline in chat responses (v0.5)
 
@@ -226,6 +230,7 @@ OSS-first distribution — no paid channels, no sales team.
 | 2026-02-27 | Logo: v3-3 (orange circle+dot + wordmark) | Finalized after 5 rounds |
 | 2026-02-27 | Distribution: hosted web app > CLI for non-tech users | timecell.ai/app = zero install |
 | 2026-02-28 | Chat-first architecture (v0.3) | Product shifted from dashboard-first to chat-first. AI advisor (Claude) is the primary experience via BYOK. Engine functions exposed as Claude tools. Dashboard is visual reference. Browser-direct API calls (no proxy). Inspired by OpenClaw model. |
+| 2026-02-28 | OpenClaw UX pattern as reference | Tool-using AI with local-first architecture and no setup friction. TimeCell is the same pattern applied to investing instead of coding. Key lessons: tools invisible by default (CIO gives judgment, not plumbing), progressive context building, conversational onboarding (no wizard), session memory (CIO remembers and proactively references changes), streaming for perceived responsiveness. |
 | 2026-02-28 | Layout flip: chat-dominant interface | User insight: chat is 90-95% of the value, dashboard is 5%. Current 50/50 split (440px chat + dashboard) is backwards. Flipping: chat takes full width, dashboard becomes collapsible sidebar. Dashboard doesn't disappear — still serves users without API key and provides visual proof for AI responses. Future: WhatsApp/Telegram as text-only channel, web app as "rich" channel with interactive widgets. |
 | 2026-02-28 | Live temperature pulled forward from v0.4 | Discovered existing live MVRV/RHODL feed in Turso DB (shared with fo-web, open-fo, mc-bitcoin-tools). Daily sync via GitHub Actions. Connecting TimeCell directly rather than building from scratch. |
 | 2026-02-28 | Framework generalizability analysis (4-AI second opinion) | Claude + OpenAI + Gemini + DeepSeek consensus: core process (conviction, sizing, ruin, sleep) transfers with high confidence. Temperature is Bitcoin-specific — needs pluggable adapters per asset (CAPE for stocks, cap rates for RE, real yields for bonds). Yield-bearing assets break zero-yield assumption. v1.0 rewritten with adapter architecture. Strongest counterargument: without on-chain data quality, framework loses its differentiating edge over generic advice. |

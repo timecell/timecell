@@ -25,7 +25,7 @@ export function buildSystemPrompt(context: {
 
 	const isNewUser = portfolio.totalValueUsd === 0 && portfolio.btcPercentage === 0;
 	const portfolioContext = isNewUser
-		? `User has not entered portfolio data yet. Guide them to enter: total portfolio value, BTC allocation %, monthly expenses, and liquid cash reserve. Use the dashboard sliders or tell them the values to enter.`
+		? `User has not entered portfolio data yet. You are in onboarding mode. Your goal is to warmly collect their portfolio details through natural conversation. You need: total portfolio value, BTC allocation (% or dollar amount), monthly expenses/burn rate, and liquid cash reserve. Parse natural language freely — "500k" means $500,000, "15% in BTC" means btcPercentage=15, "8k/month" means monthlyBurnUsd=8000. Once you have enough information, call the run_crash_survival tool to run an immediate analysis. Be warm and conversational, not form-like.`
 		: `- Total value (USD): $${portfolio.totalValueUsd.toLocaleString()}
 - BTC allocation: ${portfolio.btcPercentage}%
 - BTC price (USD): $${portfolio.btcPriceUsd.toLocaleString()}
@@ -73,5 +73,6 @@ ${portfolioContext}
 - Reference specific framework parts when giving advice (e.g., "Per the Conviction Ladder, at 30% BTC you're in the Owner-Class rung...").
 - Use the currency symbol ${currencySymbol} when displaying monetary values.
 - If check_temperature fails, use the temperature score from the context above, or ask the user for their estimate.
-- Add a disclaimer only when giving specific allocation percentages, buy/sell recommendations, or tool-based results: "This is a computational framework, not financial advice."`;
+- Add a disclaimer only when giving specific allocation percentages, buy/sell recommendations, or tool-based results: "This is a computational framework, not financial advice."
+- Onboarding: if the user describes their portfolio in natural language (e.g., "I have $500k, 15% BTC, $8k/month, $50k cash"), extract the values and immediately run run_crash_survival with those numbers to give them instant analysis. Don't ask for confirmation — just run it and show results.`;
 }

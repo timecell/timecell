@@ -365,15 +365,6 @@ export default function App() {
 	return (
 		<TooltipProvider delayDuration={300}>
 			<div className="h-[100dvh] overflow-hidden bg-gradient-to-br from-slate-950 to-slate-900 text-white flex flex-col">
-				{/* Onboarding wizard — first visit only */}
-				{showOnboarding && (
-					<OnboardingModal
-						currencySymbol={currencySymbol}
-						onComplete={handleOnboardingComplete}
-						onSkip={handleOnboardingSkip}
-					/>
-				)}
-
 				{/* Header */}
 				<header className="border-b border-slate-800 px-4 sm:px-6 py-3 sm:py-4">
 					<div className="max-w-7xl mx-auto flex items-center justify-between gap-2">
@@ -393,7 +384,7 @@ export default function App() {
 								<>
 									<button
 										type="button"
-										onClick={() => setWhatIfOpen((o) => !o)}
+										onClick={() => { setWhatIfOpen((o) => !o); setSidebarOpen(true); setSidebarFullDashboard(true); }}
 										className={`text-xs px-2.5 sm:px-3 py-1.5 rounded-lg border transition-colors touch-manipulation min-h-[36px] ${
 											whatIfOpen
 												? "bg-blue-500/20 border-blue-500/50 text-blue-400"
@@ -406,6 +397,8 @@ export default function App() {
 										type="button"
 										onClick={() => {
 											setReportCardOpen((o) => !o);
+											setSidebarOpen(true);
+											setSidebarFullDashboard(true);
 											setTimeout(
 												() =>
 													reportCardRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }),
