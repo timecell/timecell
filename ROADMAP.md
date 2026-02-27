@@ -37,7 +37,7 @@ Chat IS the product. The AI advisor is the primary experience — users ask ques
 
 **Shipped:** Chat-first AI advisor (BYOK, 8 engine tools, agentic loop, streaming), layout flip (chat full-width + collapsible sidebar), conversational onboarding, sleep test + capacity gate engines, temperature v3.0 (live Turso), report card, landing page v2.
 
-- [ ] **Additional AI tools** — Capacity gate, allocation drift, historical crash simulation, downside insurance, custody risk, geometric CAGR (6 engine functions not yet exposed)
+- [x] **Additional AI tools** — All 14 engine functions exposed as Claude tools (allocation drift, historical crash sim, downside insurance, custody risk, geometric CAGR, temperature-adjusted DCA)
 
 **Deferred to v0.4 (daemon features):**
 - [ ] CIO memory across sessions — Persist portfolio context + conversation insights. On return: "Welcome back. Temperature moved from 55 to 62 — want me to review?"
