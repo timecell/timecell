@@ -112,6 +112,17 @@ When suggesting a session close:
 3. Update MEMORY.md with anything learned
 4. **Draft a copy-paste continuation prompt** the user can paste into the new session — include context, priorities, and specific next steps
 
+## Roadmap Discipline
+
+ROADMAP.md is the single source of truth. During every session:
+- **Bugs found** → Add to the relevant version section or create a "Known Issues" section
+- **UX feedback** → Add as a bullet under the relevant version
+- **Feature ideas** → Add to "Future Horizons" with a brief description
+- **Refactoring needs** → Add to "Future Horizons → Infrastructure"
+- **Completed items** → Check off immediately when done (- [x])
+
+At session close, always verify ROADMAP.md reflects current state. Never leave completed work unchecked or new ideas unrecorded.
+
 ## Product Context
 
 - **Domain:** timecell.ai

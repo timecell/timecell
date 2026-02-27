@@ -111,12 +111,18 @@ Two modes, one engine. Mass retail stays simple; family office exposes governanc
 ## Future Horizons (unscoped — community-driven, none block v1.0/v2.0)
 
 ### Framework Depth (Bitcoin)
-- Thesis health check — "Is each property getting stronger or weaker?" (Framework Part 1.3)
+- ~~Thesis health check~~ — ✅ Built (7 properties, qualitative assessment, localStorage)
 - ~~Journey/stage tracking~~ — ✅ Built in v0.5 (6-question quiz, Learning/Tested/Systems stages)
 - Barbell-to-buckets visualization — Portfolio structure evolution (Framework Part 8.4)
-- DCA calculator (Framework Part 4)
-- 4-year moving average chart (Framework Part 4.3)
+- ~~DCA calculator~~ — ✅ Built (flat + temperature-adjusted, 4yr cycle simulation, 55 tests)
+- ~~4-year moving average chart~~ — ✅ Built (3-cycle synthetic data, recharts, ratio display)
 - Monte Carlo / Kelly criterion simulations
+
+### UX / Navigation
+- Tabbed navigation — Break single-page dashboard into tabs/sections (Position → Risk → Action → Protection). Critical for scalability to multi-asset.
+- Guided decision flow — Floating progress indicator walking users through Know → Assess → Decide → Protect journey
+- Shorthand number input in all text fields (8m, 500k, 2cr) — ✅ Done in onboarding modal
+- Code splitting — Lazy-load dashboard sections to reduce initial bundle (currently 1.4MB)
 
 ### Intelligence
 - AI-powered "what changed since last visit"
@@ -131,7 +137,7 @@ Two modes, one engine. Mass retail stays simple; family office exposes governanc
 
 ### Infrastructure
 - Self-contained temperature data pipeline — CLI/self-hosted mode should fetch MVRV/RHODL directly (no dependency on shared Turso DB). Bitcoin Magazine Pro API is paid; evaluate free alternatives or bundled local caching. Shared Turso is fine for hosted (timecell.ai/app) but OSS users need independence.
-- Consolidate Vercel projects — timecell.ai points to `timecell-site`, CLI deploys to `timecell`. Unify so serverless functions and static site live in one project.
+- ~~Consolidate Vercel projects~~ — ✅ Done. Domain moved from timecell-site to timecell project. API + app on same domain.
 - Desktop app (Electron or Tauri)
 - Plugin system / marketplace
 - Dataset versioning / snapshots / lineage
