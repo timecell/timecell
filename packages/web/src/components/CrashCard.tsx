@@ -7,45 +7,94 @@ function formatUsd(value: number): string {
 }
 
 function formatMonths(months: number): string {
-	if (months === Infinity) return "∞";
+	if (months === Infinity) return "\u221e";
+	if (months > 120) return "120mo+";
 	return `${months.toFixed(0)}mo`;
 }
 
-const STATUS_COLORS = {
-	safe: {
-		bg: "bg-emerald-900/30",
-		border: "border-emerald-500/50",
-		badge: "bg-emerald-500",
-		text: "text-emerald-400",
+/**
+ * Get visual severity style based on drawdown percentage.
+ * Even if the survival status is "safe", deeper drawdowns get warmer colors
+ * to communicate relative risk at a glance.
+ */
+function getSeverityStyle(scenario: CrashScenario) {
+	// If not safe, use status-based styling
+	if (scenario.survivalStatus === "critical") {
+		return {
+			bg: "bg-red-900/30",
+			border: "border-red-500/50",
+			badge: "bg-red-500",
+			badgeText: "text-black",
+			text: "text-red-400",
+			label: "CRITICAL",
+		};
+	}
+	if (scenario.survivalStatus === "warning") {
+		return {
+			bg: "bg-amber-900/30",
+			border: "border-amber-500/50",
+			badge: "bg-amber-500",
+			badgeText: "text-black",
+			text: "text-amber-400",
+			label: "WARNING",
+		};
+	}
+
+	// Safe status — apply gradient severity based on drawdown depth
+	if (scenario.drawdownPct <= 30) {
+		return {
+			bg: "bg-emerald-900/30",
+			border: "border-emerald-500/50",
+			badge: "bg-emerald-500",
+			badgeText: "text-black",
+			text: "text-emerald-400",
+			label: "SAFE",
+		};
+	}
+	if (scenario.drawdownPct <= 50) {
+		return {
+			bg: "bg-emerald-900/20",
+			border: "border-emerald-500/30",
+			badge: "bg-emerald-600",
+			badgeText: "text-black",
+			text: "text-emerald-400",
+			label: "SAFE",
+		};
+	}
+	if (scenario.drawdownPct <= 70) {
+		return {
+			bg: "bg-amber-900/15",
+			border: "border-amber-500/30",
+			badge: "bg-amber-500",
+			badgeText: "text-black",
+			text: "text-amber-400",
+			label: "SAFE",
+		};
+	}
+	// 80%+
+	return {
+		bg: "bg-orange-900/20",
+		border: "border-orange-500/30",
+		badge: "bg-orange-500",
+		badgeText: "text-black",
+		text: "text-orange-400",
 		label: "SAFE",
-	},
-	warning: {
-		bg: "bg-amber-900/30",
-		border: "border-amber-500/50",
-		badge: "bg-amber-500",
-		text: "text-amber-400",
-		label: "WARNING",
-	},
-	critical: {
-		bg: "bg-red-900/30",
-		border: "border-red-500/50",
-		badge: "bg-red-500",
-		text: "text-red-400",
-		label: "CRITICAL",
-	},
-};
+	};
+}
 
 export function CrashCard({ scenario }: { scenario: CrashScenario }) {
-	const status = STATUS_COLORS[scenario.survivalStatus];
+	const style = getSeverityStyle(scenario);
 
 	return (
-		<div className={`rounded-xl border ${status.border} ${status.bg} p-5`}>
+		<div
+			className={`rounded-xl border ${style.border} ${style.bg} p-5 transition-all duration-200 hover:scale-[1.02] hover:shadow-lg hover:shadow-black/20`}
+		>
 			<div className="flex items-center justify-between mb-4">
 				<span className="text-2xl font-bold text-white">-{scenario.drawdownPct}%</span>
 				<span
-					className={`${status.badge} text-black text-xs font-bold px-2.5 py-1 rounded-full`}
+					className={`${style.badge} ${style.badgeText} text-xs font-bold px-2.5 py-1 rounded-full`}
 				>
-					{status.label}
+					{style.label}
 				</span>
 			</div>
 
@@ -58,7 +107,7 @@ export function CrashCard({ scenario }: { scenario: CrashScenario }) {
 				</div>
 				<div className="flex justify-between">
 					<span className="text-slate-400 text-sm">Portfolio Value</span>
-					<span className={`font-mono text-sm ${status.text}`}>
+					<span className={`font-mono text-sm ${style.text}`}>
 						{formatUsd(scenario.portfolioValueAfterCrash)}
 					</span>
 				</div>
@@ -78,7 +127,7 @@ export function CrashCard({ scenario }: { scenario: CrashScenario }) {
 				</div>
 				<div className="border-t border-slate-700 pt-3 flex justify-between">
 					<span className="text-slate-400 text-sm">Runway</span>
-					<span className={`font-mono text-sm font-bold ${status.text}`}>
+					<span className={`font-mono text-sm font-bold ${style.text}`}>
 						{formatMonths(scenario.runwayMonths)}
 					</span>
 				</div>

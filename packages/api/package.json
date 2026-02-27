@@ -6,8 +6,9 @@
   "main": "src/server.ts",
   "exports": {
     ".": {
+      "types": "./src/server.ts",
       "import": "./src/server.ts",
-      "default": "./dist/server.js"
+      "default": "./src/server.ts"
     }
   },
   "scripts": {

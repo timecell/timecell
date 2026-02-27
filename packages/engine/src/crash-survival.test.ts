@@ -49,10 +49,13 @@ describe("crash survival calculator", () => {
 		const s30 = result.scenarios.find((s) => s.drawdownPct === 30)!;
 		const s80 = result.scenarios.find((s) => s.drawdownPct === 80)!;
 
-		// $600K reserve / $25K burn = 24 months runway
+		// runway = netPosition / burn = (portfolioAfterCrash + liquidReserve) / burn
+		// -80%: btcAfter=350K, nonBtcAfter=1.95M, net=2.3M+600K=2.9M, runway=116
 		expect(s30.survivalStatus).toBe("safe");
-		expect(s80.runwayMonths).toBe(24);
+		expect(s80.runwayMonths).toBe(116);
 		expect(s80.survivalStatus).toBe("safe");
+		// Worse crashes should have less runway (monotonically decreasing)
+		expect(s30.runwayMonths).toBeGreaterThan(s80.runwayMonths);
 	});
 
 	it("hedge positions provide payoff during crash", () => {
@@ -75,27 +78,29 @@ describe("ruin test", () => {
 	it("demo portfolio passes ruin test", () => {
 		const result = ruinTest(DEMO_PORTFOLIO);
 		expect(result.passed).toBe(true);
-		expect(result.runwayMonths).toBe(24);
+		// netPosition = (350K + 1.95M + 600K) / 25K = 116
+		expect(result.runwayMonths).toBe(116);
 	});
 
-	it("under-reserved portfolio fails ruin test", () => {
+	it("under-reserved portfolio still passes ruin test (has portfolio value)", () => {
 		const thinReserve: PortfolioInput = {
 			...DEMO_PORTFOLIO,
 			liquidReserveUsd: 200_000,
 		};
 		const result = ruinTest(thinReserve);
-		expect(result.passed).toBe(false);
-		expect(result.runwayMonths).toBe(8);
+		// netPosition = (350K + 1.95M + 200K) / 25K = 100
+		expect(result.passed).toBe(true);
+		expect(result.runwayMonths).toBe(100);
 	});
 
-	it("hedge payoff can save an under-reserved portfolio", () => {
+	it("hedge payoff adds to runway for under-reserved portfolio", () => {
 		const thinReserve: PortfolioInput = {
 			...DEMO_PORTFOLIO,
 			liquidReserveUsd: 200_000,
 		};
 		const result = ruinTest(thinReserve, DEMO_HEDGE_POSITIONS);
 		expect(result.passed).toBe(true);
-		expect(result.runwayMonths).toBeGreaterThan(18);
+		expect(result.runwayMonths).toBeGreaterThan(100);
 	});
 });
 

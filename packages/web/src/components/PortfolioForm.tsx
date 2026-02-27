@@ -46,7 +46,7 @@ function InputField({
 				step={step}
 				value={value}
 				onChange={(e) => onChange(Number(e.target.value))}
-				className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-orange-500"
+				className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-orange-500 slider-input"
 			/>
 		</div>
 	);

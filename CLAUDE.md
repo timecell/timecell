@@ -84,7 +84,7 @@ User Input → API → Engine (pure functions) → Response → UI renders
 
 ## Key References
 
-- Business logic ported from private family office dashboard (crash payoff, CAGR math, temperature, hedge utils)
+- Core math: crash payoff scenarios, geometric mean CAGR (Spitznagel), ruin test, hedge breakeven
 - Bitcoin Investing Framework v2 (10-part framework, conviction ladder, position sizing, temperature, downside insurance)
 - Architecture decisions documented in ChatGPT session and preserved in this file
 

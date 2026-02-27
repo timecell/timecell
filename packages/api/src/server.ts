@@ -21,14 +21,17 @@ export async function buildServer() {
 }
 
 // Direct execution (dev mode)
-const isDirectRun = process.argv[1]?.includes("server");
+const isDirectRun =
+	process.argv[1]?.endsWith("src/server.ts") ||
+	process.argv[1]?.endsWith("dist/server.js");
 if (isDirectRun) {
-	const server = await buildServer();
-	try {
-		await server.listen({ port: 3737, host: "0.0.0.0" });
-		console.log("TimeCell API running on http://localhost:3737");
-	} catch (err) {
-		server.log.error(err);
-		process.exit(1);
-	}
+	buildServer().then(async (server) => {
+		try {
+			await server.listen({ port: 3737, host: "0.0.0.0" });
+			console.log("TimeCell API running on http://localhost:3737");
+		} catch (err) {
+			server.log.error(err);
+			process.exit(1);
+		}
+	});
 }

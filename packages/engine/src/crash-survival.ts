@@ -26,7 +26,7 @@ export const DEFAULT_CONFIG: CrashSurvivalConfig = {
  * - BTC drops by drawdownPct%
  * - Non-BTC assets drop by drawdownPct * config.nonBtcCorrelation
  * - Hedge payoff = sum of max(0, strike - crashPrice) * quantity for each position
- * - Runway = (liquid reserve + hedge payoff) / monthly burn
+ * - Runway = (portfolio after crash + hedge payoff + liquid reserve) / monthly burn
  * - Survival status based on runway vs config thresholds
  */
 export function calculateCrashSurvival(
@@ -81,11 +81,11 @@ function calculateScenario(
 		hedgePayoff += Math.max(0, pos.strikeUsd - btcPriceAtCrash) * pos.quantityBtc;
 	}
 
-	const netPosition = portfolioValueAfterCrash + hedgePayoff;
+	const netPosition = portfolioValueAfterCrash + hedgePayoff + portfolio.liquidReserveUsd;
 
-	// Runway: liquid reserve (+ hedge payoff as available cash) / monthly burn
-	const availableLiquidity = portfolio.liquidReserveUsd + hedgePayoff;
-	const runwayMonths = calculateRunwayMonths(availableLiquidity, portfolio.monthlyBurnUsd);
+	// Runway: net position / monthly burn — how many months you can sustain
+	// by liquidating everything (portfolio after crash + hedge payoff + liquid reserve)
+	const runwayMonths = calculateRunwayMonths(netPosition, portfolio.monthlyBurnUsd);
 
 	// Survival status
 	let survivalStatus: CrashScenario["survivalStatus"];
