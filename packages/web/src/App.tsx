@@ -4,6 +4,10 @@ import { SurvivalHero } from "./components/SurvivalHero";
 import { PortfolioForm } from "./components/PortfolioForm";
 import { CrashChart } from "./components/CrashChart";
 import { CrashGrid } from "./components/CrashGrid";
+import { BtcPriceTicker } from "./components/BtcPriceTicker";
+import { TemperatureGauge } from "./components/TemperatureGauge";
+import { PositionSizing } from "./components/PositionSizing";
+import { ActionPlan } from "./components/ActionPlan";
 import { ConvictionLadder } from "./components/ConvictionLadder";
 import { InfoPanel } from "./components/InfoPanel";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -25,8 +29,9 @@ export default function App() {
 					<div className="flex items-center gap-3">
 						<img src="/logo.png" alt="TimeCell" className="h-8 brightness-110" />
 						<span className="text-xs text-slate-500 bg-slate-800 px-2 py-0.5 rounded">
-							v0.1
+							v0.2
 						</span>
+						<BtcPriceTicker fallbackPrice={portfolio.btcPriceUsd} currencySymbol={currencySymbol} />
 					</div>
 					<span className="text-xs sm:text-sm text-slate-500">Crash Survival Calculator</span>
 				</div>
@@ -80,7 +85,29 @@ export default function App() {
 					</div>
 				</div>
 
-				{/* ZONE 3: Crash details — collapsed by default */}
+				{/* ZONE 3: Market Intelligence — Temperature + Position Sizing + Action Plan */}
+				<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+					<TemperatureGauge />
+					<PositionSizing
+						totalValueUsd={portfolio.totalValueUsd}
+						currentBtcPct={portfolio.btcPercentage}
+						monthlyBurnUsd={portfolio.monthlyBurnUsd}
+						liquidReserveUsd={portfolio.liquidReserveUsd}
+						btcPriceUsd={portfolio.btcPriceUsd}
+						currencySymbol={currencySymbol}
+					/>
+					<ActionPlan
+						btcPercentage={portfolio.btcPercentage}
+						ruinTestPassed={result?.ruinTestPassed ?? true}
+						runwayMonths={result?.scenarios?.[result.scenarios.length - 1]?.runwayMonths ?? Infinity}
+						temperatureScore={55}
+						liquidReserveUsd={portfolio.liquidReserveUsd}
+						monthlyBurnUsd={portfolio.monthlyBurnUsd}
+						totalValueUsd={portfolio.totalValueUsd}
+					/>
+				</div>
+
+				{/* ZONE 4: Crash details — collapsed by default */}
 				{result && !loading && (
 					<div>
 						<button
@@ -98,7 +125,7 @@ export default function App() {
 					</div>
 				)}
 
-				{/* ZONE 4: Framework — below fold */}
+				{/* ZONE 5: Framework — below fold */}
 				<div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 					<ConvictionLadder btcPercentage={portfolio.btcPercentage} />
 					<InfoPanel />
