@@ -23,4 +23,9 @@ cpSync(resolve(root, "site"), out, { recursive: true });
 mkdirSync(resolve(out, "app"), { recursive: true });
 cpSync(resolve(root, "packages/web/dist"), resolve(out, "app"), { recursive: true });
 
-console.log("Vercel output assembled in dist-vercel/");
+// Also copy to .vercel/output/static for `vercel deploy --prebuilt`
+const vercelOut = resolve(root, ".vercel/output/static");
+rmSync(vercelOut, { recursive: true, force: true });
+cpSync(out, vercelOut, { recursive: true });
+
+console.log("Vercel output assembled in dist-vercel/ and .vercel/output/static/");

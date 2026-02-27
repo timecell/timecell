@@ -26,21 +26,18 @@ export function SurvivalHero({ result }: { result: SurvivalResult }) {
 				<div className="absolute top-0 right-0 w-64 h-64 rounded-full bg-white blur-3xl translate-x-1/3 -translate-y-1/3" />
 			</div>
 
-			<div className="relative flex flex-col lg:flex-row items-center gap-4 lg:gap-10">
+			<div className="relative flex flex-col items-center gap-4">
 				{/* Survival Score */}
-				<div className="text-center lg:text-left flex-shrink-0">
+				<div className="text-center flex-shrink-0">
 					<p className="text-xs uppercase tracking-widest text-slate-400 mb-1">Max Survivable Crash</p>
-					<div className="flex items-baseline gap-1 justify-center lg:justify-start">
-						<span className={`text-5xl sm:text-6xl lg:text-8xl font-black tabular-nums tracking-tight ${colors.text} transition-colors duration-500`}>
+					<div className="flex items-baseline gap-1 justify-center">
+						<span className={`text-5xl sm:text-6xl font-black tabular-nums tracking-tight ${colors.text} transition-colors duration-500`}>
 							{maxSurvivableDrawdown}
 						</span>
-						<span className={`text-2xl sm:text-3xl lg:text-4xl font-bold ${colors.text} opacity-70`}>%</span>
+						<span className={`text-2xl sm:text-3xl font-bold ${colors.text} opacity-70`}>%</span>
 					</div>
 					<p className="text-xs text-slate-400 mt-1">drawdown before forced selling</p>
 				</div>
-
-				{/* Divider — hidden on narrow widths */}
-				<div className="hidden lg:block w-px h-24 bg-slate-700/50" />
 
 				{/* Ruin test + key stats */}
 				<div className="flex-1 w-full space-y-3">
@@ -50,7 +47,7 @@ export function SurvivalHero({ result }: { result: SurvivalResult }) {
 							? "bg-emerald-500/10 border border-emerald-500/30"
 							: "bg-red-500/10 border border-red-500/30"
 					} transition-all duration-500`}>
-						<span className={`text-xl sm:text-2xl lg:text-3xl flex-shrink-0 ${ruinTestPassed ? "text-emerald-400" : "text-red-400"}`}>
+						<span className={`text-xl sm:text-2xl flex-shrink-0 ${ruinTestPassed ? "text-emerald-400" : "text-red-400"}`}>
 							{ruinTestPassed ? "\u2713" : "\u2717"}
 						</span>
 						<div className="min-w-0">
@@ -67,7 +64,7 @@ export function SurvivalHero({ result }: { result: SurvivalResult }) {
 					<div className="flex gap-4">
 						<div className="flex-1">
 							<p className="text-[10px] sm:text-xs text-slate-500 uppercase tracking-wider">Worst-Case Runway</p>
-							<p className={`text-lg sm:text-xl lg:text-2xl font-bold tabular-nums ${
+							<p className={`text-lg sm:text-xl font-bold tabular-nums ${
 								worstCase.runwayMonths >= 18 ? "text-emerald-400"
 								: worstCase.runwayMonths >= 6 ? "text-amber-400"
 								: "text-red-400"
@@ -78,7 +75,7 @@ export function SurvivalHero({ result }: { result: SurvivalResult }) {
 						</div>
 						<div className="flex-1">
 							<p className="text-[10px] sm:text-xs text-slate-500 uppercase tracking-wider">Survival Threshold</p>
-							<p className="text-lg sm:text-xl lg:text-2xl font-bold text-slate-300">
+							<p className="text-lg sm:text-xl font-bold text-slate-300">
 								18<span className="text-[10px] sm:text-xs font-normal text-slate-500 ml-1">months</span>
 							</p>
 						</div>

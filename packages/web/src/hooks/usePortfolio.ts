@@ -59,7 +59,7 @@ export function usePortfolio() {
 		btcPercentage: 35,
 		monthlyBurnUsd: 25_000,
 		liquidReserveUsd: 600_000,
-		btcPriceUsd: 84_000,
+		btcPriceUsd: 67_000,
 	});
 	const [hedgePositions, setHedgePositions] = useState<HedgePosition[]>([]);
 	const [currencySymbol, setCurrencySymbol] = useState("$");

@@ -370,7 +370,7 @@ export default function App() {
 					<div className="max-w-7xl mx-auto flex items-center justify-between gap-2">
 						<div className="flex items-center gap-2 sm:gap-3 min-w-0">
 							<img src="/logo.png" alt="TimeCell" className="h-12 sm:h-14 brightness-110 flex-shrink-0" />
-							<span className="text-xs text-slate-500 bg-slate-800 px-2 py-0.5 rounded flex-shrink-0">v0.3</span>
+							<span className="text-xs text-slate-500 bg-slate-800 px-2 py-0.5 rounded flex-shrink-0">v0.3.1</span>
 							<BtcPriceTicker
 								fallbackPrice={portfolio.btcPriceUsd}
 								currencySymbol={currencySymbol}
@@ -484,7 +484,7 @@ export default function App() {
 					{/* Desktop sidebar — collapsible right panel */}
 					<div
 						className={`hidden lg:flex flex-col border-l border-slate-800 bg-slate-950/80 transition-all duration-300 overflow-hidden ${
-							sidebarOpen ? "w-[380px] min-w-[380px]" : "w-0 min-w-0"
+							sidebarOpen ? "w-[420px] min-w-[420px]" : "w-0 min-w-0"
 						}`}
 					>
 						{sidebarOpen && (
@@ -514,7 +514,7 @@ export default function App() {
 								</div>
 
 								{/* Sidebar content — scrollable */}
-								<div className="flex-1 overflow-y-auto px-4 py-4">
+								<div className="flex-1 overflow-y-auto overflow-x-hidden px-3 py-4">
 									{sidebarFullDashboard ? (
 										<div className="space-y-6">
 											{renderFullDashboard()}
