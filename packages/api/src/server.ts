@@ -24,7 +24,7 @@ function findWebDist(): string | null {
 }
 
 export async function buildServer() {
-	const fastify = Fastify({ logger: true });
+	const fastify = Fastify({ logger: false });
 
 	await fastify.register(cors, { origin: true });
 

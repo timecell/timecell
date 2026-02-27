@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
 
 const sections = [
 	{
@@ -20,29 +20,15 @@ const sections = [
 ];
 
 export function InfoPanel() {
-	const [open, setOpen] = useState(false);
-
 	return (
-		<div className="rounded-xl border border-slate-700 bg-slate-800/50 overflow-hidden">
-			<button
-				type="button"
-				onClick={() => setOpen((o) => !o)}
-				className="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-slate-700/30 transition-colors"
-			>
-				<span className="text-sm font-medium text-slate-300">
-					How does this work?
-				</span>
-				<span
-					className={`inline-block w-4 h-4 border-r-2 border-b-2 border-slate-400 transform transition-transform duration-200 ${
-						open ? "-rotate-[135deg] translate-y-1" : "rotate-45 -translate-y-0.5"
-					}`}
-				/>
-			</button>
-
-			{open && (
-				<div className="px-5 pb-5 space-y-4 border-t border-slate-700">
+		<Card className="border-slate-700 bg-slate-800/50 shadow-none">
+			<CardContent className="p-4 sm:p-6">
+				<h3 className="text-base sm:text-lg font-semibold text-white mb-4">
+					How Does This Work?
+				</h3>
+				<div className="space-y-4">
 					{sections.map((s) => (
-						<div key={s.title} className="pt-4">
+						<div key={s.title}>
 							<h4 className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
 								{s.title}
 							</h4>
@@ -52,7 +38,7 @@ export function InfoPanel() {
 						</div>
 					))}
 				</div>
-			)}
-		</div>
+			</CardContent>
+		</Card>
 	);
 }

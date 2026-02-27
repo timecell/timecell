@@ -1,15 +1,16 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { usePortfolio } from "./hooks/usePortfolio";
+import { SurvivalHero } from "./components/SurvivalHero";
 import { PortfolioForm } from "./components/PortfolioForm";
 import { CrashChart } from "./components/CrashChart";
 import { CrashGrid } from "./components/CrashGrid";
-import { SurvivalSummary } from "./components/SurvivalSummary";
 import { ConvictionLadder } from "./components/ConvictionLadder";
 import { InfoPanel } from "./components/InfoPanel";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
 export default function App() {
 	const { portfolio, currencySymbol, result, loading, error, savedAt, loadPortfolio, updatePortfolio } = usePortfolio();
+	const [detailsOpen, setDetailsOpen] = useState(false);
 
 	useEffect(() => {
 		loadPortfolio();
@@ -24,7 +25,7 @@ export default function App() {
 					<div className="flex items-center gap-3">
 						<img src="/logo.png" alt="TimeCell" className="h-8 brightness-110" />
 						<span className="text-xs text-slate-500 bg-slate-800 px-2 py-0.5 rounded">
-							v0.1.0
+							v0.1
 						</span>
 					</div>
 					<span className="text-xs sm:text-sm text-slate-500">Crash Survival Calculator</span>
@@ -32,50 +33,75 @@ export default function App() {
 			</header>
 
 			{/* Main content */}
-			<main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-4 sm:space-y-6">
-				{/* Portfolio form + quick stats */}
-				<div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
-					<div className="lg:col-span-1">
+			<main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
+				{/* Error banner */}
+				{error && (
+					<div className="rounded-lg border border-red-500/50 bg-red-900/20 px-4 py-3 text-sm text-red-400">
+						{error}
+					</div>
+				)}
+
+				{/* ZONE 1: Hero — Big survival score + ruin test */}
+				{result && <SurvivalHero result={result} />}
+
+				{/* Loading skeleton for hero */}
+				{!result && loading && (
+					<div className="rounded-2xl border border-slate-700 bg-slate-800/30 p-8 animate-pulse">
+						<div className="flex items-center gap-10">
+							<div>
+								<div className="h-4 w-32 bg-slate-700 rounded mb-4" />
+								<div className="h-20 w-36 bg-slate-700 rounded" />
+							</div>
+							<div className="hidden sm:block w-px h-24 bg-slate-700" />
+							<div className="flex-1 space-y-4">
+								<div className="h-12 w-48 bg-slate-700 rounded" />
+								<div className="flex gap-6">
+									<div className="h-10 w-28 bg-slate-700 rounded" />
+									<div className="h-10 w-28 bg-slate-700 rounded" />
+								</div>
+							</div>
+						</div>
+					</div>
+				)}
+
+				{/* ZONE 2: Interactive — Sliders + Chart side by side */}
+				<div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+					<div className="lg:col-span-2">
 						<PortfolioForm portfolio={portfolio} onUpdate={updatePortfolio} savedAt={savedAt} currencySymbol={currencySymbol} />
 					</div>
-
-					<div className="lg:col-span-2 space-y-6">
-						{/* Error banner */}
-						{error && (
-							<div className="rounded-lg border border-red-500/50 bg-red-900/20 px-4 py-3 text-sm text-red-400">
-								{error}
-							</div>
-						)}
-
-						{/* Survival summary */}
-						{result && <SurvivalSummary result={result} currencySymbol={currencySymbol} />}
-
-						{/* Portfolio value chart */}
+					<div className="lg:col-span-3">
 						{result && !loading && <CrashChart result={result} currencySymbol={currencySymbol} />}
-
-						{/* Crash scenario cards */}
 						{loading && (
-							<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-								{[30, 50, 70, 80].map((pct) => (
-									<div key={pct} className="rounded-xl border border-slate-700 bg-slate-800/30 p-5 animate-pulse">
-										<div className="h-6 w-16 bg-slate-700 rounded mb-4" />
-										<div className="space-y-3">
-											<div className="h-4 bg-slate-700/50 rounded" />
-											<div className="h-4 bg-slate-700/50 rounded w-3/4" />
-											<div className="h-4 bg-slate-700/50 rounded w-1/2" />
-										</div>
-									</div>
-								))}
+							<div className="rounded-xl border border-slate-700 bg-slate-800/30 p-6 animate-pulse h-full min-h-[300px]">
+								<div className="h-5 w-48 bg-slate-700 rounded mb-6" />
+								<div className="h-full bg-slate-700/30 rounded" />
 							</div>
 						)}
-						{result && !loading && <CrashGrid result={result} currencySymbol={currencySymbol} />}
-
-						{/* Conviction Ladder */}
-						<ConvictionLadder btcPercentage={portfolio.btcPercentage} />
-
-						{/* How does this work? */}
-						<InfoPanel />
 					</div>
+				</div>
+
+				{/* ZONE 3: Crash details — collapsed by default */}
+				{result && !loading && (
+					<div>
+						<button
+							type="button"
+							onClick={() => setDetailsOpen((o) => !o)}
+							className="flex items-center gap-2 text-sm text-slate-400 hover:text-slate-200 transition-colors mb-4"
+						>
+							<span className={`inline-block w-3 h-3 border-r-2 border-b-2 border-current transform transition-transform duration-200 ${
+								detailsOpen ? "-rotate-[135deg] translate-y-0.5" : "rotate-45 -translate-y-0.5"
+							}`} />
+							<span>Crash Scenario Details</span>
+							<span className="text-xs text-slate-600">({result.scenarios.length} scenarios)</span>
+						</button>
+						{detailsOpen && <CrashGrid result={result} currencySymbol={currencySymbol} />}
+					</div>
+				)}
+
+				{/* ZONE 4: Framework — below fold */}
+				<div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+					<ConvictionLadder btcPercentage={portfolio.btcPercentage} />
+					<InfoPanel />
 				</div>
 			</main>
 
