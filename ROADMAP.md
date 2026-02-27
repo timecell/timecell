@@ -41,22 +41,29 @@
 
 These three releases collectively prove the **habit loop**: trigger → recommendation → action → improved scorecard. The critical variable is not more features — it is whether users form the "info → action" habit. Validation targets: D30 retention ≥20%, action closure rate ≥25%.
 
-## v0.3 — "Know your position"
+**Key insight (Session 8):** Chat is 90-95% of the value. The dashboard is a visual reference layer, not the primary experience. The interface should reflect this — chat takes center stage, dashboard becomes collapsible proof.
 
-Complete the Position Sizing Process (Framework Part 3). Every screen ends with an action, not just a number. Sliders become "what if" tools after you enter YOUR numbers.
+## v0.3 — "Talk to your portfolio"
 
-- [x] **Guided first-run flow** — Questions not sliders: "What's your net worth?" → "How much is liquid?" → "What % is BTC?" → reveal dashboard with YOUR numbers
-- [x] **Sleep test display** — "If BTC drops 80% tomorrow, you lose $X. Does your life change?" Big, visceral number. Framework Part 3 Step 6.
-- [x] **Capacity gate inputs** — Age/income proxy, withdrawal horizon, liability schedule. `Effective Allocation = min(Conviction Rung, Capacity Ceiling)`. Framework Part 3 Step 2.
-- [x] **Interactive conviction gates** — At 25%+, show checkboxes: multi-cycle experience? 2yr expenses outside BTC? No forced-sale liabilities? Sleep test? Written triggers? Warn clearly if gates aren't met.
-- [x] **De-risk triggers** — Written rules UI: "If temperature > 80, sell X%. If ruin test fails, reduce to Y%." Framework Part 3 Step 5.
-- [x] **One-page report card** — Single summary: survival score, ruin test, conviction rung, temperature, action plan. Screenshot-friendly, shareable with advisors.
-- [x] **Chat-first AI advisor** — Claude-powered chat panel as primary experience. BYOK (user provides API key). 8 engine functions as AI tools. Framework embodied in system prompt. Agentic tool-use loop with abort/cancel.
+Chat IS the product. The AI advisor is the primary experience — users ask questions and get framework-driven answers backed by real calculations. The dashboard exists as visual proof that appears when relevant.
+
+**Shipped:**
+- [x] **Chat-first AI advisor** — Claude-powered chat with BYOK. 8 engine functions as AI tools. Framework embodied in system prompt. Agentic tool-use loop with abort/cancel.
 - [x] **BYOK setup** — API key entry, model selection (sonnet/opus/haiku), localStorage storage, clear with confirmation
-- [x] **Split layout** — Chat (left 440px) + Dashboard (right scrollable). Mobile: tab bar toggle with 44px touch targets and dvh viewport fix.
-- [ ] **Streaming responses** — Switch from blocking to incremental text display for better perceived responsiveness
+- [x] **Guided first-run flow** — Questions not sliders: "What's your net worth?" → "How much is liquid?" → "What % is BTC?" → reveal dashboard with YOUR numbers
+- [x] **Sleep test, capacity gate, conviction gates, de-risk triggers, report card** — Full Position Sizing Process (Framework Part 3)
+
+**In progress — Layout flip (chat-dominant):**
+- [ ] **Chat takes full width** — Chat is the main surface. Full-width on desktop with dashboard as narrow collapsible right sidebar (~320px). Mobile: chat is default, dashboard is secondary tab.
+- [ ] **Conversational onboarding** — Replace GuidedFlow 4-step walkthrough with AI-driven onboarding in chat. New users see "Welcome! Tell me about your portfolio" instead of a wizard. Remove WelcomeHero and StageCallout.
+- [ ] **Dashboard sidebar** — Dashboard becomes a collapsible panel: key metrics (survival score, temperature, action items) visible at a glance. Expands for detail. Collapses to just icons.
+- [ ] **Streaming responses** — Switch from blocking to incremental text display. Critical for chat-dominant UX — users stare at the chat, perceived latency matters.
 - [ ] **Additional AI tools** — Capacity gate, allocation drift, historical crash simulation, downside insurance, custody risk, geometric CAGR (6 engine functions not yet exposed)
-- [ ] **Conversation persistence improvement** — Token-aware history (not just message count), multi-conversation support
+- [ ] **Landing page v2** — Reflects chat-first product: hero shows chat demo, not dashboard table. "Open App" is primary CTA.
+
+**Deferred:**
+- [ ] Conversation persistence / multi-conversation (v0.4)
+- [ ] Embed dashboard widgets inline in chat responses (v0.5)
 
 ## v0.4 — "Stay informed"
 
@@ -132,11 +139,13 @@ Two modes, one engine. Mass retail stays simple; family office exposes governanc
 
 ### Conversational Interface
 - ~~Chat panel~~ — ✅ Built in v0.3 (chat-first layout, 8 tools, BYOK, agentic loop)
+- ~~Chat streaming~~ — Moving to v0.3 (in progress)
+- **WhatsApp/Telegram bot** — Same engine tools, text-only responses. Users get advice on the go without opening the web app. Web app remains the "rich" channel with interactive widgets.
 - **CLI conversational mode** — Extend existing CLI wizard with AI-powered chat that reads engine output and interprets it
 - **User personas** — 3 test personas (Conservative HNI / Aggressive crypto-native / Curious newcomer) for flow testing and UX validation
-- **Chat streaming** — Progressive text rendering, tool-by-tool status updates, streaming API
 - **Multi-conversation history** — Conversation titles, history sidebar, search across conversations
 - **Message actions** — Copy to clipboard, share, pin important advice, bookmark
+- **Inline dashboard widgets** — AI responses embed interactive charts/gauges (survival chart, temperature gauge) directly in the chat stream
 
 ### Intelligence
 - AI-powered "what changed since last visit"
@@ -217,6 +226,7 @@ OSS-first distribution — no paid channels, no sales team.
 | 2026-02-27 | Logo: v3-3 (orange circle+dot + wordmark) | Finalized after 5 rounds |
 | 2026-02-27 | Distribution: hosted web app > CLI for non-tech users | timecell.ai/app = zero install |
 | 2026-02-28 | Chat-first architecture (v0.3) | Product shifted from dashboard-first to chat-first. AI advisor (Claude) is the primary experience via BYOK. Engine functions exposed as Claude tools. Dashboard is visual reference. Browser-direct API calls (no proxy). Inspired by OpenClaw model. |
+| 2026-02-28 | Layout flip: chat-dominant interface | User insight: chat is 90-95% of the value, dashboard is 5%. Current 50/50 split (440px chat + dashboard) is backwards. Flipping: chat takes full width, dashboard becomes collapsible sidebar. Dashboard doesn't disappear — still serves users without API key and provides visual proof for AI responses. Future: WhatsApp/Telegram as text-only channel, web app as "rich" channel with interactive widgets. |
 | 2026-02-28 | Live temperature pulled forward from v0.4 | Discovered existing live MVRV/RHODL feed in Turso DB (shared with fo-web, open-fo, mc-bitcoin-tools). Daily sync via GitHub Actions. Connecting TimeCell directly rather than building from scratch. |
 | 2026-02-28 | Framework generalizability analysis (4-AI second opinion) | Claude + OpenAI + Gemini + DeepSeek consensus: core process (conviction, sizing, ruin, sleep) transfers with high confidence. Temperature is Bitcoin-specific — needs pluggable adapters per asset (CAPE for stocks, cap rates for RE, real yields for bonds). Yield-bearing assets break zero-yield assumption. v1.0 rewritten with adapter architecture. Strongest counterargument: without on-chain data quality, framework loses its differentiating edge over generic advice. |
 
