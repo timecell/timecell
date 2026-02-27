@@ -97,6 +97,20 @@ User Input → API → Engine (pure functions) → Response → UI renders
 - `/task` — Task continuity across sessions
 - `/skill-audit` — Validate skills against design principles
 
+## Session Management
+
+Proactively suggest closing the session and starting fresh when any of these are true:
+- 3+ agent swarms have completed in the session
+- Context is heavy with tool output (many file reads, large diffs, repeated browser automation)
+- Work is shifting to a different focus area (e.g. from feature building to UX redesign)
+- Browser automation or agents start failing/retrying — sign of context degradation
+
+When suggesting a session close:
+1. Commit all uncommitted work
+2. Update ROADMAP.md with current state
+3. Update MEMORY.md with anything learned
+4. **Draft a copy-paste continuation prompt** the user can paste into the new session — include context, priorities, and specific next steps
+
 ## Product Context
 
 - **Domain:** timecell.ai
