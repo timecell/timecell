@@ -31,20 +31,7 @@ interface ChatPanelProps {
 	currencySymbol?: string;
 }
 
-interface ToolCall {
-	name: string;
-	result?: string;
-	status?: "success" | "error" | "warning";
-}
-
-interface ChatMessage {
-	id: string;
-	role: "user" | "assistant";
-	content: string;
-	toolCalls?: ToolCall[];
-	isStreaming?: boolean;
-	timestamp: number;
-}
+import type { ChatMessage } from "../hooks/useChat";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -214,7 +201,18 @@ function toolCallLabel(name: string): string {
 	return labels[name] ?? `Ran ${name.replace(/_/g, " ")}`;
 }
 
-function toolStatusColor(status?: string): string {
+function inferToolStatus(result: string): "success" | "error" | "warning" {
+	try {
+		const parsed = JSON.parse(result);
+		if (parsed.error) return "error";
+		if (parsed.ruinTestPassed === false || parsed.survivalScore < 50) return "warning";
+		return "success";
+	} catch {
+		return "success";
+	}
+}
+
+function toolStatusColor(status: string): string {
 	switch (status) {
 		case "success":
 			return "text-emerald-400";
@@ -227,7 +225,7 @@ function toolStatusColor(status?: string): string {
 	}
 }
 
-function toolStatusBorder(status?: string): string {
+function toolStatusBorder(status: string): string {
 	switch (status) {
 		case "success":
 			return "border-emerald-500/30";
@@ -244,12 +242,13 @@ function toolStatusBorder(status?: string): string {
 // Sub-components
 // ---------------------------------------------------------------------------
 
-function ToolCallCard({ tool }: { tool: ToolCall }) {
+function ToolCallCard({ tool }: { tool: { name: string; input: Record<string, unknown>; result: string } }) {
 	const [expanded, setExpanded] = useState(false);
+	const status = inferToolStatus(tool.result);
 
 	return (
 		<div
-			className={`rounded-lg border ${toolStatusBorder(tool.status)} bg-slate-900/60 text-xs mb-2`}
+			className={`rounded-lg border ${toolStatusBorder(status)} bg-slate-900/60 text-xs mb-2`}
 		>
 			<button
 				type="button"
@@ -257,6 +256,7 @@ function ToolCallCard({ tool }: { tool: ToolCall }) {
 				className="w-full flex items-center gap-2 px-3 py-2 text-left hover:bg-slate-800/50 transition-colors rounded-lg"
 			>
 				<span className="text-slate-500">&#x1f527;</span>
+				<span className={`flex-shrink-0 w-1.5 h-1.5 rounded-full ${status === "success" ? "bg-emerald-400" : status === "error" ? "bg-red-400" : "bg-amber-400"}`} />
 				<span className="text-slate-300 flex-1">{toolCallLabel(tool.name)}</span>
 				{expanded ? (
 					<ChevronDown className="w-3 h-3 text-slate-500" />
@@ -264,11 +264,11 @@ function ToolCallCard({ tool }: { tool: ToolCall }) {
 					<ChevronRight className="w-3 h-3 text-slate-500" />
 				)}
 			</button>
-			{expanded && tool.result && (
+			{expanded && (
 				<div
-					className={`px-3 pb-2 text-xs ${toolStatusColor(tool.status)} leading-relaxed border-t border-slate-800`}
+					className={`px-3 pb-2 text-xs ${toolStatusColor(status)} leading-relaxed border-t border-slate-800`}
 				>
-					<div className="pt-2">{tool.result}</div>
+					<pre className="pt-2 whitespace-pre-wrap break-words font-mono">{tool.result}</pre>
 				</div>
 			)}
 		</div>
@@ -394,7 +394,7 @@ export function ChatPanel({
 		setApiKey,
 		model,
 		setModel,
-	} = useChat();
+	} = useChat(portfolio, temperatureScore, undefined, currencySymbol);
 
 	const [input, setInput] = useState("");
 	const [showSettings, setShowSettings] = useState(false);
