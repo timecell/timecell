@@ -1,8 +1,27 @@
+import { existsSync } from "node:fs";
+import { join, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 import Fastify from "fastify";
 import cors from "@fastify/cors";
+import fastifyStatic from "@fastify/static";
 import { crashRoutes } from "./routes/crash.js";
 import { portfolioRoutes } from "./routes/portfolio.js";
 import { priceRoutes } from "./routes/price.js";
+
+function findWebDist(): string | null {
+	const candidates = [
+		// Bundled inside API package (npm published)
+		join(dirname(fileURLToPath(import.meta.url)), "web"),
+		// Monorepo development (src/)
+		join(dirname(fileURLToPath(import.meta.url)), "../../web/dist"),
+		// Monorepo development (dist/)
+		join(dirname(fileURLToPath(import.meta.url)), "../web"),
+	];
+	for (const p of candidates) {
+		if (existsSync(join(p, "index.html"))) return p;
+	}
+	return null;
+}
 
 export async function buildServer() {
 	const fastify = Fastify({ logger: true });
@@ -16,6 +35,24 @@ export async function buildServer() {
 
 	// Health check
 	fastify.get("/api/health", async () => ({ status: "ok", version: "0.1.0" }));
+
+	// Serve built web dashboard if available
+	const webDist = findWebDist();
+	if (webDist) {
+		await fastify.register(fastifyStatic, { root: webDist, prefix: "/" });
+		// SPA fallback: serve index.html for non-API routes
+		fastify.setNotFoundHandler(async (req, reply) => {
+			if (req.url.startsWith("/api")) {
+				return reply.status(404).send({ error: "Not Found", statusCode: 404 });
+			}
+			return reply.sendFile("index.html");
+		});
+	} else {
+		fastify.get("/", async () => ({
+			message: "TimeCell API is running. Build the web dashboard with: npm run build --workspace=@timecell/web",
+			health: "/api/health",
+		}));
+	}
 
 	return fastify;
 }

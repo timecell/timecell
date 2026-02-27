@@ -1,6 +1,6 @@
 {
   "name": "@timecell/api",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
   "description": "TimeCell API server",
   "main": "dist/server.js",
@@ -12,18 +12,21 @@
       "default": "./dist/server.js"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "build": "tsc"
+    "build": "tsc && cp -r ../web/dist dist/web 2>/dev/null || true"
   },
   "dependencies": {
+    "@fastify/cors": "latest",
+    "@fastify/static": "^9.0.0",
     "@timecell/engine": "*",
-    "fastify": "^5",
-    "@fastify/cors": "latest"
+    "fastify": "^5"
   },
   "devDependencies": {
     "@types/node": "latest",
