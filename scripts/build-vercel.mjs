@@ -4,7 +4,7 @@
  * - Web dashboard (packages/web/dist/) at /app/
  */
 
-import { cpSync, mkdirSync } from "node:fs";
+import { cpSync, mkdirSync, rmSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -13,6 +13,7 @@ const root = resolve(__dirname, "..");
 const out = resolve(root, "dist-vercel");
 
 // Clean and create output dir
+rmSync(out, { recursive: true, force: true });
 mkdirSync(out, { recursive: true });
 
 // Copy landing page to root

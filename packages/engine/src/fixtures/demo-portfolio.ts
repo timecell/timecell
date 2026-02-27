@@ -4,8 +4,8 @@ import type { PortfolioInput, HedgePosition } from "../types.js";
 // Demo Portfolio — Realistic YPO-relevant example
 // =============================================================================
 
-/** Default BTC price for demo (approximate Feb 2026) */
-export const DEMO_BTC_PRICE = 84000;
+/** Default BTC price for demo — only used if live fetch fails */
+export const DEMO_BTC_PRICE = 67000;
 
 /** Demo portfolio: $5M, 35% BTC, $25K/mo burn, $600K liquid reserve */
 export const DEMO_PORTFOLIO: PortfolioInput = {

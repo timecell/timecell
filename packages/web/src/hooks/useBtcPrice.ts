@@ -16,6 +16,8 @@ async function fetchFromApi(): Promise<{ price: number; source: "api" } | null> 
 	try {
 		const res = await fetch(API_PRICE_URL);
 		if (!res.ok) return null;
+		const ct = res.headers.get("content-type") ?? "";
+		if (!ct.includes("application/json")) return null;
 		const data = await res.json();
 		const price = typeof data?.price === "number" ? data.price : null;
 		if (!price) return null;
