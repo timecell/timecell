@@ -8,6 +8,7 @@ TimeCell (timecell.ai) is a local-first, CLI-first money and investing framework
 **Config:** `~/.timecell/`
 **No cloud, no auth, data stays local.**
 **Roadmap:** `ROADMAP.md` — single source of truth for all tasks (icebox/planned/in-progress/done). Read at session start.
+**Framework:** `docs/bitcoin-investing-framework-v2.md` — the 10-part Bitcoin Investing Framework that defines all product logic (conviction ladder, position sizing, temperature, ruin test, downside insurance). Read when implementing framework features.
 
 ## Architecture
 
