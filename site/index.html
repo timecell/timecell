@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="TimeCell — Know if you survive the crash before it happens. A local-first crash survival calculator for Bitcoin investors." />
+  <title>TimeCell — Crash Survival Calculator</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container">
+      <span class="logo">TimeCell</span>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- Hero -->
+    <section class="hero">
+      <div class="container hero-inner">
+        <div class="hero-label">Bitcoin Portfolio Risk Analysis</div>
+        <h1 class="hero-title">TimeCell</h1>
+        <p class="hero-tagline">Know if you survive the crash before it happens.</p>
+        <a href="#install" class="cta-button">Get Started &rarr;</a>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features" id="features">
+      <div class="container">
+        <h2 class="section-heading">What TimeCell does</h2>
+        <div class="feature-grid">
+
+          <div class="feature-card">
+            <div class="feature-icon">&#9632;</div>
+            <h3 class="feature-title">Crash Survival Score</h3>
+            <p class="feature-body">
+              See exactly where your portfolio breaks across &minus;30%, &minus;50%, &minus;70%, and &minus;80% drawdowns.
+              Know your threshold before the market finds it for you.
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">&#9632;</div>
+            <h3 class="feature-title">Ruin Test</h3>
+            <p class="feature-body">
+              The framework question: if BTC drops 80% and everything else drops 40%, do you survive?
+              One scenario. One answer. No ambiguity.
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">&#9632;</div>
+            <h3 class="feature-title">Local-First</h3>
+            <p class="feature-body">
+              Your data stays on your machine. No cloud, no accounts, no tracking.
+              Built for people who treat privacy as a prerequisite, not a feature.
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Install -->
+    <section class="install" id="install">
+      <div class="container install-inner">
+        <h2 class="section-heading">Run it now</h2>
+        <p class="install-sub">No installation required. Runs locally in your terminal.</p>
+        <div class="code-block">
+          <div class="code-block-header">
+            <span class="code-block-label">Terminal</span>
+            <button class="copy-button" id="copyBtn" aria-label="Copy command to clipboard">
+              Copy
+            </button>
+          </div>
+          <pre class="code-content"><code id="installCmd">npx timecell</code></pre>
+        </div>
+        <p class="install-note">Requires Node.js 18+. Works on macOS, Linux, and Windows.</p>
+      </div>
+    </section>
+
+    <!-- Why section -->
+    <section class="why">
+      <div class="container why-inner">
+        <h2 class="section-heading">Built for serious allocators</h2>
+        <p class="why-body">
+          Most portfolio tools are built for average market conditions. TimeCell is built for the tail.
+          It answers the question that matters: not how much you could make, but whether you can survive
+          the scenario that ends most investors.
+        </p>
+        <p class="why-body">
+          No dashboards. No subscriptions. No data leaving your machine. Open a terminal,
+          run the command, and know your number in under a minute.
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span class="footer-brand">Built by TimeCell Labs</span>
+      <a
+        href="https://twitter.com/timecellai"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="footer-link"
+      >@timecellai</a>
+    </div>
+  </footer>
+
+  <script>
+    const btn = document.getElementById('copyBtn');
+    const cmd = document.getElementById('installCmd');
+
+    btn.addEventListener('click', () => {
+      navigator.clipboard.writeText(cmd.textContent.trim()).then(() => {
+        btn.textContent = 'Copied';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = 'Copy';
+          btn.classList.remove('copied');
+        }, 2000);
+      }).catch(() => {
+        // Fallback for environments without clipboard API
+        const range = document.createRange();
+        range.selectNode(cmd);
+        window.getSelection().removeAllRanges();
+        window.getSelection().addRange(range);
+        btn.textContent = 'Selected';
+        setTimeout(() => {
+          btn.textContent = 'Copy';
+          window.getSelection().removeAllRanges();
+        }, 2000);
+      });
+    });
+  </script>
+
+</body>
+</html>

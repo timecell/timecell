@@ -1,0 +1,23 @@
+{
+  "name": "@timecell/web",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "TimeCell web application",
+  "scripts": {
+    "dev": "vite --port 3738",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^19",
+    "react-dom": "^19"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.2.1",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@vitejs/plugin-react": "latest",
+    "tailwindcss": "^4",
+    "vite": "^6"
+  }
+}

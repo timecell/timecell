@@ -3,7 +3,13 @@
   "version": "0.1.0",
   "type": "module",
   "description": "TimeCell API server",
-  "main": "dist/server.js",
+  "main": "src/server.ts",
+  "exports": {
+    ".": {
+      "import": "./src/server.ts",
+      "default": "./dist/server.js"
+    }
+  },
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "build": "tsc"
@@ -14,6 +20,7 @@
     "@fastify/cors": "latest"
   },
   "devDependencies": {
+    "@types/node": "latest",
     "tsx": "latest"
   }
 }

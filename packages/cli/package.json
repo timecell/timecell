@@ -1,0 +1,23 @@
+{
+  "name": "timecell",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "TimeCell CLI — Crash Survival Calculator",
+  "bin": {
+    "timecell": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/index.ts"
+  },
+  "dependencies": {
+    "@inquirer/prompts": "^7",
+    "@timecell/api": "*",
+    "@timecell/engine": "*",
+    "open": "^10"
+  },
+  "devDependencies": {
+    "@types/node": "latest",
+    "tsx": "latest"
+  }
+}
