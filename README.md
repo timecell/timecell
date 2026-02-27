@@ -48,6 +48,15 @@ site/       — Landing page (timecell.ai)
 - Vitest for testing
 - SQLite for local persistence (planned)
 
+## Roadmap
+
+- Position sizing calculator (how much BTC to hold)
+- Bitcoin temperature gauge (market cycle awareness)
+- Hedge breakeven analysis (Spitznagel geometric mean)
+- Portfolio rebalancing rules
+- Tax optimization modeling
+- Multi-asset correlation engine
+
 ## License
 
 MIT

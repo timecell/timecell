@@ -3,13 +3,18 @@
   "version": "0.1.0",
   "type": "module",
   "description": "TimeCell API server",
-  "main": "src/server.ts",
+  "main": "dist/server.js",
+  "types": "dist/server.d.ts",
   "exports": {
     ".": {
-      "types": "./src/server.ts",
-      "import": "./src/server.ts",
-      "default": "./src/server.ts"
+      "types": "./dist/server.d.ts",
+      "import": "./dist/server.js",
+      "default": "./dist/server.js"
     }
+  },
+  "files": ["dist"],
+  "publishConfig": {
+    "access": "public"
   },
   "scripts": {
     "dev": "tsx watch src/server.ts",

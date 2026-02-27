@@ -6,14 +6,18 @@
   "bin": {
     "timecell": "dist/index.js"
   },
+  "files": ["dist"],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsc",
     "dev": "tsx src/index.ts"
   },
   "dependencies": {
     "@inquirer/prompts": "^7",
-    "@timecell/api": "*",
-    "@timecell/engine": "*",
+    "@timecell/api": "0.1.0",
+    "@timecell/engine": "0.1.0",
     "open": "^10"
   },
   "devDependencies": {
