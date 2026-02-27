@@ -1,7 +1,7 @@
 // =============================================================================
 // Claude Tool Definitions — Anthropic API tool_use format
 // =============================================================================
-// Maps 8 TimeCell engine functions as Claude-callable tools.
+// Maps 14 TimeCell engine functions as Claude-callable tools.
 // resolveToolCall dispatches tool names to engine functions and returns JSON.
 
 import {
@@ -12,12 +12,22 @@ import {
 	calculateSleepTest,
 	calculateSellingRules,
 	calculateDCASummary,
+	calculateAllocationDrift,
+	simulateAllHistoricalCrashes,
+	calculateDownsideInsurance,
+	calculateCustodyRisk,
+	calculateGeometricMeanCAGR,
+	calculateTemperatureAdjustedDCA,
 	type PortfolioInput,
 	type ActionPlanInput,
 	type PositionSizingInput,
 	type SleepTestInput,
 	type SellingRulesInput,
 	type DCASummaryInput,
+	type AllocationDriftInput,
+	type InsuranceInput,
+	type CustodyInput,
+	type DCAInput,
 } from "@timecell/engine";
 
 // ---------------------------------------------------------------------------
@@ -166,6 +176,100 @@ export const TOOLS: ToolDefinition[] = [
 			required: ["currentBtcPrice", "temperatureScore", "monthlyAmount"],
 		},
 	},
+	{
+		name: "calculate_allocation_drift",
+		description:
+			"Detect when BTC price movement has caused portfolio allocation to drift from the user's target. Use this when discussing rebalancing or checking if allocation has shifted.",
+		input_schema: {
+			type: "object",
+			properties: {
+				initialBtcPct: { type: "number", description: "BTC % when user last set their allocation" },
+				initialBtcPrice: { type: "number", description: "BTC price when allocation was set" },
+				currentBtcPrice: { type: "number", description: "Current BTC price in USD" },
+				otherAssetsValue: { type: "number", description: "Non-BTC portfolio value in USD (assumed stable)" },
+				btcHoldings: { type: "number", description: "Amount of BTC held (in BTC units, not USD)" },
+			},
+			required: ["initialBtcPct", "initialBtcPrice", "currentBtcPrice", "otherAssetsValue", "btcHoldings"],
+		},
+	},
+	{
+		name: "simulate_historical_crashes",
+		description:
+			"Simulate how the user's portfolio would have performed in real historical Bitcoin crashes (Mt. Gox 2014, ICO Bust 2018, COVID 2020, LUNA/FTX 2022). Use this when the user asks about past crashes or wants historical context.",
+		input_schema: {
+			type: "object",
+			properties: {
+				totalValueUsd: { type: "number", description: "Total portfolio value in USD" },
+				btcPercentage: { type: "number", description: "BTC allocation as percentage (0-100)" },
+				btcPriceUsd: { type: "number", description: "Current BTC price in USD" },
+				monthlyBurnUsd: { type: "number", description: "Monthly expenses in USD" },
+				liquidReserveUsd: { type: "number", description: "Liquid cash reserve in USD" },
+			},
+			required: ["totalValueUsd", "btcPercentage", "btcPriceUsd", "monthlyBurnUsd", "liquidReserveUsd"],
+		},
+	},
+	{
+		name: "calculate_downside_insurance",
+		description:
+			"Calculate put option hedge costs and payoffs for downside insurance. Use this when the user asks about hedging, insurance, or protecting their BTC position.",
+		input_schema: {
+			type: "object",
+			properties: {
+				totalBtcValueUsd: { type: "number", description: "Total value of BTC holdings in USD" },
+				btcPriceUsd: { type: "number", description: "Current BTC price in USD" },
+				hedgeBudgetPct: { type: "number", description: "% of BTC value allocated to hedge budget (e.g. 2 means 2%)" },
+				putStrikePct: { type: "number", description: "Put strike as % of current price (e.g. 70 = 30% out-of-the-money)" },
+				putCostPct: { type: "number", description: "Put premium as % of notional protected (e.g. 3 means 3%)" },
+				expiryMonths: { type: "number", description: "Months until put option expires" },
+			},
+			required: ["totalBtcValueUsd", "btcPriceUsd", "hedgeBudgetPct", "putStrikePct", "putCostPct", "expiryMonths"],
+		},
+	},
+	{
+		name: "calculate_custody_risk",
+		description:
+			"Assess exchange vs self-custody risk for BTC holdings. Use this when the user asks about custody, exchange risk, or where to store their Bitcoin.",
+		input_schema: {
+			type: "object",
+			properties: {
+				totalBtcValueUsd: { type: "number", description: "Total USD value of BTC holdings" },
+				exchangePct: { type: "number", description: "Percentage of BTC held on exchanges (0-100)" },
+				btcPriceUsd: { type: "number", description: "Current BTC price in USD" },
+			},
+			required: ["totalBtcValueUsd", "exchangePct", "btcPriceUsd"],
+		},
+	},
+	{
+		name: "calculate_geometric_cagr",
+		description:
+			"Compare hedged vs unhedged long-term CAGR using geometric mean analysis (Spitznagel method). Use this when discussing whether insurance improves long-term returns.",
+		input_schema: {
+			type: "object",
+			properties: {
+				normalReturn: { type: "number", description: "Annual return in non-crash years (e.g. 0.30 for 30%)" },
+				annualCost: { type: "number", description: "Annual hedge cost as decimal (e.g. 0.03 for 3%)" },
+				crashMagnitude: { type: "number", description: "Crash loss as decimal (e.g. 0.80 for 80% crash)" },
+				recoveryOfLoss: { type: "number", description: "Fraction of loss recovered by hedge (e.g. 0.50 for 50% recovery)" },
+				cycleLength: { type: "number", description: "Years per crash cycle (e.g. 4 for Bitcoin's 4-year cycle)" },
+			},
+			required: ["normalReturn", "annualCost", "crashMagnitude", "recoveryOfLoss", "cycleLength"],
+		},
+	},
+	{
+		name: "calculate_temperature_dca",
+		description:
+			"Calculate a temperature-adjusted DCA schedule that buys more in fear zones and less in greed zones. Use this when the user asks about DCA strategy with market timing.",
+		input_schema: {
+			type: "object",
+			properties: {
+				monthlyAmountUsd: { type: "number", description: "Base monthly DCA amount in USD" },
+				months: { type: "number", description: "Number of months to simulate (default 12)" },
+				currentBtcPriceUsd: { type: "number", description: "Current BTC price in USD" },
+				temperatureScore: { type: "number", description: "Current market temperature (0-100)" },
+			},
+			required: ["monthlyAmountUsd", "months", "currentBtcPriceUsd", "temperatureScore"],
+		},
+	},
 ];
 
 // ---------------------------------------------------------------------------
@@ -283,6 +387,75 @@ async function resolveToolCallInner(
 				mode: "temperature-adjusted",
 			};
 			const result = calculateDCASummary(dcaInput);
+			return JSON.stringify(result);
+		}
+
+		case "calculate_allocation_drift": {
+			const driftInput: AllocationDriftInput = {
+				initialBtcPct: input.initialBtcPct as number,
+				initialBtcPrice: input.initialBtcPrice as number,
+				currentBtcPrice: input.currentBtcPrice as number,
+				otherAssetsValue: input.otherAssetsValue as number,
+				btcHoldings: input.btcHoldings as number,
+			};
+			const result = calculateAllocationDrift(driftInput);
+			return JSON.stringify(result);
+		}
+
+		case "simulate_historical_crashes": {
+			const portfolio: PortfolioInput = {
+				totalValueUsd: input.totalValueUsd as number,
+				btcPercentage: input.btcPercentage as number,
+				btcPriceUsd: input.btcPriceUsd as number,
+				monthlyBurnUsd: input.monthlyBurnUsd as number,
+				liquidReserveUsd: input.liquidReserveUsd as number,
+			};
+			const result = simulateAllHistoricalCrashes(portfolio);
+			return JSON.stringify(result);
+		}
+
+		case "calculate_downside_insurance": {
+			const insuranceInput: InsuranceInput = {
+				totalBtcValueUsd: input.totalBtcValueUsd as number,
+				btcPriceUsd: input.btcPriceUsd as number,
+				hedgeBudgetPct: input.hedgeBudgetPct as number,
+				putStrikePct: input.putStrikePct as number,
+				putCostPct: input.putCostPct as number,
+				expiryMonths: input.expiryMonths as number,
+			};
+			const result = calculateDownsideInsurance(insuranceInput);
+			return JSON.stringify(result);
+		}
+
+		case "calculate_custody_risk": {
+			const custodyInput: CustodyInput = {
+				totalBtcValueUsd: input.totalBtcValueUsd as number,
+				exchangePct: input.exchangePct as number,
+				btcPriceUsd: input.btcPriceUsd as number,
+			};
+			const result = calculateCustodyRisk(custodyInput);
+			return JSON.stringify(result);
+		}
+
+		case "calculate_geometric_cagr": {
+			const result = calculateGeometricMeanCAGR(
+				input.normalReturn as number,
+				input.annualCost as number,
+				input.crashMagnitude as number,
+				input.recoveryOfLoss as number,
+				input.cycleLength as number,
+			);
+			return JSON.stringify(result);
+		}
+
+		case "calculate_temperature_dca": {
+			const dcaInput: DCAInput = {
+				monthlyInvestmentUsd: input.monthlyAmountUsd as number,
+				totalMonths: input.months as number,
+				btcPriceUsd: input.currentBtcPriceUsd as number,
+				mode: "temperature-adjusted",
+			};
+			const result = calculateTemperatureAdjustedDCA(dcaInput, input.temperatureScore as number);
 			return JSON.stringify(result);
 		}
 

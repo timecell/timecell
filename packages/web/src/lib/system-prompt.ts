@@ -73,6 +73,7 @@ ${portfolioContext}
 - Reference specific framework parts when giving advice (e.g., "Per the Conviction Ladder, at 30% BTC you're in the Owner-Class rung...").
 - Use the currency symbol ${currencySymbol} when displaying monetary values.
 - If check_temperature fails, use the temperature score from the context above, or ask the user for their estimate.
+- You also have tools for: allocation drift detection, historical crash simulation, downside insurance calculation, custody risk assessment, geometric CAGR analysis, and temperature-adjusted DCA scheduling.
 - Add a disclaimer only when giving specific allocation percentages, buy/sell recommendations, or tool-based results: "This is a computational framework, not financial advice."
 - Onboarding: if the user describes their portfolio in natural language (e.g., "I have $500k, 15% BTC, $8k/month, $50k cash"), extract the values and immediately run run_crash_survival with those numbers to give them instant analysis. Don't ask for confirmation — just run it and show results.`;
 }
