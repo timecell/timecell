@@ -18,6 +18,7 @@
 - [ ] **Demo dry run** — full walkthrough per demo-checklist.md, on projector, timed
 - [ ] **Logo deploy to Vercel** — push site/ changes so timecell.ai shows logo
 - [ ] **Currency default to INR for demo** — audience thinks in crores, show ₹ symbol
+- [ ] **Hosted web version** (timecell.ai/app) — deploy dashboard to Vercel so YPO members can try with zero install. Static Vite build + serverless API. **Highest priority for post-demo distribution** — "open this URL on your phone" beats "install Node.js"
 
 ---
 
@@ -72,6 +73,17 @@
 - [ ] Currency conversion with live rates — INR/USD/EUR with auto-fetch
 - [ ] Market sentiment integration — Fear & Greed index alongside temperature
 
+### Distribution & Access (Make it easy for non-tech users)
+- [ ] **Hosted web app** (timecell.ai/app) — zero install, just open URL. Vite static build + Vercel serverless API. **Recommended first priority post-demo.** Nikesh-friendly.
+- [ ] **Desktop app** (Electron or Tauri) — download .dmg/.exe, double-click, no terminal. High effort but best UX for recurring use.
+- [ ] **One-line install script** — `curl timecell.ai/install | sh` installs Node + runs npx. Still needs terminal.
+- [ ] **Install instructions page** — timecell.ai/install with step-by-step screenshots for Mac/Windows. Minimum viable for CLI distribution.
+- [ ] npm package README with screenshots
+- [ ] Product Hunt launch
+- [ ] Twitter/X content — demo GIF, thread explaining the framework
+- [ ] Blog post — "Why crash survival matters more than returns"
+- [ ] YPO follow-up email template with personalized results
+
 ### Technical
 - [ ] SQLite persistence — save portfolio history, track changes over time
 - [ ] Better CLI error messages for non-technical users
@@ -79,13 +91,6 @@
 - [ ] Test coverage for API routes
 - [ ] CI/CD pipeline — GitHub Actions for test + publish
 - [ ] Hosted mode — optional cloud deployment for teams (Postgres, auth)
-
-### Distribution
-- [ ] npm package README with screenshots
-- [ ] Product Hunt launch
-- [ ] Twitter/X content — demo GIF, thread explaining the framework
-- [ ] Blog post — "Why crash survival matters more than returns"
-- [ ] YPO follow-up email template with personalized results
 
 ---
 
@@ -97,3 +102,4 @@
 | 2026-02-27 | Logo: v3-3 (orange circle+dot + wordmark) | Finalized after 5 rounds of iterations |
 | 2026-02-27 | Number shorthand: simple suffix parsing, no AI | k/m/b/cr/l covers Western + Indian notation |
 | 2026-02-27 | Dashboard UX: needs redesign — too data-heavy | Prioritize emotional impact for demo: survival score hero > interactive sliders > details |
+| 2026-02-27 | Distribution: hosted web app is priority over CLI for non-tech users | Only dep for CLI is Node.js 18+ — blocker for YPO audience. timecell.ai/app = zero install |

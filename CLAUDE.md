@@ -4,9 +4,10 @@
 
 TimeCell (timecell.ai) is a local-first, CLI-first money and investing framework tool. Bitcoin crash survival is the initial wedge; the product evolves to cover the full investing lifecycle.
 
-**Install:** `npx timecell` → setup wizard → local SQLite → localhost dashboard
+**Install:** `npx @timecell/cli` → setup wizard → local SQLite → localhost dashboard
 **Config:** `~/.timecell/`
 **No cloud, no auth, data stays local.**
+**Roadmap:** `ROADMAP.md` — single source of truth for all tasks (icebox/planned/in-progress/done). Read at session start.
 
 ## Architecture
 
