@@ -1,6 +1,6 @@
 {
   "name": "@timecell/cli",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "type": "module",
   "description": "TimeCell CLI — Crash Survival Calculator",
   "bin": {
@@ -18,8 +18,8 @@
   },
   "dependencies": {
     "@inquirer/prompts": "^7",
-    "@timecell/api": "0.1.1",
-    "@timecell/engine": "0.1.1",
+    "@timecell/api": "*",
+    "@timecell/engine": "*",
     "open": "^10"
   },
   "devDependencies": {

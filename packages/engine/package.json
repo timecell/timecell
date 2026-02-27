@@ -1,6 +1,6 @@
 {
   "name": "@timecell/engine",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "type": "module",
   "description": "TimeCell core engine",
   "main": "dist/index.js",
