@@ -1,0 +1,18 @@
+{
+	"buildCommand": "npm run build --workspace=@timecell/engine && VERCEL=1 npm run build --workspace=@timecell/web && node scripts/build-vercel.mjs",
+	"outputDirectory": "dist-vercel",
+	"framework": null,
+	"installCommand": "npm install",
+	"rewrites": [
+		{ "source": "/app/:path((?!assets/).*)", "destination": "/app/index.html" }
+	],
+	"headers": [
+		{
+			"source": "/(.*)",
+			"headers": [
+				{ "key": "X-Content-Type-Options", "value": "nosniff" },
+				{ "key": "X-Frame-Options", "value": "DENY" }
+			]
+		}
+	]
+}
