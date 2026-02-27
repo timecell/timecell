@@ -25,52 +25,19 @@ The web app is the acquisition funnel. The daemon is the product. Installation f
 
 ---
 
-## v0.1 — "Can I survive a crash?" ✅ SHIPPED
+## v0.1 ✅ SHIPPED
+Monorepo scaffolding, crash survival engine, ruin test, runway, hedge payoff, CAGR, CLI wizard, dashboard (shadcn/ui, recharts, dark theme), landing page, logo, conviction ladder, currency support. Published as v0.1.1.
 
-- [x] Full monorepo scaffolding, all packages published v0.1.1
-- [x] Engine: crash survival, ruin test, runway, hedge payoff, CAGR
-- [x] Dashboard: shadcn/ui, recharts, dark theme, responsive
-- [x] CLI: wizard, auto BTC price, port handling
-- [x] Landing page: timecell.ai on Vercel
-- [x] Logo, conviction ladder, currency support, shorthand numbers, info panel
-
-## v0.2 — "What should I do about it?" ✅ SHIPPED
-
-- [x] Action plan engine — 11 framework rules, pure function, 17 tests
-- [x] ActionPlan.tsx component with standalone mode support
-- [x] 5-zone dashboard layout (hero > interactive > market intelligence > crash details > framework)
-- [x] Temperature gauge — engine function + API route + SVG gauge component
-- [x] Position sizing — engine function + 20 tests + API route + UI with sliders
-- [x] Live BTC price — hook + ticker component, auto-refresh, price flash
-- [x] Hosted web app infrastructure — standalone mode, Vercel config, engine runs client-side. Live at timecell.ai/app.
-- [x] All packages bumped to v0.2.0, 54 tests passing
-
-## v0.3–v0.5 Scope Note
-
-These three releases collectively prove the **habit loop**: trigger → recommendation → action → improved scorecard. The critical variable is not more features — it is whether users form the "info → action" habit. Validation targets: D30 retention ≥20%, action closure rate ≥25%.
-
-**Key insight (Session 8):** Chat is 90-95% of the value. The dashboard is a visual reference layer, not the primary experience. The interface should reflect this — chat takes center stage, dashboard becomes collapsible proof.
+## v0.2 ✅ SHIPPED
+Action plan engine (11 rules), temperature gauge, position sizing, live BTC price, 5-zone dashboard layout, hosted web app (timecell.ai/app), standalone mode. All packages v0.2.0, 54 tests passing.
 
 ## v0.3 — "Talk to your portfolio"
 
 Chat IS the product. The AI advisor is the primary experience — users ask questions and get framework-driven answers backed by real calculations. The dashboard exists as visual proof that appears when relevant.
 
-**Shipped:**
-- [x] **Chat-first AI advisor** — Claude-powered chat with BYOK. 8 engine functions as AI tools. Framework embodied in system prompt. Agentic tool-use loop with abort/cancel.
-- [x] **BYOK setup** — API key entry, model selection (sonnet/opus/haiku), localStorage storage, clear with confirmation
-- [x] **Guided first-run flow** — Questions not sliders: "What's your net worth?" → "How much is liquid?" → "What % is BTC?" → reveal dashboard with YOUR numbers
-- [x] **Sleep test, capacity gate, conviction gates, de-risk triggers, report card** — Full Position Sizing Process (Framework Part 3)
+**Shipped:** Chat-first AI advisor (BYOK, 8 engine tools, agentic loop, streaming), layout flip (chat full-width + collapsible sidebar), conversational onboarding, sleep test + capacity gate engines, temperature v3.0 (live Turso), report card, landing page v2.
 
-**Shipped — Layout flip (chat-dominant):**
-- [x] **Chat takes full width** — Chat is the main surface. Full-width on desktop with 380px collapsible dashboard sidebar. Mobile: chat is default, dashboard is secondary tab.
-- [x] **Conversational onboarding** — AI welcome message replaces 4-step wizard. New users see "Welcome! Tell me about your portfolio" in chat. OnboardingModal, WelcomeHero, GuidedFlow removed.
-- [x] **Dashboard sidebar** — Collapsible right panel: Key Metrics (5 pinned) vs Full Dashboard toggle. localStorage persistence for sidebar state.
-- [x] **Streaming responses** — `messages.stream()` with incremental text display. Blinking cursor during generation.
-- [x] **Tool calls UX** — Subtle inline status dots, collapsed by default. Expandable via left-border detail. Tools are invisible infrastructure.
 - [ ] **Additional AI tools** — Capacity gate, allocation drift, historical crash simulation, downside insurance, custody risk, geometric CAGR (6 engine functions not yet exposed)
-- [x] **Landing page v2** — Chat-first CIO positioning. "Open App" is primary CTA.
-
-**Insight (Session 9):** TimeCell is an AI agent, not a CLI tool or web app. The daemon/agent is the core product — the web app is the trial/demo that converts users to agent installers. Install friction is temporary (solve progressively like OpenClaw); architectural ceiling is permanent (browser can never do background monitoring, filesystem access, self-improvement). 4-AI second opinion validated this direction.
 
 **Deferred to v0.4 (daemon features):**
 - [ ] CIO memory across sessions — Persist portfolio context + conversation insights. On return: "Welcome back. Temperature moved from 55 to 62 — want me to review?"
@@ -161,7 +128,7 @@ Two modes, one engine. Mass retail stays simple; family office exposes governanc
 
 ### Conversational Interface
 - ~~Chat panel~~ — ✅ Built in v0.3 (chat-first layout, 8 tools, BYOK, agentic loop)
-- ~~Chat streaming~~ — Moving to v0.3 (in progress)
+- ~~Chat streaming~~ — ✅ Built in v0.3
 - **WhatsApp/Telegram bot** — Same engine tools, text-only responses. Users get advice on the go without opening the web app. Web app remains the "rich" channel with interactive widgets.
 - **CLI conversational mode** — Extend existing CLI wizard with AI-powered chat that reads engine output and interprets it
 - **User personas** — 3 test personas (Conservative HNI / Aggressive crypto-native / Curious newcomer) for flow testing and UX validation
@@ -231,61 +198,17 @@ OSS-first distribution — no paid channels, no sales team.
 
 ## Decision Log
 
+Last 3 decisions. Full log: `docs/decisions.md`
+
 | Date | Decision | Context |
 |------|----------|---------|
-| 2026-02-27 | OSS/AI Labs reframing + second-opinion incorporation | Multi-AI review (OpenAI, Gemini, DeepSeek, Claude). Key changes: v1.0/v2.0 reframed as contingent horizons with validation gates; v0.3-v0.5 unified around habit loop proof; added Risks & Assumptions (framework generalizability, bear market sensitivity, financial advice disclaimers); added Distribution section. |
-| 2026-02-28 | Broadened roadmap vision to full investing lifecycle | ChatGPT architecture session captured product arc: Bitcoin wedge → daily habit → full portfolio → family office platform. Roadmap was too Bitcoin-narrow. |
-| 2026-02-28 | Added v1.0 and v2.0 horizons | v1.0 = multi-asset command center. v2.0 = family office mode. Captures architecture decisions from planning session (Postgres, multi-entity, role-scoped agents, trade intents). |
-| 2026-02-28 | Restructured v0.3-v0.5 around product story | Survive → Understand → Size → Monitor → Advance. Previous v0.4 (distribution) was stale. |
-| 2026-02-28 | Desktop app moved to icebox | No proven demand. Hosted web app covers zero-install need. |
-| 2026-02-28 | "What Should I Do?" engine is the product differentiator | Framework audit: product shows data but doesn't give answers. Action plan closes the loop. |
-| 2026-02-28 | Framework v2 is the source of truth for all product logic | Copied to docs/, referenced in CLAUDE.md. All features trace back to framework parts. |
-| 2026-02-28 | Capacity gate is critical input, not nice-to-have | Framework Part 3 Step 2: Effective Allocation = min(Conviction, Capacity). Without it, position sizing is incomplete. |
-| 2026-02-28 | Computation vs personality separation | Numbers and actions must be deterministic and auditable. Personality layer (engagement, UX tone) is separate. From ChatGPT architecture session. |
-| 2026-02-28 | Execution deferred by design | Read-only until v2.0. Design outputs as trade intents so future execution is possible. Execution is 10x harder than analysis. |
-| 2026-02-28 | One engine, multiple surfaces | Mass retail hides complexity; family office exposes governance. Prevents building two products. |
-| 2026-02-27 | Currency: option 2 (with conversion) for long-term | Math is currency-agnostic, but INR users need ₹ display + live conversion |
-| 2026-02-27 | Logo: v3-3 (orange circle+dot + wordmark) | Finalized after 5 rounds |
-| 2026-02-27 | Distribution: hosted web app > CLI for non-tech users | timecell.ai/app = zero install |
-| 2026-02-28 | Chat-first architecture (v0.3) | Product shifted from dashboard-first to chat-first. AI advisor (Claude) is the primary experience via BYOK. Engine functions exposed as Claude tools. Dashboard is visual reference. Browser-direct API calls (no proxy). Inspired by OpenClaw model. |
-| 2026-02-28 | OpenClaw UX pattern as reference | Tool-using AI with local-first architecture and no setup friction. TimeCell is the same pattern applied to investing instead of coding. Key lessons: tools invisible by default (CIO gives judgment, not plumbing), progressive context building, conversational onboarding (no wizard), session memory (CIO remembers and proactively references changes), streaming for perceived responsiveness. |
 | 2026-02-28 | Layout flip: chat-dominant interface | User insight: chat is 90-95% of the value, dashboard is 5%. Flipped: chat full width, dashboard as 380px collapsible sidebar. |
-| 2026-02-28 | Daemon-as-core architecture (4-AI validated, 2 rounds) | Round 1: all 4 AIs recommended web-first, daemon optional. Founder pushed back: OpenClaw expanded to non-devs, CLI can do things web never can (background monitoring, filesystem, self-improvement), install friction is temporary but ceiling is permanent. Round 2: OpenAI shifted to daemon-first (higher EV ~41 vs ~34), Gemini maintained dissent (trust crisis for financial product), DeepSeek proposed hybrid (daemon + web as remote control). Final decision: daemon IS the core product, web app is acquisition funnel / remote control. Kill-switch: <5% install conversion after 6 weeks → fall back to server-side monitoring. |
-| 2026-02-28 | Live temperature pulled forward from v0.4 | Discovered existing live MVRV/RHODL feed in Turso DB (shared with fo-web, open-fo, mc-bitcoin-tools). Daily sync via GitHub Actions. Connecting TimeCell directly rather than building from scratch. |
-| 2026-02-28 | Framework generalizability analysis (4-AI second opinion) | Claude + OpenAI + Gemini + DeepSeek consensus: core process (conviction, sizing, ruin, sleep) transfers with high confidence. Temperature is Bitcoin-specific — needs pluggable adapters per asset (CAPE for stocks, cap rates for RE, real yields for bonds). Yield-bearing assets break zero-yield assumption. v1.0 rewritten with adapter architecture. Strongest counterargument: without on-chain data quality, framework loses its differentiating edge over generic advice. |
-
----
+| 2026-02-28 | Daemon-as-core architecture (4-AI validated, 2 rounds) | Round 1: all 4 AIs recommended web-first, daemon optional. Founder pushed back: install friction is temporary but ceiling is permanent. Round 2: OpenAI shifted to daemon-first. Final: daemon IS the core product, web app is acquisition funnel / remote control. Kill-switch: <5% install conversion after 6 weeks. |
+| 2026-02-28 | Framework generalizability analysis (4-AI second opinion) | Core process (conviction, sizing, ruin, sleep) transfers with high confidence. Temperature is Bitcoin-specific — needs pluggable adapters per asset. Yield-bearing assets break zero-yield assumption. v1.0 rewritten with adapter architecture. |
 
 ## Build History
 
-### v0.3 (partial) — Sessions 6-9 (Feb 28)
-- Chat-first AI advisor: ChatPanel, useChat hook (agentic tool loop, abort/cancel, activeToolName), ApiKeySetup (BYOK)
-- 8 engine functions exposed as Claude tools with try/catch, system prompt with framework knowledge
-- Layout flip: chat full-width, 380px collapsible dashboard sidebar (Key Metrics / Full Dashboard toggle)
-- Conversational onboarding: AI welcome message replaces 4-step wizard. OnboardingModal/WelcomeHero/GuidedFlow removed.
-- Streaming responses: messages.stream() with incremental display, blinking cursor
-- Tool calls UX: subtle inline status dots, collapsed by default, expandable detail
-- Landing page v2: chat-first CIO positioning, "Open App" primary CTA
-- QA review: 3 parallel agents (UX, tools, mobile), 10+ critical/high issues fixed
-- Temperature v3.0 (MVRV z-score CDF + RHODL log-scale, 6-tier zones), live Turso connection
-- Sleep test engine (8 tests) + capacity gate engine (23 tests), 86 total tests
-- SleepTest (visceral loss display), ReportCard (screenshot-friendly)
-- Framework generalizability analysis (4-AI second opinion), ROADMAP rewritten with adapter architecture
-- Financial disclaimer, standalone mode fix, action plan 6-tier thresholds
-- SurvivalHero sidebar overflow fix, markdown table/heading/numbered list rendering
-- Logo size increases across app and landing page
-
-### v0.2 — Sessions 4-5 (Feb 28)
-- Action plan engine (11 rules, 17 tests), temperature gauge, position sizing (20 tests)
-- 5-zone dashboard, standalone mode, Vercel config, live BTC price
-- All packages v0.2.0, 54 tests passing
-
-### v0.1 — Sessions 1-3 (Feb 27)
-- Full monorepo, crash survival, ruin test, runway, hedge payoff, CAGR
-- Dashboard (shadcn/ui, recharts, dark theme), CLI wizard
-- Landing page, logo, conviction ladder, currency, shorthand numbers
-
----
+Build history: `docs/build-history.md`
 
 ## Marketing (Icebox)
 - [ ] Product Hunt launch
