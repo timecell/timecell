@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import { usePortfolio } from "./hooks/usePortfolio";
-import type { PortfolioInput } from "./hooks/usePortfolio";
 import { useCurrencyRate } from "./hooks/useCurrencyRate";
 import { SurvivalHero } from "./components/SurvivalHero";
 import { PortfolioForm } from "./components/PortfolioForm";
@@ -27,7 +26,6 @@ import { DCACalculator } from "./components/DCACalculator";
 import { ReportCard } from "./components/ReportCard";
 import { WhatIfComparison } from "./components/WhatIfComparison";
 import { HistoricalCrashOverlay } from "./components/HistoricalCrashOverlay";
-import { OnboardingModal, useOnboarding } from "./components/OnboardingModal";
 import { CurrencySelector } from "./components/CurrencySelector";
 import { GuidedFlow, WelcomeHero } from "./components/GuidedFlow";
 import { ChatPanel } from "./components/ChatPanel";
@@ -43,7 +41,6 @@ export default function App() {
 	const [whatIfOpen, setWhatIfOpen] = useState(false);
 	const [temperatureScore, setTemperatureScore] = useState(55);
 	const reportCardRef = useRef<HTMLDivElement>(null);
-	const { showOnboarding, dismiss: dismissOnboarding } = useOnboarding();
 	const [chatVisible, setChatVisible] = useState(true);
 
 	// Sidebar state — persisted in localStorage
@@ -83,18 +80,6 @@ export default function App() {
 	useEffect(() => {
 		loadPortfolio();
 	}, []);
-
-	const handleOnboardingComplete = useCallback(
-		(values: Partial<PortfolioInput>) => {
-			dismissOnboarding();
-			updatePortfolio(values);
-		},
-		[dismissOnboarding, updatePortfolio],
-	);
-
-	const handleOnboardingSkip = useCallback(() => {
-		dismissOnboarding();
-	}, [dismissOnboarding]);
 
 	// ── Full dashboard content (reused in sidebar full mode and mobile) ──
 	const renderFullDashboard = () => (
@@ -393,7 +378,7 @@ export default function App() {
 				<header className="border-b border-slate-800 px-4 sm:px-6 py-3 sm:py-4">
 					<div className="max-w-7xl mx-auto flex items-center justify-between gap-2">
 						<div className="flex items-center gap-2 sm:gap-3 min-w-0">
-							<img src="/logo.png" alt="TimeCell" className="h-9 sm:h-10 brightness-110 flex-shrink-0" />
+							<img src="/logo.png" alt="TimeCell" className="h-12 sm:h-14 brightness-110 flex-shrink-0" />
 							<span className="text-xs text-slate-500 bg-slate-800 px-2 py-0.5 rounded flex-shrink-0">v0.3</span>
 							<BtcPriceTicker
 								fallbackPrice={portfolio.btcPriceUsd}
