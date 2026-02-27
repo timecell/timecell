@@ -1,4 +1,12 @@
 import type { CrashScenario } from "../hooks/usePortfolio";
+import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import {
+	Tooltip,
+	TooltipTrigger,
+	TooltipContent,
+} from "@/components/ui/tooltip";
 
 function formatUsd(value: number): string {
 	if (value >= 1_000_000) return `$${(value / 1_000_000).toFixed(1)}M`;
@@ -23,8 +31,8 @@ function getSeverityStyle(scenario: CrashScenario) {
 		return {
 			bg: "bg-red-900/30",
 			border: "border-red-500/50",
-			badge: "bg-red-500",
-			badgeText: "text-black",
+			badgeVariant: "destructive" as const,
+			badgeClass: "bg-red-500 text-black hover:bg-red-500",
 			text: "text-red-400",
 			label: "CRITICAL",
 		};
@@ -33,8 +41,8 @@ function getSeverityStyle(scenario: CrashScenario) {
 		return {
 			bg: "bg-amber-900/30",
 			border: "border-amber-500/50",
-			badge: "bg-amber-500",
-			badgeText: "text-black",
+			badgeVariant: "secondary" as const,
+			badgeClass: "bg-amber-500 text-black hover:bg-amber-500",
 			text: "text-amber-400",
 			label: "WARNING",
 		};
@@ -45,8 +53,8 @@ function getSeverityStyle(scenario: CrashScenario) {
 		return {
 			bg: "bg-emerald-900/30",
 			border: "border-emerald-500/50",
-			badge: "bg-emerald-500",
-			badgeText: "text-black",
+			badgeVariant: "outline" as const,
+			badgeClass: "bg-emerald-500 text-black border-emerald-500 hover:bg-emerald-500",
 			text: "text-emerald-400",
 			label: "SAFE",
 		};
@@ -55,8 +63,8 @@ function getSeverityStyle(scenario: CrashScenario) {
 		return {
 			bg: "bg-emerald-900/20",
 			border: "border-emerald-500/30",
-			badge: "bg-emerald-600",
-			badgeText: "text-black",
+			badgeVariant: "outline" as const,
+			badgeClass: "bg-emerald-600 text-black border-emerald-600 hover:bg-emerald-600",
 			text: "text-emerald-400",
 			label: "SAFE",
 		};
@@ -65,8 +73,8 @@ function getSeverityStyle(scenario: CrashScenario) {
 		return {
 			bg: "bg-amber-900/15",
 			border: "border-amber-500/30",
-			badge: "bg-amber-500",
-			badgeText: "text-black",
+			badgeVariant: "secondary" as const,
+			badgeClass: "bg-amber-500 text-black hover:bg-amber-500",
 			text: "text-amber-400",
 			label: "SAFE",
 		};
@@ -75,8 +83,8 @@ function getSeverityStyle(scenario: CrashScenario) {
 	return {
 		bg: "bg-orange-900/20",
 		border: "border-orange-500/30",
-		badge: "bg-orange-500",
-		badgeText: "text-black",
+		badgeVariant: "secondary" as const,
+		badgeClass: "bg-orange-500 text-black hover:bg-orange-500",
 		text: "text-orange-400",
 		label: "SAFE",
 	};
@@ -86,52 +94,85 @@ export function CrashCard({ scenario }: { scenario: CrashScenario }) {
 	const style = getSeverityStyle(scenario);
 
 	return (
-		<div
-			className={`rounded-xl border ${style.border} ${style.bg} p-5 transition-all duration-200 hover:scale-[1.02] hover:shadow-lg hover:shadow-black/20`}
+		<Card
+			className={`${style.border} ${style.bg} transition-all duration-200 hover:scale-[1.02] hover:shadow-lg hover:shadow-black/20 shadow-none`}
 		>
-			<div className="flex items-center justify-between mb-4">
-				<span className="text-2xl font-bold text-white">-{scenario.drawdownPct}%</span>
-				<span
-					className={`${style.badge} ${style.badgeText} text-xs font-bold px-2.5 py-1 rounded-full`}
+			<CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0 p-3 sm:p-5 pb-0 sm:pb-0">
+				<span className="text-xl sm:text-2xl font-bold text-white">-{scenario.drawdownPct}%</span>
+				<Badge
+					variant={style.badgeVariant}
+					className={`${style.badgeClass} rounded-full text-xs font-bold px-2.5 py-1 w-fit`}
 				>
 					{style.label}
-				</span>
-			</div>
+				</Badge>
+			</CardHeader>
 
-			<div className="space-y-3">
-				<div className="flex justify-between">
-					<span className="text-slate-400 text-sm">BTC Price</span>
-					<span className="text-white font-mono text-sm">
-						{formatUsd(scenario.btcPriceAtCrash)}
-					</span>
-				</div>
-				<div className="flex justify-between">
-					<span className="text-slate-400 text-sm">Portfolio Value</span>
-					<span className={`font-mono text-sm ${style.text}`}>
-						{formatUsd(scenario.portfolioValueAfterCrash)}
-					</span>
-				</div>
-				{scenario.hedgePayoff > 0 && (
-					<div className="flex justify-between">
-						<span className="text-slate-400 text-sm">Hedge Payoff</span>
-						<span className="text-emerald-400 font-mono text-sm">
-							+{formatUsd(scenario.hedgePayoff)}
+			<CardContent className="p-3 sm:p-5 pt-3 sm:pt-4">
+				<div className="space-y-2 sm:space-y-3">
+					<div className="flex justify-between gap-2">
+						<span className="text-slate-400 text-xs sm:text-sm flex-shrink-0">BTC Price</span>
+						<span className="text-white font-mono text-xs sm:text-sm text-right">
+							{formatUsd(scenario.btcPriceAtCrash)}
 						</span>
 					</div>
-				)}
-				<div className="flex justify-between">
-					<span className="text-slate-400 text-sm">Net Position</span>
-					<span className="text-white font-mono text-sm font-bold">
-						{formatUsd(scenario.netPosition)}
-					</span>
+					<div className="flex justify-between gap-2">
+						<span className="text-slate-400 text-xs sm:text-sm flex-shrink-0">Portfolio Value</span>
+						<span className={`font-mono text-xs sm:text-sm ${style.text} text-right`}>
+							{formatUsd(scenario.portfolioValueAfterCrash)}
+						</span>
+					</div>
+					{scenario.hedgePayoff > 0 && (
+						<div className="flex justify-between gap-2">
+							<Tooltip>
+								<TooltipTrigger asChild>
+									<span className="text-slate-400 text-xs sm:text-sm flex-shrink-0 cursor-help underline decoration-dotted underline-offset-4 decoration-slate-600">
+										Hedge Payoff
+									</span>
+								</TooltipTrigger>
+								<TooltipContent>
+									<p>Value of put options at this crash level</p>
+								</TooltipContent>
+							</Tooltip>
+							<span className="text-emerald-400 font-mono text-xs sm:text-sm text-right">
+								+{formatUsd(scenario.hedgePayoff)}
+							</span>
+						</div>
+					)}
+					<div className="flex justify-between gap-2">
+						<Tooltip>
+							<TooltipTrigger asChild>
+								<span className="text-slate-400 text-xs sm:text-sm flex-shrink-0 cursor-help underline decoration-dotted underline-offset-4 decoration-slate-600">
+									Net Position
+								</span>
+							</TooltipTrigger>
+							<TooltipContent>
+								<p>Portfolio value after crash + hedge payoff + liquid reserve</p>
+							</TooltipContent>
+						</Tooltip>
+						<span className="text-white font-mono text-xs sm:text-sm font-bold text-right">
+							{formatUsd(scenario.netPosition)}
+						</span>
+					</div>
+					<Separator className="bg-slate-700" />
+					<div className="flex justify-between gap-2">
+						<Tooltip>
+							<TooltipTrigger asChild>
+								<span className="text-slate-400 text-xs sm:text-sm flex-shrink-0 cursor-help underline decoration-dotted underline-offset-4 decoration-slate-600">
+									Runway
+								</span>
+							</TooltipTrigger>
+							<TooltipContent>
+								<p>
+									Months of {formatUsd(scenario.runwayMonths > 0 && scenario.runwayMonths !== Infinity ? Math.round(scenario.netPosition / scenario.runwayMonths) : 0)}/mo burn covered by remaining portfolio value
+								</p>
+							</TooltipContent>
+						</Tooltip>
+						<span className={`font-mono text-xs sm:text-sm font-bold ${style.text} text-right`}>
+							{formatMonths(scenario.runwayMonths)}
+						</span>
+					</div>
 				</div>
-				<div className="border-t border-slate-700 pt-3 flex justify-between">
-					<span className="text-slate-400 text-sm">Runway</span>
-					<span className={`font-mono text-sm font-bold ${style.text}`}>
-						{formatMonths(scenario.runwayMonths)}
-					</span>
-				</div>
-			</div>
-		</div>
+			</CardContent>
+		</Card>
 	);
 }
