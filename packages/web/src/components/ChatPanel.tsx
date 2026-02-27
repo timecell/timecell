@@ -122,6 +122,58 @@ function renderMarkdown(text: string): React.ReactNode[] {
 	for (let i = 0; i < lines.length; i++) {
 		const line = lines[i];
 
+		// Table detection: line starts with |
+		if (line.trim().startsWith("|") && line.trim().endsWith("|")) {
+			const tableRows: string[][] = [];
+			let j = i;
+			while (j < lines.length && lines[j].trim().startsWith("|") && lines[j].trim().endsWith("|")) {
+				const row = lines[j].trim();
+				// Skip separator rows (|---|---|)
+				if (/^\|[\s\-:]+\|$/.test(row.replace(/\|/g, m => m).replace(/[|\s\-:]/g, ""))) {
+					j++;
+					continue;
+				}
+				if (/^\|[-\s:|]+\|$/.test(row)) {
+					j++;
+					continue;
+				}
+				const cells = row.slice(1, -1).split("|").map(c => c.trim());
+				tableRows.push(cells);
+				j++;
+			}
+			if (tableRows.length > 0) {
+				const [header, ...body] = tableRows;
+				nodes.push(
+					<div key={`table-${i}`} className="overflow-x-auto my-2">
+						<table className="w-full text-xs border-collapse">
+							<thead>
+								<tr className="border-b border-slate-700">
+									{header.map((cell, ci) => (
+										<th key={ci} className="text-left px-3 py-2 text-slate-400 font-medium">
+											{inlineFormat(cell, `th-${i}-${ci}`)}
+										</th>
+									))}
+								</tr>
+							</thead>
+							<tbody>
+								{body.map((row, ri) => (
+									<tr key={ri} className="border-b border-slate-800/50">
+										{row.map((cell, ci) => (
+											<td key={ci} className="px-3 py-1.5 text-slate-300">
+												{inlineFormat(cell, `td-${i}-${ri}-${ci}`)}
+											</td>
+										))}
+									</tr>
+								))}
+							</tbody>
+						</table>
+					</div>,
+				);
+			}
+			i = j - 1; // Skip past table rows
+			continue;
+		}
+
 		// Code block toggle
 		if (line.trimStart().startsWith("```")) {
 			if (codeBlock) {
@@ -149,6 +201,33 @@ function renderMarkdown(text: string): React.ReactNode[] {
 		// Empty line
 		if (line.trim() === "") {
 			nodes.push(<div key={`br-${i}`} className="h-2" />);
+			continue;
+		}
+
+		// Headings (### H3, ## H2, # H1)
+		if (/^#{1,3}\s/.test(line)) {
+			const level = line.match(/^(#{1,3})\s/)![1].length;
+			const content = line.replace(/^#{1,3}\s/, "");
+			const sizeClass = level === 1 ? "text-base font-bold" : level === 2 ? "text-sm font-bold" : "text-sm font-semibold";
+			nodes.push(
+				<p key={`h-${i}`} className={`${sizeClass} text-white mt-2 mb-1`}>
+					{inlineFormat(content, `h-c-${i}`)}
+				</p>,
+			);
+			continue;
+		}
+
+		// Numbered lists (1. item, 2. item)
+		if (/^\s*\d+\.\s/.test(line)) {
+			const match = line.match(/^\s*(\d+)\.\s(.*)/)!;
+			nodes.push(
+				<div key={`ol-${i}`} className="flex gap-2 ml-1">
+					<span className="text-slate-500 flex-shrink-0 text-sm tabular-nums">{match[1]}.</span>
+					<span className="text-sm leading-relaxed">
+						{inlineFormat(match[2], `ol-c-${i}`)}
+					</span>
+				</div>,
+			);
 			continue;
 		}
 
