@@ -31,3 +31,14 @@ export { calculateCapacityGate } from "./capacity-gate.js";
 export type { CapacityGateInput, CapacityGateResult } from "./capacity-gate.js";
 export { calculateAllocationDrift } from "./allocation-drift.js";
 export type { AllocationDriftInput, AllocationDriftResult } from "./allocation-drift.js";
+export {
+	HISTORICAL_CRASHES,
+	SURVIVAL_RUNWAY_MONTHS,
+	simulateHistoricalCrash,
+	simulateAllHistoricalCrashes,
+} from "./historical-crashes.js";
+export type { HistoricalCrash, HistoricalCrashResult } from "./historical-crashes.js";
+export { calculateSellingRules } from "./selling-rules.js";
+export type { SellingRulesInput, SellingSchedule, SellingRulesResult } from "./selling-rules.js";
+export { calculateDownsideInsurance } from "./downside-insurance.js";
+export type { InsuranceInput, InsuranceResult } from "./downside-insurance.js";

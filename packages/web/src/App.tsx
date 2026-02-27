@@ -13,15 +13,20 @@ import { ActionPlan } from "./components/ActionPlan";
 import { CapacityGate } from "./components/CapacityGate";
 import { SleepTest } from "./components/SleepTest";
 import { ConvictionLadder } from "./components/ConvictionLadder";
+import { JourneyTracker } from "./components/JourneyTracker";
 import { ConvictionGates } from "./components/ConvictionGates";
 import { DeRiskTriggers } from "./components/DeRiskTriggers";
+import { SellingRules } from "./components/SellingRules";
+import { DownsideInsurance } from "./components/DownsideInsurance";
+import { MarketSentiment } from "./components/MarketSentiment";
 import { InfoPanel } from "./components/InfoPanel";
 import { ReportCard } from "./components/ReportCard";
 import { WhatIfComparison } from "./components/WhatIfComparison";
+import { HistoricalCrashOverlay } from "./components/HistoricalCrashOverlay";
 import { OnboardingModal, useOnboarding } from "./components/OnboardingModal";
 import { CurrencySelector } from "./components/CurrencySelector";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { calculateSleepTest } from "@timecell/engine";
+import { calculateSleepTest, scoreToZone } from "@timecell/engine";
 
 export default function App() {
 	const { portfolio, result, loading, error, savedAt, loadPortfolio, updatePortfolio } = usePortfolio();
@@ -257,6 +262,22 @@ export default function App() {
 						runwayMonths={result?.scenarios?.[result.scenarios.length - 1]?.runwayMonths ?? Infinity}
 					/>
 
+					{/* ZONE 3.6: Selling Rules — temperature-based de-accumulation ladder */}
+				<SellingRules
+					temperatureScore={temperatureScore}
+					btcPercentage={portfolio.btcPercentage}
+					totalValueUsd={portfolio.totalValueUsd}
+					btcPriceUsd={portfolio.btcPriceUsd}
+					currencySymbol={currencySymbol}
+					currencyRate={currencyRate}
+				/>
+
+				{/* ZONE 3.75: Market Sentiment — TimeCell temperature vs Fear & Greed cross-validation */}
+					<MarketSentiment
+						temperatureScore={temperatureScore}
+						temperatureZone={scoreToZone(temperatureScore)}
+					/>
+
 					{/* ZONE 4: Crash details — collapsed by default */}
 					{result && !loading && (
 						<div>
@@ -279,9 +300,21 @@ export default function App() {
 						</div>
 					)}
 
+					{/* ZONE 4.5: Historical Crash Overlay — how you would have fared in past crashes */}
+					<HistoricalCrashOverlay
+						totalValueUsd={portfolio.totalValueUsd}
+						btcPercentage={portfolio.btcPercentage}
+						monthlyBurnUsd={portfolio.monthlyBurnUsd}
+						liquidReserveUsd={portfolio.liquidReserveUsd}
+						btcPriceUsd={portfolio.btcPriceUsd}
+						currencySymbol={currencySymbol}
+						currencyRate={currencyRate}
+					/>
+
 					{/* ZONE 5: Framework — below fold */}
-					<div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 						<ConvictionLadder btcPercentage={portfolio.btcPercentage} />
+						<JourneyTracker btcPercentage={portfolio.btcPercentage} />
 						<InfoPanel />
 					</div>
 				</main>
