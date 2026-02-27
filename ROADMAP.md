@@ -130,6 +130,8 @@ Two modes, one engine. Mass retail stays simple; family office exposes governanc
 - Advisor collaboration mode
 
 ### Infrastructure
+- Self-contained temperature data pipeline — CLI/self-hosted mode should fetch MVRV/RHODL directly (no dependency on shared Turso DB). Bitcoin Magazine Pro API is paid; evaluate free alternatives or bundled local caching. Shared Turso is fine for hosted (timecell.ai/app) but OSS users need independence.
+- Consolidate Vercel projects — timecell.ai points to `timecell-site`, CLI deploys to `timecell`. Unify so serverless functions and static site live in one project.
 - Desktop app (Electron or Tauri)
 - Plugin system / marketplace
 - Dataset versioning / snapshots / lineage
