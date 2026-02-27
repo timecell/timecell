@@ -123,9 +123,12 @@ export function useChat(
 	temperatureZone?: string,
 	currencySymbol?: string,
 ) {
-	const [messages, setMessages] = useState<ChatMessage[]>(() =>
-		loadFromStorage<ChatMessage[]>(STORAGE_KEY_HISTORY, []),
-	);
+	const [messages, setMessages] = useState<ChatMessage[]>(() => {
+		// Clear stale streaming flags — if the page was refreshed mid-stream,
+		// persisted messages may still have isStreaming: true.
+		const stored = loadFromStorage<ChatMessage[]>(STORAGE_KEY_HISTORY, []);
+		return stored.map((m) => (m.isStreaming ? { ...m, isStreaming: false } : m));
+	});
 	const [isLoading, setIsLoading] = useState(false);
 	const [activeToolName, setActiveToolName] = useState<string | null>(null);
 	const [error, setError] = useState<string | null>(null);
