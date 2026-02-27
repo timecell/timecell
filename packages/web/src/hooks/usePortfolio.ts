@@ -44,9 +44,11 @@ export function usePortfolio() {
 		btcPriceUsd: 84_000,
 	});
 	const [hedgePositions, setHedgePositions] = useState<HedgePosition[]>([]);
+	const [currencySymbol, setCurrencySymbol] = useState("$");
 	const [result, setResult] = useState<SurvivalResult | null>(null);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
+	const [savedAt, setSavedAt] = useState<number | null>(null);
 
 	const calculate = useCallback(async (p: PortfolioInput, h: HedgePosition[]) => {
 		setLoading(true);
@@ -74,6 +76,7 @@ export function usePortfolio() {
 			const data = await res.json();
 			setPortfolio(data.portfolio);
 			setHedgePositions(data.hedgePositions || []);
+			if (data.currency?.symbol) setCurrencySymbol(data.currency.symbol);
 			await calculate(data.portfolio, data.hedgePositions || []);
 		} catch {
 			// Use defaults and calculate
@@ -86,6 +89,7 @@ export function usePortfolio() {
 			const updated = { ...portfolio, ...updates };
 			setPortfolio(updated);
 			await calculate(updated, hedgePositions);
+			setSavedAt(Date.now());
 		},
 		[portfolio, hedgePositions, calculate],
 	);
@@ -93,9 +97,11 @@ export function usePortfolio() {
 	return {
 		portfolio,
 		hedgePositions,
+		currencySymbol,
 		result,
 		loading,
 		error,
+		savedAt,
 		loadPortfolio,
 		updatePortfolio,
 		setHedgePositions,

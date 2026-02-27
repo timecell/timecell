@@ -12,10 +12,10 @@ import {
 import type { SurvivalResult, CrashScenario } from "../hooks/usePortfolio";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
-function formatUsd(value: number): string {
-	if (value >= 1_000_000) return `$${(value / 1_000_000).toFixed(1)}M`;
-	if (value >= 1_000) return `$${(value / 1_000).toFixed(0)}K`;
-	return `$${value.toFixed(0)}`;
+function formatCurrency(value: number, symbol = "$"): string {
+	if (value >= 1_000_000) return `${symbol}${(value / 1_000_000).toFixed(1)}M`;
+	if (value >= 1_000) return `${symbol}${(value / 1_000).toFixed(0)}K`;
+	return `${symbol}${value.toFixed(0)}`;
 }
 
 function getBarColor(scenario: CrashScenario): string {
@@ -34,7 +34,7 @@ interface ChartDataPoint {
 	scenario: CrashScenario;
 }
 
-export function CrashChart({ result }: { result: SurvivalResult }) {
+export function CrashChart({ result, currencySymbol = "$" }: { result: SurvivalResult; currencySymbol?: string }) {
 	const data: ChartDataPoint[] = result.scenarios.map((s) => ({
 		label: `-${s.drawdownPct}%`,
 		portfolioValue: s.portfolioValueAfterCrash,
@@ -72,7 +72,7 @@ export function CrashChart({ result }: { result: SurvivalResult }) {
 							tick={{ fill: "#94a3b8", fontSize: 12 }}
 							axisLine={false}
 							tickLine={false}
-							tickFormatter={formatUsd}
+							tickFormatter={(v: number) => formatCurrency(v, currencySymbol)}
 							width={64}
 						/>
 						<YAxis
@@ -96,7 +96,7 @@ export function CrashChart({ result }: { result: SurvivalResult }) {
 							}}
 							formatter={(value: number, name: string) => {
 								if (name === "portfolioValue")
-									return [formatUsd(value), "Portfolio Value"];
+									return [formatCurrency(value, currencySymbol), "Portfolio Value"];
 								if (name === "runway") {
 									const display =
 										value >= 240

@@ -8,10 +8,10 @@ import {
 	TooltipContent,
 } from "@/components/ui/tooltip";
 
-function formatUsd(value: number): string {
-	if (value >= 1_000_000) return `$${(value / 1_000_000).toFixed(1)}M`;
-	if (value >= 1_000) return `$${(value / 1_000).toFixed(0)}K`;
-	return `$${value.toFixed(0)}`;
+function formatCurrency(value: number, symbol = "$"): string {
+	if (value >= 1_000_000) return `${symbol}${(value / 1_000_000).toFixed(1)}M`;
+	if (value >= 1_000) return `${symbol}${(value / 1_000).toFixed(0)}K`;
+	return `${symbol}${value.toFixed(0)}`;
 }
 
 function formatMonths(months: number): string {
@@ -90,7 +90,7 @@ function getSeverityStyle(scenario: CrashScenario) {
 	};
 }
 
-export function CrashCard({ scenario }: { scenario: CrashScenario }) {
+export function CrashCard({ scenario, currencySymbol = "$" }: { scenario: CrashScenario; currencySymbol?: string }) {
 	const style = getSeverityStyle(scenario);
 
 	return (
@@ -112,13 +112,13 @@ export function CrashCard({ scenario }: { scenario: CrashScenario }) {
 					<div className="flex justify-between gap-2">
 						<span className="text-slate-300 text-xs sm:text-sm flex-shrink-0">BTC Price</span>
 						<span className="text-white font-mono text-xs sm:text-sm text-right">
-							{formatUsd(scenario.btcPriceAtCrash)}
+							{formatCurrency(scenario.btcPriceAtCrash, currencySymbol)}
 						</span>
 					</div>
 					<div className="flex justify-between gap-2">
 						<span className="text-slate-300 text-xs sm:text-sm flex-shrink-0">Portfolio Value</span>
 						<span className={`font-mono text-xs sm:text-sm ${style.text} text-right`}>
-							{formatUsd(scenario.portfolioValueAfterCrash)}
+							{formatCurrency(scenario.portfolioValueAfterCrash, currencySymbol)}
 						</span>
 					</div>
 					{scenario.hedgePayoff > 0 && (
@@ -134,7 +134,7 @@ export function CrashCard({ scenario }: { scenario: CrashScenario }) {
 								</TooltipContent>
 							</Tooltip>
 							<span className="text-emerald-400 font-mono text-xs sm:text-sm text-right">
-								+{formatUsd(scenario.hedgePayoff)}
+								+{formatCurrency(scenario.hedgePayoff, currencySymbol)}
 							</span>
 						</div>
 					)}
@@ -150,7 +150,7 @@ export function CrashCard({ scenario }: { scenario: CrashScenario }) {
 							</TooltipContent>
 						</Tooltip>
 						<span className="text-white font-mono text-xs sm:text-sm font-bold text-right">
-							{formatUsd(scenario.netPosition)}
+							{formatCurrency(scenario.netPosition, currencySymbol)}
 						</span>
 					</div>
 					<Separator className="bg-slate-700" />
@@ -164,7 +164,7 @@ export function CrashCard({ scenario }: { scenario: CrashScenario }) {
 							<TooltipContent>
 								<p>
 									{isFinite(scenario.runwayMonths) && scenario.runwayMonths > 0
-										? `Months of ${formatUsd(Math.round(scenario.netPosition / scenario.runwayMonths))}/mo burn covered by remaining assets`
+										? `Months of ${formatCurrency(Math.round(scenario.netPosition / scenario.runwayMonths), currencySymbol)}/mo burn covered by remaining assets`
 										: "Months of expenses covered by remaining assets"}
 								</p>
 							</TooltipContent>

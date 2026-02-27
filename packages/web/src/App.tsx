@@ -4,10 +4,12 @@ import { PortfolioForm } from "./components/PortfolioForm";
 import { CrashChart } from "./components/CrashChart";
 import { CrashGrid } from "./components/CrashGrid";
 import { SurvivalSummary } from "./components/SurvivalSummary";
+import { ConvictionLadder } from "./components/ConvictionLadder";
+import { InfoPanel } from "./components/InfoPanel";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
 export default function App() {
-	const { portfolio, result, loading, error, loadPortfolio, updatePortfolio } = usePortfolio();
+	const { portfolio, currencySymbol, result, loading, error, savedAt, loadPortfolio, updatePortfolio } = usePortfolio();
 
 	useEffect(() => {
 		loadPortfolio();
@@ -20,9 +22,7 @@ export default function App() {
 			<header className="border-b border-slate-800 px-4 sm:px-6 py-4">
 				<div className="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
 					<div className="flex items-center gap-3">
-						<h1 className="text-lg sm:text-xl font-bold tracking-tight">
-							<span className="text-orange-500">Time</span>Cell
-						</h1>
+						<img src="/logo.png" alt="TimeCell" className="h-8 brightness-110" />
 						<span className="text-xs text-slate-500 bg-slate-800 px-2 py-0.5 rounded">
 							v0.1.0
 						</span>
@@ -36,7 +36,7 @@ export default function App() {
 				{/* Portfolio form + quick stats */}
 				<div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
 					<div className="lg:col-span-1">
-						<PortfolioForm portfolio={portfolio} onUpdate={updatePortfolio} />
+						<PortfolioForm portfolio={portfolio} onUpdate={updatePortfolio} savedAt={savedAt} currencySymbol={currencySymbol} />
 					</div>
 
 					<div className="lg:col-span-2 space-y-6">
@@ -48,10 +48,10 @@ export default function App() {
 						)}
 
 						{/* Survival summary */}
-						{result && <SurvivalSummary result={result} />}
+						{result && <SurvivalSummary result={result} currencySymbol={currencySymbol} />}
 
 						{/* Portfolio value chart */}
-						{result && !loading && <CrashChart result={result} />}
+						{result && !loading && <CrashChart result={result} currencySymbol={currencySymbol} />}
 
 						{/* Crash scenario cards */}
 						{loading && (
@@ -68,7 +68,13 @@ export default function App() {
 								))}
 							</div>
 						)}
-						{result && !loading && <CrashGrid result={result} />}
+						{result && !loading && <CrashGrid result={result} currencySymbol={currencySymbol} />}
+
+						{/* Conviction Ladder */}
+						<ConvictionLadder btcPercentage={portfolio.btcPercentage} />
+
+						{/* How does this work? */}
+						<InfoPanel />
 					</div>
 				</div>
 			</main>

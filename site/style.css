@@ -97,6 +97,17 @@ body {
   color: var(--orange);
 }
 
+.logo-img {
+  height: 28px;
+  width: auto;
+}
+
+.hero-logo {
+  height: clamp(60px, 12vw, 100px);
+  width: auto;
+  margin-bottom: 8px;
+}
+
 .header-nav {
   display: flex;
   gap: 28px;

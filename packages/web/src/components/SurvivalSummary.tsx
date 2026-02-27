@@ -2,7 +2,7 @@ import type { SurvivalResult } from "../hooks/usePortfolio";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
-export function SurvivalSummary({ result }: { result: SurvivalResult }) {
+export function SurvivalSummary({ result }: { result: SurvivalResult; currencySymbol?: string }) {
 	const { maxSurvivableDrawdown, ruinTestPassed } = result;
 
 	return (

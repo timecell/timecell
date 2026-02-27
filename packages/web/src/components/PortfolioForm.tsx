@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import type { PortfolioInput } from "../hooks/usePortfolio";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
@@ -5,12 +6,14 @@ import { Slider } from "@/components/ui/slider";
 interface Props {
 	portfolio: PortfolioInput;
 	onUpdate: (updates: Partial<PortfolioInput>) => void;
+	savedAt?: number | null;
+	currencySymbol?: string;
 }
 
-function formatLabel(value: number): string {
-	if (value >= 1_000_000) return `$${(value / 1_000_000).toFixed(1)}M`;
-	if (value >= 1_000) return `$${(value / 1_000).toFixed(0)}K`;
-	return `$${value.toFixed(0)}`;
+function formatLabel(value: number, symbol = "$"): string {
+	if (value >= 1_000_000) return `${symbol}${(value / 1_000_000).toFixed(1)}M`;
+	if (value >= 1_000) return `${symbol}${(value / 1_000).toFixed(0)}K`;
+	return `${symbol}${value.toFixed(0)}`;
 }
 
 function InputField({
@@ -52,11 +55,27 @@ function InputField({
 	);
 }
 
-export function PortfolioForm({ portfolio, onUpdate }: Props) {
+export function PortfolioForm({ portfolio, onUpdate, savedAt, currencySymbol = "$" }: Props) {
+	const [visible, setVisible] = useState(false);
+
+	useEffect(() => {
+		if (!savedAt) return;
+		setVisible(true);
+		const timer = setTimeout(() => setVisible(false), 2000);
+		return () => clearTimeout(timer);
+	}, [savedAt]);
+
 	return (
 		<Card className="border-slate-700 bg-slate-800/50 shadow-none">
 			<CardHeader className="p-4 sm:p-6 pb-0 sm:pb-0">
-				<CardTitle className="text-base sm:text-lg text-white">Portfolio</CardTitle>
+				<div className="flex items-center justify-between">
+					<CardTitle className="text-base sm:text-lg text-white">Portfolio</CardTitle>
+					<span
+						className={`text-xs text-green-400 transition-opacity duration-500 ${visible ? "opacity-100" : "opacity-0"}`}
+					>
+						&#10003; Saved
+					</span>
+				</div>
 			</CardHeader>
 
 			<CardContent className="p-4 sm:p-6 pt-4 sm:pt-5 space-y-4 sm:space-y-5">
@@ -67,7 +86,7 @@ export function PortfolioForm({ portfolio, onUpdate }: Props) {
 					min={100_000}
 					max={50_000_000}
 					step={100_000}
-					format={formatLabel}
+					format={(v) => formatLabel(v, currencySymbol)}
 				/>
 
 				<InputField
@@ -87,7 +106,7 @@ export function PortfolioForm({ portfolio, onUpdate }: Props) {
 					min={0}
 					max={500_000}
 					step={1_000}
-					format={formatLabel}
+					format={(v) => formatLabel(v, currencySymbol)}
 				/>
 
 				<InputField
@@ -97,7 +116,7 @@ export function PortfolioForm({ portfolio, onUpdate }: Props) {
 					min={0}
 					max={5_000_000}
 					step={10_000}
-					format={formatLabel}
+					format={(v) => formatLabel(v, currencySymbol)}
 				/>
 
 				<InputField
@@ -107,7 +126,7 @@ export function PortfolioForm({ portfolio, onUpdate }: Props) {
 					min={10_000}
 					max={200_000}
 					step={1_000}
-					format={formatLabel}
+					format={(v) => formatLabel(v, currencySymbol)}
 				/>
 			</CardContent>
 		</Card>

@@ -10,6 +10,7 @@ const PORTFOLIO_PATH = join(CONFIG_DIR, "portfolio.json");
 interface SavedPortfolio {
 	portfolio: PortfolioInput;
 	hedgePositions: HedgePosition[];
+	currency?: { code: string; symbol: string };
 }
 
 async function loadPortfolio(): Promise<SavedPortfolio> {
