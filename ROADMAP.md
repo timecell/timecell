@@ -69,8 +69,8 @@ Advanced analysis tools for experienced investors making allocation decisions.
 
 - [x] **"What if" comparison mode** — Split screen: current allocation vs proposed, both crash survival states side by side, delta row
 - [ ] **Exchange vs self-custody tracking** — What's on exchange vs cold storage. Risk profile differs (Framework Part 7).
-- [ ] **Historical crash overlay** — Map current scenario to 2018, 2022 actual drawdowns
-- [ ] **Market sentiment** — Fear & Greed index alongside temperature for cross-validation
+- [x] **Historical crash overlay** — Map current scenario to 2014, 2018, 2022, COVID actual drawdowns with survival simulation (19 tests)
+- [x] **Market sentiment** — Fear & Greed index alongside temperature for cross-validation, agreement indicator
 
 ---
 
@@ -103,8 +103,8 @@ Two modes, one engine. Mass retail stays simple; family office exposes governanc
 - [ ] **Trade intents → execution** — Analysis outputs become actionable trade intents; later, actual execution
 - [ ] **Multi-entity / family mode** — Shared dashboards, per-entity views, RBAC
 - [ ] **Governance workflows** — Approval chains, audit trails, decision logging
-- [ ] **Selling rules engine** — Temperature-based selling triggers with tax overlay (Framework Part 5)
-- [ ] **Downside insurance configuration** — Put option budgeting, hedge breakeven (Framework Part 6)
+- [x] **Selling rules engine** — Temperature-based 6-tier selling schedule (70-95), pulled forward from v2.0
+- [x] **Downside insurance configuration** — Put option budgeting, hedge breakeven, payoff scenarios (25 tests), pulled forward from v2.0
 
 ---
 
@@ -112,7 +112,7 @@ Two modes, one engine. Mass retail stays simple; family office exposes governanc
 
 ### Framework Depth (Bitcoin)
 - Thesis health check — "Is each property getting stronger or weaker?" (Framework Part 1.3)
-- Journey/stage tracking — Where are you: Learning, Tested, or Systems? (Framework Part 8)
+- ~~Journey/stage tracking~~ — ✅ Built in v0.5 (6-question quiz, Learning/Tested/Systems stages)
 - Barbell-to-buckets visualization — Portfolio structure evolution (Framework Part 8.4)
 - DCA calculator (Framework Part 4)
 - 4-year moving average chart (Framework Part 4.3)

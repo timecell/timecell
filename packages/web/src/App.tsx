@@ -272,6 +272,14 @@ export default function App() {
 					currencyRate={currencyRate}
 				/>
 
+				{/* ZONE 3.7: Downside Insurance — put option budgeting + break-even calculator (Framework Part 6) */}
+				<DownsideInsurance
+					totalBtcValueUsd={portfolio.totalValueUsd * (portfolio.btcPercentage / 100)}
+					btcPriceUsd={portfolio.btcPriceUsd}
+					currencySymbol={currencySymbol}
+					currencyRate={currencyRate}
+				/>
+
 				{/* ZONE 3.75: Market Sentiment — TimeCell temperature vs Fear & Greed cross-validation */}
 					<MarketSentiment
 						temperatureScore={temperatureScore}
