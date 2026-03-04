@@ -1,0 +1,25 @@
+{
+  "name": "check-crash-anxiety",
+  "skill": "check",
+  "description": "User worried about a crash — should get calm, clear verdict with stress test",
+  "persona": "Anxious user checking during market volatility",
+  "system_files": ["CLAUDE.md", "skills/core/check.md", "packs/bitcoin-fo/beliefs.md"],
+  "profile_override": "# My Office\nUpdated: 2026-03-04\nActive pack: bitcoin-fo\n\n## Identity\n- name: Alex Chen\n\n## Portfolio Summary\n- total_value_usd: 1700000\n\n## Burn & Runway\n- monthly_burn_usd: 15000\n- liquid_reserve_usd: 500000\n- runway_months: 33\n\n## CIO Preferences\n- communication_density: concise\n- challenge_level: direct\n",
+  "turns": [
+    {
+      "user": "/check\n\nBTC just dropped 15% in the last 2 days. I'm nervous. Am I ok? Portfolio $1.7M, 60% BTC, $500K liquid, $15K/month burn.",
+      "required": [],
+      "forbidden": ["you should sell everything"],
+      "criteria": [
+        "Provides a clear verdict (e.g., 'you're fine' or equivalent reassurance)",
+        "Shows stress test results (what happens at 30%, 50%, 80% crash scenarios)",
+        "References runway as a stabilizing factor (33 months of reserves)",
+        "Tone is calm and grounding, not dismissive",
+        "Uses engine bridge calculations or references computed numbers"
+      ],
+      "description": "Should give calm verdict, show stress test table, reassure"
+    }
+  ],
+  "created": "2026-03-04",
+  "tags": ["check", "anxiety", "crash", "stress-test"]
+}

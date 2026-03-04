@@ -1,0 +1,29 @@
+{
+  "case": "start-critical-runway",
+  "timestamp": "2026-03-04T16:43:43.253746",
+  "model": "claude-sonnet-4-20250514",
+  "turns": [
+    {
+      "user": "/start\n\nMy liquid reserves dropped to $60K. Everything else is in BTC. Monthly burn still $15K. BTC price $90K. MVRV: 2.5, RHODL: 50000.",
+      "assistant": "# Daily Snapshot \u2014 March 4, 2026\n\n## Portfolio\nTotal: $1,700,000\nRunway: **4 months (CRITICAL)**\n\n## Guardrails\n\ud83d\udea8 **Runway: 4 months (CRITICAL \u2014 immediate action required)**\n\u26a0\ufe0f Custody: Unable to assess without custody breakdown\n\u26a0\ufe0f Concentration: ~96% BTC (EXTREME)\n\n## Priorities (URGENT)\n\n1. **CRITICAL: Restore runway immediately**\n   - You need $120K liquid minimum (8 months runway)\n   - Sell $60K BTC now to reach safe runway\n   - At current BTC price ($90K), that's ~0.67 BTC\n\n2. **Assess custody risk**\n   - Where is your $1.64M in BTC held?\n   - If exchange-heavy, immediate custody rebalancing needed\n\n3. **Temperature check for selling strategy**\n   - MVRV 2.5 / RHODL 50K suggests mid-cycle\n   - Good time to take profits for runway restoration\n\n---\n\n**Alex, you're in existential risk territory.** 4 months runway means you're one market crash away from forced selling at the worst possible time. The Bitcoin conviction is solid, but conviction without runway discipline becomes desperation selling.\n\nSell the BTC now, restore your foundation, then rebuild position systematically. This is exactly what runway discipline is for.",
+      "checks": {
+        "critical": true,
+        "runway": true,
+        "4 month": true,
+        "action": true,
+        "immediate": true
+      },
+      "passed": true,
+      "description": "Should flag CRITICAL runway and demand immediate action"
+    }
+  ],
+  "auto_score": {
+    "passed": 5,
+    "failed": 0,
+    "total": 5,
+    "all_turns_passed": true
+  },
+  "human_score": null,
+  "human_notes": null,
+  "is_golden": false
+}

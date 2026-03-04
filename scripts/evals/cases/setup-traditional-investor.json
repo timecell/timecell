@@ -1,0 +1,76 @@
+{
+  "name": "setup-traditional-investor",
+  "skill": "setup",
+  "description": "Traditional investor, no Bitcoin pack, testing generic framework",
+  "persona": "Sarah Park, 55, Chicago. Recently retired CFO. $4M in retirement accounts (401K, IRA). $800K in taxable brokerage. $200K cash. $5M total. $12K/month expenses. No crypto exposure. Interested in TimeCell for structured portfolio management.",
+  "system_files": ["CLAUDE.md", "skills/core/setup.md", "memory/profile.md"],
+  "turns": [
+    {
+      "user": "Hi, I just installed this. I don't own any Bitcoin.",
+      "required": [],
+      "forbidden": ["bitcoin temperature", "MVRV"],
+      "criteria": [
+        "Starts the setup/onboarding process",
+        "Does NOT push Bitcoin-related concepts on a non-crypto user",
+        "Welcomes the user and asks about their situation"
+      ],
+      "description": "Should start setup WITHOUT pushing Bitcoin pack opinions"
+    },
+    {
+      "user": "I'm Sarah Park, 55, just retired as CFO in Chicago. Married, no kids. Monthly expenses about $12K, mostly from pension and social security.",
+      "required": [],
+      "forbidden": [],
+      "criteria": [
+        "Addresses the user by name (Sarah)",
+        "Transitions to asking about goals",
+        "Acknowledges the retirement context"
+      ],
+      "description": "Should capture identity and ask goals"
+    },
+    {
+      "user": "Goals: 1) Maintain current lifestyle through retirement (30+ years). 2) Leave $1M to our alma mater. 3) Keep $500K accessible for travel and experiences.",
+      "required": [],
+      "forbidden": [],
+      "criteria": [
+        "Acknowledges all three goals",
+        "Transitions to asking about current portfolio or holdings"
+      ],
+      "description": "Should transition to portfolio"
+    },
+    {
+      "user": "$2.5M in Vanguard 401K (target date funds). $1.5M in Fidelity IRA (bonds and dividends). $800K in Schwab taxable (index funds). $200K in savings accounts.",
+      "required": [],
+      "forbidden": [],
+      "criteria": [
+        "Identifies the four distinct accounts as entities",
+        "Notes the diversified traditional portfolio structure",
+        "May comment on asset allocation across accounts"
+      ],
+      "description": "Should create entities"
+    },
+    {
+      "user": "Expenses $12K/month. The $200K in savings is liquid. I also get $4K/month pension and $2.5K social security.",
+      "required": [],
+      "forbidden": [],
+      "criteria": [
+        "Calculates or discusses runway (very long given income covers most expenses)",
+        "Notes that pension + social security ($6.5K) covers over half of expenses",
+        "Recognizes the strong financial position"
+      ],
+      "description": "Should calculate runway (very long with income)"
+    },
+    {
+      "user": "I prefer detailed explanations — I was a CFO, I can handle complexity. Be direct, I don't need hand-holding.",
+      "required": [],
+      "forbidden": [],
+      "criteria": [
+        "Acknowledges the communication preference (detailed + direct)",
+        "Signals that setup is complete or wrapping up",
+        "Suggests next steps (like running /start)"
+      ],
+      "description": "Should set communication preferences"
+    }
+  ],
+  "created": "2026-03-04",
+  "tags": ["setup", "no-pack", "traditional", "retired"]
+}

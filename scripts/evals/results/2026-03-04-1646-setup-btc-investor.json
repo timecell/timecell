@@ -1,0 +1,115 @@
+{
+  "case": "setup-btc-investor",
+  "timestamp": "2026-03-04T16:46:16.999208",
+  "model": "claude-sonnet-4-20250514",
+  "turns": [
+    {
+      "user": "Hello",
+      "assistant": "Welcome to TimeCell. I'm your CIO \u2014 I'll help you set up your family office.\n\nThis conversation will take about 15-20 minutes. We'll cover who you are, what you own, and how you think about risk. You can quit anytime \u2014 I'll save your progress.\n\nLet's start with you. Tell me about yourself \u2014 your life situation, where you live, your family. What's going on in your world right now?",
+      "checks": {
+        "welcome": true,
+        "setup": false
+      },
+      "passed": false,
+      "description": "Should auto-detect empty profile and start /setup"
+    },
+    {
+      "user": "I'm Alex Chen, 42, living in Austin, Texas. Software engineer turned investor. Married, two kids (8 and 12). Monthly income from consulting about $25K, expenses around $15K.",
+      "assistant": "Great to meet you, Alex. Austin's a good place for a tech investor \u2014 lots happening there. Consulting at $25K with $15K expenses gives you solid cashflow. That $10K monthly surplus is meaningful capital to deploy.\n\nWhat's your primary source of income beyond the consulting? Any equity positions, real estate, or other income streams? And what's driving that $15K monthly spend \u2014 is that sustainable, or are there big changes coming (like college planning for the 12-year-old)?\n\nAlso, tell me about your investment journey. You said \"software engineer turned investor\" \u2014 what sparked that transition? Are you actively managing money now, or is this your first structured approach to family wealth?",
+      "checks": {
+        "alex": true,
+        "goal": false
+      },
+      "passed": false,
+      "description": "Should capture identity and transition to goals"
+    },
+    {
+      "user": "Three goals: 1) Financial independence by 50. 2) Buy a house in Austin, $800K-1M budget, within 2 years. 3) College fund for both kids, $200K each over 10 years.",
+      "assistant": "Good clarity on goals, Alex. Let me dig into the numbers:\n\n**Goal 1 (FI by 50):** That's 8 years. What does \"financial independence\" mean to you specifically? Covering your current $15K/month burn? Or a different lifestyle? \n\n**Goal 2 (Austin house):** $800K-1M in 2 years means you need roughly $160K-200K down payment. Where is that down payment coming from \u2014 current savings, or do you need to build it?\n\n**Goal 3 (College fund):** $400K total over 10 years = $40K/year. With your $10K monthly surplus, that's $33K annually available for other goals. Tight but doable.\n\nQuick math check: If you earmark $40K/year for college and $80K-100K/year for house savings, that's $120K-140K annually. Your surplus is $120K. This suggests you'll need to either:\n- Extend the house timeline\n- Reduce the house budget \n- Increase income/reduce expenses\n\nBefore we get into what you currently own, help me understand: what's your primary source of income beyond consulting? Any equity, real estate, or passive income? And what does your current asset base look like \u2014 are we starting from zero or building on existing wealth?",
+      "checks": {
+        "goal": true,
+        "hold": false
+      },
+      "passed": false,
+      "description": "Should capture goals and ask about portfolio"
+    },
+    {
+      "user": "15 BTC in a Coldcard hardware wallet. 3 BTC on Coinbase for trading. $200K in Fidelity brokerage (index funds). $80K in savings. $50K Roth IRA. Total about $1.7M at BTC $90K.",
+      "assistant": "Now we're talking. $1.7M puts you in serious family office territory, Alex.\n\nLet me break down what I'm seeing:\n\n**BTC Position:** 18 BTC total (~$1.62M at $90K) = 95% of your net worth. That's concentrated conviction. The 15 BTC in Coldcard shows you understand custody. Good.\n\n**Traditional Assets:** $330K in tradfi ($200K Fidelity + $80K cash + $50K Roth) = ~19% of portfolio. This is your stability layer.\n\n**Allocation Reality Check:** You're essentially a Bitcoin family office with a small traditional allocation. That changes everything about your goals timeline.\n\nKey questions:\n\n1. **House down payment:** With BTC at these levels, are you willing to sell 2-3 BTC (~$180K-270K) for the house? Or waiting for higher prices?\n\n2. **FI by 50:** If BTC hits $200K+ in this cycle, you'd already be there. If it crashes to $30K, you're back to building. How do you think about this volatility against your 8-year timeline?\n\n3. **The 3 BTC on Coinbase:** What's your trading strategy there? Taking profits on the way up, or just keeping some liquid?\n\nYou're not starting from zero \u2014 you're managing serious Bitcoin wealth. That requires a different framework than traditional portfolio management.\n\nWhat's your thinking on potentially taking some profits for the house, or are you planning to hold through this cycle?",
+      "checks": {
+        "btc": true,
+        "wallet": false
+      },
+      "passed": false,
+      "description": "Should identify entities and begin creating them"
+    },
+    {
+      "user": "Monthly expenses $15K. The $80K in savings is my liquid reserve. I also get $25K/month from consulting.",
+      "assistant": "Got it. Let me map your liquidity picture:\n\n**Runway:** $80K savings \u00f7 $15K monthly burn = 5.3 months runway\n**Cashflow:** $25K income - $15K expenses = $10K monthly surplus\n\nThat's actually a tight runway for someone with $1.7M net worth. Most of your wealth is in BTC, which you (correctly) shouldn't touch for living expenses.\n\nThis creates an interesting dynamic:\n- Your BTC position gives you massive upside potential\n- But your liquid cushion is thin for someone at your wealth level\n- You're essentially living paycheck-to-paycheck despite being worth $1.7M\n\n**The real question:** What happens if consulting income drops or disappears? 5 months isn't much buffer.\n\nSome family offices in your situation keep 12-24 months of expenses liquid (that'd be $180K-360K for you). Others accept the tight runway because they're confident in income stability.\n\nBefore we set up your buckets and guardrails, I need to understand: \n1. How stable is that $25K/month consulting? Could it disappear overnight, or is it pretty locked in?\n2. Are you comfortable with 5 months runway, or does that keep you up at night?\n3. Have you ever had to live off savings before?\n\nThis liquidity question will shape everything else \u2014 your allocation strategy, when/if to take BTC profits, how aggressive we can be with goals.\n\nWhat's your gut feeling about that runway level?",
+      "checks": {
+        "runway": true,
+        "month": true
+      },
+      "passed": true,
+      "description": "Should calculate runway"
+    },
+    {
+      "user": "I agree with the bitcoin-fo beliefs mostly. No leverage \u2014 yes. Self-custody \u2014 yes. But I'm comfortable at 60-70% BTC concentration, not 80%+.",
+      "assistant": "Smart calibration, Alex. You're applying the bitcoin-fo framework but adapting it to your risk profile. 60-70% BTC concentration is still serious conviction while giving you more flexibility.\n\n**Current allocation:** ~95% BTC, 19% tradfi (some overlap due to surplus BTC gains)\n\n**Your target:** 60-70% BTC means at current prices, you'd want:\n- ~$1.02M-1.19M in BTC (11.3-13.2 BTC)\n- ~$510K-680K in other assets\n\n**The rebalancing math:** You're sitting on 4.7-6.7 BTC of \"excess\" concentration that you could tactically deploy.\n\nThis gives you options for your goals:\n- **House down payment:** Sell 2-3 BTC = $180K-270K (stays within your concentration comfort zone)\n- **Liquid runway expansion:** Sell 1-2 BTC to boost cash reserves to 12+ months\n- **Diversification:** Move some into growth assets beyond index funds\n\n**Key question:** Are you thinking about this rebalancing tactically (sell BTC on strength during this cycle) or systematically (maintain 60-70% regardless of price)?\n\nAlso, for the \"other 30-40%\" \u2014 what's your thinking? More index funds, real estate, growth stocks, or something else?\n\nThe bitcoin-fo framework would say: \"Sell on strength when overallocated, not on fear.\" Does that align with how you're thinking about trimming the BTC position?",
+      "checks": {
+        "60": true,
+        "70": true
+      },
+      "passed": true,
+      "description": "Should capture disagreement as user override"
+    },
+    {
+      "user": "Buckets look good. Safety Floor = savings. Core Conviction = BTC. Growth Engine = Fidelity. No moonshots yet. Lifestyle Fund for the house downpayment.",
+      "assistant": "Perfect bucket allocation, Alex. You've naturally organized your wealth in a coherent way:\n\n**Safety Floor:** $80K savings (4.7% of portfolio)\n**Core Conviction:** 18 BTC (~$1.62M, 95% of portfolio) \n**Growth Engine:** $200K Fidelity index funds (11.8%)\n**Lifestyle Fund:** TBD - house down payment staging area\n**Moonshots:** None (smart - focus first)\n\n**The rebalancing opportunity:** Your Core Conviction bucket is oversized relative to your 60-70% target. This creates a tactical opportunity to fund your other buckets by trimming BTC on strength.\n\n**Proposed moves:**\n1. **Boost Safety Floor:** Sell 1-2 BTC \u2192 increase runway from 5 months to 12+ months\n2. **Fund Lifestyle:** Sell 2-3 BTC \u2192 create $180K-270K house war chest  \n3. **Expand Growth Engine:** Maybe add another $100K for diversification\n\nThis would get you to roughly:\n- **Safety Floor:** $200K+ (12+ months runway)\n- **Core Conviction:** ~11-13 BTC (60-70% allocation)\n- **Growth Engine:** $300K+\n- **Lifestyle Fund:** $200K+ (house ready)\n\n**Timing question:** Are you thinking about executing this rebalancing now while BTC is strong, or waiting for specific price targets? \n\nThe bitcoin-fo approach says \"sell on strength when overallocated.\" BTC at $90K feels like strength. What's your instinct on timing?",
+      "checks": {
+        "bucket": true,
+        "safety": true
+      },
+      "passed": true,
+      "description": "Should map holdings to buckets"
+    },
+    {
+      "user": "If BTC dropped 60%? I'd hold. Rode through 2022. What worries me is losing consulting income AND a crash simultaneously. Never panic-sold.",
+      "assistant": "That's revealing, Alex. You've got the conviction part down \u2014 riding through 2022 proves you can handle volatility. But you've identified the real risk: **correlated failure**.\n\nConsulting income + BTC crash hitting simultaneously is the nightmare scenario for your structure. Here's why that's dangerous:\n\n**The math:** \n- BTC drops 60% ($90K \u2192 $36K): Your $1.62M in BTC becomes $650K\n- Total portfolio drops from $1.7M to ~$1M\n- Consulting stops: You're burning $15K/month with only $80K runway\n- You'd be forced to sell BTC at cycle lows to cover living expenses\n\n**This is exactly why runway matters.** It's not about market risk tolerance \u2014 it's about avoiding forced selling during crashes.\n\nYour risk profile is actually sophisticated:\n- **Market volatility:** High tolerance (proven in 2022)\n- **Sequence risk:** Correctly identified the real threat\n- **Liquidity risk:** Currently underhedged\n\n**The bitcoin-fo framework would say:** \"Runway discipline enables conviction.\" You can't truly hold through -60% if you might need to sell for groceries.\n\n**Question:** What would it take to feel bulletproof against that correlated scenario? 12 months runway? 18 months? A more diverse income base?\n\nThis insight should drive your Safety Floor target. You're not just planning for normal volatility \u2014 you're planning for the worst-case combo punch.\n\nHow long could you realistically rebuild consulting income if it disappeared tomorrow?",
+      "checks": {
+        "risk": true
+      },
+      "passed": true,
+      "description": "Should capture revealed preferences without labels"
+    },
+    {
+      "user": "Min runway 6 months is fine since I have income. Max custodian 30% good. BTC concentration upper comfort at 70%. I have a will but no POA or digital asset plan.",
+      "assistant": "Got it, Alex. You're setting practical guardrails:\n\n**Guardrails confirmed:**\n- **Min runway:** 6 months (currently at 5.3 months - slight breach)\n- **Max custodian:** 30% (currently at ~17% with 3 BTC on Coinbase - SAFE)\n- **Max BTC concentration:** 70% (currently at 95% - significant breach)\n\n**Estate planning gap:** Will exists, but no Power of Attorney or digital asset plan. With 18 BTC, that's a critical vulnerability. If something happens to you, your family could lose access to most of your wealth.\n\n**Current status:**\n- \u2705 **SAFE:** Custodial exposure under control\n- \u26a0\ufe0f **WARNING:** Runway slightly low (5.3 vs 6.0 months)  \n- \ud83d\udea8 **CRITICAL:** BTC concentration at 95% vs 70% max\n- \ud83d\udea8 **CRITICAL:** No digital asset succession plan\n\n**The rebalancing priority:** You need to trim 4-5 BTC to get back within your concentration comfort zone. That ~$400K-450K could simultaneously:\n1. Fix your runway (add $120K to cash)\n2. Fund house down payment (~$200K)\n3. Boost Growth Engine diversification ($100K+)\n\n**Estate planning urgency:** With most wealth in self-custody BTC, you need POA and digital asset instructions ASAP. This isn't optional at your wealth level.\n\nHow do you want to communicate information? Would you prefer:\n- **Concise:** Numbers + actions, get to the point\n- **Detailed:** Context + reasoning, full picture\n\nAnd for feedback style:\n- **Supportive:** Gentle nudges\n- **Direct:** Blunt truth\n- **Provocative:** Devil's advocate, challenge assumptions",
+      "checks": {
+        "guardrail": true,
+        "6": true
+      },
+      "passed": true,
+      "description": "Should calibrate guardrails"
+    },
+    {
+      "user": "Concise communication, be direct. What's my status?",
+      "assistant": "**OFFICE STATUS**\n\n**Guardrail Breaches:**\n- \ud83d\udea8 **CRITICAL:** BTC concentration 95% (target: max 70%)\n- \u26a0\ufe0f **WARNING:** Runway 5.3 months (target: min 6 months)\n- \ud83d\udea8 **CRITICAL:** No digital asset succession plan\n\n**Immediate Actions:**\n1. **Sell 4-5 BTC** ($360K-450K) to fix concentration\n2. **Deploy proceeds:** $120K \u2192 cash (runway), $200K \u2192 house fund, $100K \u2192 growth\n3. **Execute estate plan:** POA + digital asset instructions within 30 days\n\n**Goal Progress:**\n- FI by 50: On track if BTC performs\n- House fund: Need $200K, can source from BTC trim\n- College fund: $40K/year required, manageable with cashflow\n\n**Next Steps:**\nRun `/weekly` for ongoing monitoring, `/check` before major moves.\n\n**Your office is 70% set up.** The concentration breach is the big risk. Everything else is manageable.\n\nReady to discuss the BTC trim strategy, or questions first?",
+      "checks": {
+        "complete": false,
+        "/start": false
+      },
+      "passed": false,
+      "description": "Should set preferences and show completion + next steps"
+    }
+  ],
+  "auto_score": {
+    "passed": 13,
+    "failed": 6,
+    "total": 19,
+    "all_turns_passed": false
+  },
+  "human_score": null,
+  "human_notes": null,
+  "is_golden": false
+}

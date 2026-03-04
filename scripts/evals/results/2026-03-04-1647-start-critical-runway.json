@@ -1,0 +1,29 @@
+{
+  "case": "start-critical-runway",
+  "timestamp": "2026-03-04T16:47:13.106391",
+  "model": "claude-sonnet-4-20250514",
+  "turns": [
+    {
+      "user": "/start\n\nMy liquid reserves dropped to $60K. Everything else is in BTC. Monthly burn still $15K. BTC price $90K. MVRV: 2.5, RHODL: 50000.",
+      "assistant": "# Daily Snapshot \u2014 March 4, 2026\n\n## Portfolio\nTotal: $1.7M\n**Runway: 4 months (CRITICAL)**\n\n## Guardrails\n\ud83d\udd34 **Runway: 4 months (CRITICAL)** \u2014 Below 6-month minimum\n\u2705 Custody: Self-custody assumed (pack default)\n\u26a0\ufe0f **Concentration: ~96% BTC (EXTREME)** \u2014 Verify crash survival\n\n## Priorities\n\n**1. URGENT: Rebuild runway buffer**\n- Current: 4 months liquid / 6 months minimum = CRITICAL breach\n- Action: Sell $30K BTC (~0.33 BTC) to reach 6-month runway floor\n- This restores basic safety without materially impacting position\n\n**2. Stress test the extreme concentration**\n- At 96% BTC allocation, a -50% crash drops total value to $850K\n- Verify you can psychologically hold through that scenario\n- If not, consider modest diversification at next temperature spike\n\nBitcoin conviction is one thing. Having only 2.7 months of additional runway beyond your liquid reserves is another. The math doesn't care about your beliefs.\n\nFix the runway. Hold the conviction.\n\n---\n*Next suggested: Run /check for full risk assessment*",
+      "checks": {
+        "critical": true,
+        "runway": true,
+        "4 month": true,
+        "action": true,
+        "immediate": false
+      },
+      "passed": false,
+      "description": "Should flag CRITICAL runway and demand immediate action"
+    }
+  ],
+  "auto_score": {
+    "passed": 4,
+    "failed": 1,
+    "total": 5,
+    "all_turns_passed": false
+  },
+  "human_score": null,
+  "human_notes": null,
+  "is_golden": false
+}

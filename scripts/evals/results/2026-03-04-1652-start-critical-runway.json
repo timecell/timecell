@@ -1,0 +1,31 @@
+{
+  "case": "start-critical-runway",
+  "timestamp": "2026-03-04T16:52:51.916739",
+  "model": "claude-sonnet-4-20250514",
+  "turns": [
+    {
+      "user": "/start\n\nMy liquid reserves dropped to $60K. Everything else is in BTC. Monthly burn $20K. BTC at $80K.",
+      "assistant": "# Daily Snapshot \u2014 March 4, 2026\n\n## Portfolio\nTotal: $1.2M\nRunway: **3 months** (CRITICAL)\n\n## Guardrails\n\ud83d\udea8 **CRITICAL: Runway at 3 months** \u2014 you're in existential territory\n\u26a0\ufe0f **WARNING: Liquid reserves** \u2014 $60K barely covers 3 months burn\n\n## Priorities (IMMEDIATE ACTION REQUIRED)\n\n1. **SELL BTC NOW** \u2014 You need $180K minimum for 9-month runway. Current liquid reserves won't survive a prolonged bear market or emergency.\n\n2. **Establish systematic selling** \u2014 With BTC at $80K, this is a strategic exit opportunity. Sell enough to reach 12-18 month runway target.\n\n3. **Lock in cash position** \u2014 Once sold, park proceeds in high-yield savings/money market. This isn't trading money \u2014 it's survival money.\n\n---\n\n**Alex, you're at the edge of the cliff.** 3 months runway means ANY disruption (income loss, emergency, extended bear) could force panic selling at the worst time. \n\nThe Bitcoin conviction play requires discipline: you MUST maintain adequate runway to hold through crashes. Right now you can't. Sell strategically while BTC is strong, secure your foundation, then rebuild conviction from a position of strength.\n\nThis isn't about doubting Bitcoin \u2014 it's about surviving long enough to benefit from it.",
+      "checks": {
+        "critical": true
+      },
+      "keyword_passed": true,
+      "judge": {
+        "score": 4,
+        "total": 4,
+        "detail": "# Evaluation\n\n**Criterion 1: Flags runway as CRITICAL (3 months at $20K/month burn)**\n- **PASS** \u2014 Response explicitly states \"Runway: **3 months** (CRITICAL)\" and repeats \"CRITICAL: Runway at 3 months\" with clear language about existential risk.\n\n**Criterion 2: Demands immediate action to increase liquidity**\n- **PASS** \u2014 \"IMMEDIATE ACTION REQUIRED\" header, \"SELL BTC NOW\" in all caps, and repeated emphasis on urgency (\"you're at the edge of the cliff,\" \"ANY disruption\"). The demand for action is unambiguous.\n\n**Criterion 3: Provides specific recommendation (e.g., sell some BTC to increase reserves)**\n- **PASS** \u2014 Response recommends: (a) sell BTC now, (b) sell enough to reach 12-18 month runway target ($240K-$360K total liquid), (c) park proceeds in high-yield savings/money market. These are concrete, actionable steps tied to a measurable goal.\n\n**Criterion 4: Conveys urgency clearly**\n- **PASS** \u2014 Multiple urgency signals: emoji warnings (\ud83d\udea8\u26a0\ufe0f), \"CRITICAL\" repeated, \"edge of the cliff\" framing, \"IMMEDIATE ACTION REQUIRED,\" emphasis on panic-selling risks, and existential language. The tone unmistakably communicates that delay is dangerous.\n\n---\n\n**SCORE: 4/4**\n\nThe response meets all criteria in both letter and spirit. It diagnoses the problem accurately, escalates appropriately, gives specific direction, and uses tone/formatting effectively to convey genuine urgency without being alarmist."
+      },
+      "passed": true,
+      "description": "Should flag CRITICAL runway and demand immediate action"
+    }
+  ],
+  "auto_score": {
+    "passed": 1,
+    "failed": 0,
+    "total": 1,
+    "all_turns_passed": true
+  },
+  "human_score": null,
+  "human_notes": null,
+  "is_golden": false
+}

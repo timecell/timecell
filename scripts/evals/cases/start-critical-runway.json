@@ -1,0 +1,24 @@
+{
+  "name": "start-critical-runway",
+  "skill": "start",
+  "description": "Daily snapshot with critically low runway — should trigger urgent action",
+  "persona": "User with dangerously low liquid reserves",
+  "system_files": ["CLAUDE.md", "skills/core/start.md", "packs/bitcoin-fo/beliefs.md"],
+  "profile_override": "# My Office\nUpdated: 2026-03-04\nActive pack: bitcoin-fo\n\n## Identity\n- name: Alex Chen\n\n## Portfolio Summary\n- total_value_usd: 1200000\n\n## Burn & Runway\n- monthly_burn_usd: 20000\n- liquid_reserve_usd: 60000\n- runway_months: 3\n\n## CIO Preferences\n- communication_density: concise\n- challenge_level: direct\n",
+  "turns": [
+    {
+      "user": "/start\n\nMy liquid reserves dropped to $60K. Everything else is in BTC. Monthly burn $20K. BTC at $80K.",
+      "required": ["critical"],
+      "forbidden": ["all clear", "you're fine"],
+      "criteria": [
+        "Flags runway as CRITICAL (3 months at $20K/month burn)",
+        "Demands immediate action to increase liquidity",
+        "Provides specific recommendation (e.g., sell some BTC to increase reserves)",
+        "Conveys urgency clearly"
+      ],
+      "description": "Should flag CRITICAL runway and demand immediate action"
+    }
+  ],
+  "created": "2026-03-04",
+  "tags": ["start", "daily", "critical-runway"]
+}

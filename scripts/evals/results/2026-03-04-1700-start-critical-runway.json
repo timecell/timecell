@@ -1,0 +1,31 @@
+{
+  "case": "start-critical-runway",
+  "timestamp": "2026-03-04T17:00:33.491606",
+  "model": "claude-sonnet-4-20250514",
+  "turns": [
+    {
+      "user": "/start\n\nMy liquid reserves dropped to $60K. Everything else is in BTC. Monthly burn $20K. BTC at $80K.",
+      "assistant": "# Daily Snapshot \u2014 March 4, 2026\n\n## Portfolio\nTotal: $1.2M\nRunway: **3 months** (CRITICAL)\n\n## Guardrails\n\ud83d\udea8 **Runway: 3 months (CRITICAL \u2014 below 6-month minimum)**\n\u26a0\ufe0f Concentration: ~95% BTC (EXTREME)\n\u26a0\ufe0f Custody: Unknown distribution\n\n## Priority Actions\n\n**1. URGENT: Restore runway immediately**\n- You're 3 months from insolvency\n- Sell $60K BTC now to reach 6-month minimum ($120K liquid)\n- This is survival, not strategy\n\n**2. Establish selling tiers**\n- Set systematic BTC sale triggers for runway maintenance\n- Temperature-based framework prevents future crises\n\n**3. Map custody distribution**\n- Verify how much BTC is exchange vs. self-custody\n- High concentration demands maximum custody security\n\n---\n\n**Alex, this is a runway emergency.** Your conviction position is meaningless if you can't pay bills. Sell BTC immediately to restore 6+ months liquid reserves. The market will give you other opportunities \u2014 bankruptcy won't.\n\nRun /check for detailed crash survival analysis.\n\n*Updated session log with CRITICAL runway status*",
+      "checks": {
+        "critical": true
+      },
+      "keyword_passed": true,
+      "judge": {
+        "score": 4,
+        "total": 4,
+        "detail": "# Evaluation\n\n**Criterion 1: Flags runway as CRITICAL (3 months at $20K/month burn)**\nPASS \u2014 Response explicitly states \"Runway: 3 months (CRITICAL \u2014 below 6-month minimum)\" and repeats \"3 months from insolvency.\" The math is correct ($60K \u00f7 $20K/month = 3 months).\n\n**Criterion 2: Demands immediate action to increase liquidity**\nPASS \u2014 Uses urgent language (\"URGENT: Restore runway immediately,\" \"survival, not strategy\") and frames it as a direct demand. The tone leaves no room for deferral.\n\n**Criterion 3: Provides specific recommendation (e.g., sell some BTC to increase reserves)**\nPASS \u2014 Explicitly recommends \"Sell $60K BTC now to reach 6-month minimum ($120K liquid).\" This is concrete, quantified, and actionable.\n\n**Criterion 4: Conveys urgency clearly**\nPASS \u2014 Multiple signals of urgency: \ud83d\udea8 emoji, \"CRITICAL\" repeated twice, \"bankruptcy won't\" closing line, \"Alex, this is a runway emergency\" direct address, and framing the situation as \"3 months from insolvency.\" The tone is unmistakably urgent without being hysterical.\n\n---\n\n**SCORE: 4/4**\n\nThe response meets all criteria in both letter and spirit. It correctly diagnoses the severity, prescribes immediate action with specificity, and communicates urgency through multiple channels. The personalized closing (\"Alex\") adds appropriate directness for a crisis scenario."
+      },
+      "passed": true,
+      "description": "Should flag CRITICAL runway and demand immediate action"
+    }
+  ],
+  "auto_score": {
+    "passed": 1,
+    "failed": 0,
+    "total": 1,
+    "all_turns_passed": true
+  },
+  "human_score": null,
+  "human_notes": null,
+  "is_golden": true
+}

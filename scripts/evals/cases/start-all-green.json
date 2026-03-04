@@ -1,0 +1,25 @@
+{
+  "name": "start-all-green",
+  "skill": "start",
+  "description": "Daily snapshot where everything is healthy — all guardrails SAFE/STRONG",
+  "persona": "Returning user with healthy portfolio",
+  "system_files": ["CLAUDE.md", "skills/core/start.md", "packs/bitcoin-fo/beliefs.md"],
+  "profile_override": "# My Office\nUpdated: 2026-03-04\nActive pack: bitcoin-fo\n\n## Identity\n- name: Alex Chen\n- tax_jurisdiction: US\n- life_context: Mid-career investor, strong runway\n\n## Portfolio Summary\n- total_value_usd: 1700000\n- primary_currency: USD\n\n## Burn & Runway\n- monthly_burn_usd: 15000\n- liquid_reserve_usd: 500000\n- runway_months: 33\n\n## Goals\n- Financial independence by 50\n- Buy house $800K-1M\n- College fund $400K\n\n## Risk Profile\n- risk_context: High conviction, rode through 2022\n- leverage_stance: No leverage ever\n\n## CIO Preferences\n- communication_density: concise\n- challenge_level: direct\n",
+  "turns": [
+    {
+      "user": "/start\n\nPortfolio: $1.7M, 60% BTC ($1.02M), 40% traditional ($680K). Monthly burn: $15K. Liquid: $500K. BTC price: $90K. MVRV: 1.5, RHODL: 5000.",
+      "required": [],
+      "forbidden": [],
+      "criteria": [
+        "Provides a portfolio snapshot with key numbers",
+        "Shows runway status (should be healthy/safe at 33 months)",
+        "Checks guardrails and shows them as healthy or safe",
+        "Does NOT flag urgent actions — everything is green",
+        "Response is concise (matching user preference)"
+      ],
+      "description": "All green — should report everything safe, no actions"
+    }
+  ],
+  "created": "2026-03-04",
+  "tags": ["start", "daily", "all-green"]
+}

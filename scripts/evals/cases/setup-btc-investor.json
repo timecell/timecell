@@ -1,0 +1,122 @@
+{
+  "name": "setup-btc-investor",
+  "skill": "setup",
+  "description": "Mid-career Bitcoin-conviction investor going through first-time setup",
+  "persona": "Alex Chen, 42, Austin TX. Software engineer turned investor. 18 BTC total (15 in Coldcard, 3 on Coinbase). $200K in Fidelity index funds. $80K savings. $50K Roth IRA. $1.7M total. $15K/month expenses, $25K/month consulting income.",
+  "system_files": ["CLAUDE.md", "skills/core/setup.md", "memory/profile.md", "packs/bitcoin-fo/beliefs.md"],
+  "turns": [
+    {
+      "user": "Hello",
+      "required": [],
+      "forbidden": ["how can I help"],
+      "criteria": [
+        "Automatically starts onboarding/setup process without being asked",
+        "Welcomes the user warmly",
+        "Asks about the user's identity or life situation"
+      ],
+      "description": "Should auto-detect empty profile and start /setup"
+    },
+    {
+      "user": "I'm Alex Chen, 42, living in Austin, Texas. Software engineer turned investor. Married, two kids (8 and 12). Monthly income from consulting about $25K, expenses around $15K.",
+      "required": [],
+      "forbidden": [],
+      "criteria": [
+        "Acknowledges the user by name (Alex)",
+        "Transitions to asking about goals or financial objectives",
+        "Does NOT jump straight to portfolio details yet"
+      ],
+      "description": "Should capture identity and transition to goals"
+    },
+    {
+      "user": "Three goals: 1) Financial independence by 50. 2) Buy a house in Austin, $800K-1M budget, within 2 years. 3) College fund for both kids, $200K each over 10 years.",
+      "required": [],
+      "forbidden": [],
+      "criteria": [
+        "Acknowledges all three goals specifically",
+        "Transitions to asking about current portfolio or holdings",
+        "May provide initial analysis on goal feasibility"
+      ],
+      "description": "Should capture goals and ask about portfolio"
+    },
+    {
+      "user": "15 BTC in a Coldcard hardware wallet. 3 BTC on Coinbase for trading. $200K in Fidelity brokerage (index funds). $80K in savings. $50K Roth IRA. Total about $1.7M at BTC $90K.",
+      "required": [],
+      "forbidden": [],
+      "criteria": [
+        "Identifies the distinct accounts/entities (hardware wallet, exchange, brokerage, savings, IRA)",
+        "Notes the high BTC concentration (90%+ of portfolio)",
+        "Recognizes the self-custody vs exchange split"
+      ],
+      "description": "Should identify entities and begin creating them"
+    },
+    {
+      "user": "Monthly expenses $15K. The $80K in savings is my liquid reserve. I also get $25K/month from consulting.",
+      "required": [],
+      "forbidden": [],
+      "criteria": [
+        "Calculates or discusses runway (liquid reserves / monthly burn)",
+        "Acknowledges the income surplus ($25K income - $15K expenses = $10K/month)",
+        "References runway in months"
+      ],
+      "description": "Should calculate runway"
+    },
+    {
+      "user": "I agree with the bitcoin-fo beliefs mostly. No leverage — yes. Self-custody — yes. But I'm comfortable at 60-70% BTC concentration, not 80%+.",
+      "required": [],
+      "forbidden": [],
+      "criteria": [
+        "Acknowledges the user's agreement with pack beliefs",
+        "Records the 60-70% concentration preference as a user override or disagreement",
+        "Does not push back against the user's preference"
+      ],
+      "description": "Should capture disagreement as user override"
+    },
+    {
+      "user": "Buckets look good. Safety Floor = savings. Core Conviction = BTC. Growth Engine = Fidelity. No moonshots yet. Lifestyle Fund for the house downpayment.",
+      "required": [],
+      "forbidden": [],
+      "criteria": [
+        "Maps the user's holdings to the bucket structure",
+        "Acknowledges the Safety Floor, Core Conviction, Growth Engine, and Lifestyle Fund",
+        "Confirms or summarizes the bucket allocation"
+      ],
+      "description": "Should map holdings to buckets"
+    },
+    {
+      "user": "If BTC dropped 60%? I'd hold. Rode through 2022. What worries me is losing consulting income AND a crash simultaneously. Never panic-sold.",
+      "required": [],
+      "forbidden": ["conservative", "you are aggressive"],
+      "criteria": [
+        "Captures the revealed risk preference (high conviction holder)",
+        "Identifies the dual-risk scenario (income loss + crash) as the real concern",
+        "Does NOT label the user with a risk category (conservative/moderate/aggressive)"
+      ],
+      "description": "Should capture revealed preferences without labels"
+    },
+    {
+      "user": "Min runway 6 months is fine since I have income. Max custodian 30% good. BTC concentration upper comfort at 70%. I have a will but no POA or digital asset plan.",
+      "required": [],
+      "forbidden": [],
+      "criteria": [
+        "Records the guardrail values (6 months runway, 30% custodian, 70% concentration)",
+        "Flags the missing POA and digital asset plan as gaps",
+        "Summarizes the guardrail calibration"
+      ],
+      "description": "Should calibrate guardrails"
+    },
+    {
+      "user": "Concise communication, be direct. What's my status?",
+      "required": [],
+      "forbidden": [],
+      "criteria": [
+        "Acknowledges the communication preference",
+        "Signals that setup is complete or nearly complete",
+        "Suggests running /start or the daily snapshot as next step",
+        "Provides a brief portfolio status summary"
+      ],
+      "description": "Should set preferences and show completion + next steps"
+    }
+  ],
+  "created": "2026-03-04",
+  "tags": ["setup", "bitcoin-fo", "onboarding", "mid-career"]
+}

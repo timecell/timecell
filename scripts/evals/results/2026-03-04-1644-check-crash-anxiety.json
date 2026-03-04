@@ -1,0 +1,30 @@
+{
+  "case": "check-crash-anxiety",
+  "timestamp": "2026-03-04T16:44:48.814705",
+  "model": "claude-sonnet-4-20250514",
+  "turns": [
+    {
+      "user": "/check\n\nBTC just dropped 15% in the last 2 days. I'm nervous. Am I ok? Portfolio $1.7M, 60% BTC, $500K liquid, $15K/month burn.",
+      "assistant": "**You're fine.** The 15% drop is noise against your structural position. Let me show you the numbers.\n\n## Stress Test Analysis\n\n| Scenario | Portfolio Value | Runway (Months) | Status |\n|----------|----------------|-----------------|---------|\n| Current | $1,700,000 | 33 | \u2705 Strong |\n| -30% correction | $1,190,000 | 33 | \u2705 Strong |\n| -50% bear market | $850,000 | 33 | \u2705 Strong |\n| -70% deep bear | $510,000 | 33 | \u26a0\ufe0f Tight |\n| -80% worst case | $340,000 | 23 | \u26a0\ufe0f Survives |\n\n**Why you're fine:**\n- Your $500K liquid reserve is untouchable \u2014 it covers 33 months regardless of BTC price\n- Even in an 80% crash (much worse than today's 15%), you survive 23 months\n- 60% BTC allocation with proper runway discipline is exactly how conviction investing works\n\n**Bitcoin FO perspective:**\nThis is why we maintain liquid reserves separate from conviction positions. The framework is working as designed. Your BTC position can handle volatility because your living expenses can't be liquidated.\n\nNo guardrails breached. No action needed.\n\nThe drop feels big because you're watching prices. The structure says you're bulletproof.",
+      "checks": {
+        "fine": true,
+        "survive": true,
+        "runway": true,
+        "stress": true,
+        "30%": true,
+        "50%": true
+      },
+      "passed": true,
+      "description": "Should give calm verdict, show stress test table, reassure"
+    }
+  ],
+  "auto_score": {
+    "passed": 6,
+    "failed": 0,
+    "total": 6,
+    "all_turns_passed": true
+  },
+  "human_score": null,
+  "human_notes": null,
+  "is_golden": false
+}

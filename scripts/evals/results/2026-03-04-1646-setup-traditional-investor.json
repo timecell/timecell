@@ -1,0 +1,75 @@
+{
+  "case": "setup-traditional-investor",
+  "timestamp": "2026-03-04T16:46:57.359693",
+  "model": "claude-sonnet-4-20250514",
+  "turns": [
+    {
+      "user": "Hi, I just installed this. I don't own any Bitcoin.",
+      "assistant": "Welcome to TimeCell. I'm your AI Chief Investment Officer, and I'll help you set up your family office framework.\n\nI see you're starting fresh and mentioned you don't own Bitcoin \u2014 that's perfectly fine. The bitcoin-fo pack that's currently loaded is just one lens for thinking about wealth management, but we'll calibrate everything to YOUR actual situation and beliefs.\n\nThis setup conversation will take about 15-20 minutes. We'll cover who you are, what you own, and how you think about risk. You can quit anytime \u2014 I'll save your progress.\n\nLet's start with you. Tell me about yourself \u2014 your life situation, where you live, your family. What's your story?",
+      "checks": {
+        "welcome": true,
+        "setup": true
+      },
+      "passed": true,
+      "description": "Should start setup WITHOUT pushing Bitcoin pack opinions"
+    },
+    {
+      "user": "I'm Sarah Park, 55, just retired as CFO in Chicago. Married, no kids. Monthly expenses about $12K, mostly from pension and social security.",
+      "assistant": "Nice to meet you, Sarah. Congratulations on retirement \u2014 that's a major transition. CFO to Chief Investment Officer of your own family office is a natural evolution.\n\nChicago, married, $12K monthly burn, pension + social security covering expenses \u2014 that's a solid foundation. As a former CFO, you understand cash flow and risk management, which puts you ahead of most people walking into this conversation.\n\nWhat's your primary source of income now? Is it fully the pension and social security, or do you have other income streams? And more importantly \u2014 what are you trying to achieve with your money at this stage of life?\n\nNot the textbook retirement goals, but YOUR actual goals. What matters to you and your spouse as you think about the next 20-30 years?",
+      "checks": {
+        "sarah": true,
+        "goal": true
+      },
+      "passed": true,
+      "description": "Should capture identity and ask goals"
+    },
+    {
+      "user": "Goals: 1) Maintain current lifestyle through retirement (30+ years). 2) Leave $1M to our alma mater. 3) Keep $500K accessible for travel and experiences.",
+      "assistant": "Perfect. Those are clear, concrete goals \u2014 exactly what I need to work with. \n\nLet me capture what you've told me so far:\n\n**Sarah's Goals:**\n1. Maintain $12K/month lifestyle for 30+ years\n2. Leave $1M to alma mater  \n3. Keep $500K accessible for travel and experiences\n\nNow let's map what you actually own. Walk me through your accounts, investments, and assets. Don't worry about perfect numbers \u2014 ballpark is fine for now.\n\nStart wherever feels natural \u2014 401(k), IRAs, taxable accounts, real estate, anything significant. I need to understand your current portfolio structure before we can build the right framework around it.\n\nAs a former CFO, you probably have this organized already. What does your balance sheet look like?",
+      "checks": {
+        "portfolio": true
+      },
+      "passed": true,
+      "description": "Should transition to portfolio"
+    },
+    {
+      "user": "$2.5M in Vanguard 401K (target date funds). $1.5M in Fidelity IRA (bonds and dividends). $800K in Schwab taxable (index funds). $200K in savings accounts.",
+      "assistant": "Excellent. $5M total, well-diversified across tax buckets, and you've kept it simple with quality providers. Very CFO-like approach.\n\nLet me make sure I have this right:\n- **$2.5M** \u2192 Vanguard 401(k) (target date funds)\n- **$1.5M** \u2192 Fidelity IRA (bonds/dividends) \n- **$800K** \u2192 Schwab taxable (index funds)\n- **$200K** \u2192 Savings accounts\n- **$5M total**\n\nA few quick questions:\n1. The $200K in savings \u2014 is that across multiple banks, or concentrated? \n2. Any real estate beyond your primary residence?\n3. The pension you mentioned \u2014 is that a monthly payment for life, or a lump sum you could take?\n\nAnd here's the key question: With $144K annual expenses and what sounds like pension + social security covering most of that, this $5M is essentially your \"above and beyond\" money. Is that how you think about it?",
+      "checks": {
+        "vanguard": true,
+        "fidelity": true,
+        "schwab": true
+      },
+      "passed": true,
+      "description": "Should create entities"
+    },
+    {
+      "user": "Expenses $12K/month. The $200K in savings is liquid. I also get $4K/month pension and $2.5K social security.",
+      "assistant": "Got it. Let me parse this correctly:\n\n**Monthly cash flow:**\n- Expenses: $12K\n- Pension: $4K  \n- Social Security: $2.5K\n- **Gap: $5.5K/month ($66K/year)**\n\nSo you need to draw $66K annually from your $5M portfolio to maintain lifestyle. That's a 1.3% withdrawal rate \u2014 extremely conservative and sustainable.\n\nThis changes everything. You're not just \"maintaining lifestyle\" \u2014 you have significant wealth-building capacity even in retirement.\n\nA few clarifications:\n1. The $200K in savings \u2014 is this emergency money, or are you planning to invest some of it?\n2. Is the $4K pension fixed for life, or does it have COLA adjustments?\n3. Any major home equity or other real estate I should factor in?\n\nYour goals are very achievable with this structure. The question becomes: what do you want to do with the excess capacity? Your portfolio could potentially grow significantly while still funding your lifestyle and legacy goals.",
+      "checks": {
+        "runway": false
+      },
+      "passed": false,
+      "description": "Should calculate runway (very long with income)"
+    },
+    {
+      "user": "I prefer detailed explanations \u2014 I was a CFO, I can handle complexity. Be direct, I don't need hand-holding.",
+      "assistant": "Understood. CFO to CFO \u2014 let's cut through the pleasantries.\n\n**Your Financial Position:**\n- $5M liquid portfolio\n- $66K annual draw needed (1.3% rate)\n- 30-year horizon\n- $1.5M legacy target ($1M donation + $500K experiences)\n\n**The Math:**\nAt 1.3% withdrawal with even modest growth (4-5% real returns), your portfolio grows substantially over 30 years while funding lifestyle. You're massively over-capitalized for your stated goals.\n\n**The Real Question:**\nYou have $3-4M of \"surplus\" capacity beyond your stated needs. What's your actual plan for that? More legacy? Different lifestyle creep? Philanthropic expansion beyond the $1M?\n\n**Portfolio Assessment:**\nYour allocation is fine but dated. Target-date funds in the 401(k) are getting conservative as you hit their target date. The bond-heavy IRA made sense in 2019, less sense now. You're probably 60/40 or more conservative when you could run 70/30 or 80/20 given your cash flow security.\n\nBefore I set up your guardrails and buckets \u2014 what's your actual risk tolerance? Not theoretical, practical. Have you ever panic-sold? What's your leverage stance? What keeps you awake about money?",
+      "checks": {
+        "preference": false,
+        "complete": false
+      },
+      "passed": false,
+      "description": "Should set communication preferences"
+    }
+  ],
+  "auto_score": {
+    "passed": 8,
+    "failed": 3,
+    "total": 11,
+    "all_turns_passed": false
+  },
+  "human_score": null,
+  "human_notes": null,
+  "is_golden": false
+}

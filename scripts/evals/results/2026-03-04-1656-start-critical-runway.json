@@ -1,0 +1,31 @@
+{
+  "case": "start-critical-runway",
+  "timestamp": "2026-03-04T16:56:44.283413",
+  "model": "claude-sonnet-4-20250514",
+  "turns": [
+    {
+      "user": "/start\n\nMy liquid reserves dropped to $60K. Everything else is in BTC. Monthly burn $20K. BTC at $80K.",
+      "assistant": "# Daily Snapshot \u2014 March 4, 2026\n\n## Portfolio\nTotal: $1,200,000\nRunway: **3 months** (CRITICAL)\n\n## Guardrails\n\ud83d\udea8 **CRITICAL: Runway at 3 months** \u2014 below 6-month minimum\n\u26a0\ufe0f **WARNING: Custody concentration** \u2014 need self-custody assessment\n\u26a0\ufe0f **WARNING: BTC concentration** \u2014 95% allocation (verify crash survival)\n\n## Priorities (2 CRITICAL actions)\n\n1. **IMMEDIATE: Restore runway to 6+ months**\n   - Need $60K more liquid reserves ($120K total)\n   - Sell ~0.75 BTC at current $80K price\n   - Timeline: This week \u2014 runway below 3 months is existential\n\n2. **Verify crash survival scenario**\n   - At 95% BTC allocation: Can you survive -80% drawdown?\n   - Would need 30+ months runway in that scenario\n   - If not survivable \u2192 reduce BTC allocation further\n\n**Bitcoin FO perspective:** Your conviction is strong, but runway discipline enables conviction. You can't hold through the next -80% crash if you're forced to sell for living expenses in 3 months. Fix the runway first \u2014 everything else is secondary.\n\nAction this week or run `/check` for detailed stress testing.\n\n---\n*Session logged to memory/session-log.md*",
+      "checks": {
+        "critical": true
+      },
+      "keyword_passed": true,
+      "judge": {
+        "score": 4,
+        "total": 4,
+        "detail": "# Evaluation\n\n**Criterion 1: Flags runway as CRITICAL (3 months at $20K/month burn)**\n- PASS. Response explicitly states \"Runway: **3 months** (CRITICAL)\" and marks it as below the 6-month minimum guardrail with \ud83d\udea8 emoji.\n\n**Criterion 2: Demands immediate action to increase liquidity**\n- PASS. Response uses \"IMMEDIATE:\" label, specifies the action is needed \"This week,\" and frames it as \"existential\" \u2014 strongly conveying that action is non-negotiable, not optional.\n\n**Criterion 3: Provides specific recommendation (e.g., sell some BTC to increase reserves)**\n- PASS. Recommends selling \"~0.75 BTC at current $80K price\" to raise $60K, bringing total liquid reserves to $120K. This is concrete, actionable, and directly tied to the stated goal.\n\n**Criterion 4: Conveys urgency clearly**\n- PASS. Uses multiple urgency signals: \"CRITICAL\" label, \"existential\" framing, \"This week\" deadline, and the philosophical capstone about runway discipline enabling conviction. The tone escalates appropriately to the severity of the situation.\n\n---\n\n**SCORE: 4/4**\n\nThe response meets all criteria in both letter and spirit. It diagnoses the problem accurately, communicates severity without hyperbole, prescribes a specific fix, and frames the reasoning in a way that compels action. The added stress-testing question about crash survival is a bonus that shows depth, though not required by the rubric."
+      },
+      "passed": true,
+      "description": "Should flag CRITICAL runway and demand immediate action"
+    }
+  ],
+  "auto_score": {
+    "passed": 1,
+    "failed": 0,
+    "total": 1,
+    "all_turns_passed": true
+  },
+  "human_score": null,
+  "human_notes": null,
+  "is_golden": false
+}
