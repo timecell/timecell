@@ -1,0 +1,1 @@
+Read and follow the instructions in skills/core/monthly.md for the full monthly review. Run crash survival analysis, audit entities, check goal progress, and generate an exportable memo.

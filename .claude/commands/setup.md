@@ -1,0 +1,1 @@
+Read and follow the instructions in skills/core/setup.md to guide the user through first-time onboarding. This is a guided conversation — be warm, structured, and conversational. Do NOT present it as a form.

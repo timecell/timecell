@@ -1,0 +1,1 @@
+Read and follow the instructions in skills/core/start.md for the daily portfolio snapshot. Load profile, compute metrics via engine-bridge.py, check guardrails, and generate the daily report.

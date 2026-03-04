@@ -1,0 +1,1 @@
+Read and follow the instructions in skills/core/weekly.md for the weekly review. Compare week-over-week metrics, check guardrail trends, review strategy execution, and set priorities for next week.

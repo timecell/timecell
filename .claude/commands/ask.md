@@ -1,0 +1,1 @@
+Read and follow the instructions in skills/core/ask.md for a free-form CIO conversation. Handle rule changes, what-if scenarios, one-off analysis, and pack-specific questions.

@@ -1,0 +1,1 @@
+Read and follow the instructions in skills/core/check.md for an on-demand risk assessment. Run stress tests, check all guardrails, verify custody, and give a clear verdict.
