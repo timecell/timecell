@@ -68,7 +68,7 @@ FUNCTION_MAP = {
     },
     "calculateTemperatureAdjustedDCA": {
         "import": "calculateTemperatureAdjustedDCA",
-        "args": "temperature,baseAmount"
+        "args": "input,temperatureScore"
     },
     "calculateCustodyRisk": {
         "import": "calculateCustodyRisk",

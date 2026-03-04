@@ -14,13 +14,7 @@
 #   - BTC holdings: ~595 BTC ($53.55M / $90K)
 #
 # Known issues:
-#   - calculateTemperatureAdjustedDCA: The bridge maps args as
-#     "temperature,baseAmount" (two primitives), but the actual TS function
-#     signature is (input: DCAInput, temperatureScore: number). The bridge
-#     will pass the temperature number as the first arg where a DCAInput
-#     object is expected. This will likely fail or produce wrong results.
-#     To fix, the bridge should map args as "input,temperatureScore" with
-#     input being an object pass-through.
+#   - (none — all resolved)
 # =============================================================================
 
 set -euo pipefail
@@ -293,18 +287,16 @@ run_test "calculateDCA" '{
 # ---------------------------------------------------------------------------
 # 13. calculateTemperatureAdjustedDCA
 #     Signature: (input: DCAInput, temperatureScore: number)
-#     Bridge args: "temperature,baseAmount" — multi-arg extraction
-#
-#     KNOWN ISSUE: The bridge extracts "temperature" and "baseAmount" as two
-#     primitive values and calls calculateTemperatureAdjustedDCA(temp, baseAmount).
-#     But the actual TS function expects (DCAInput, number). The bridge should
-#     map args as "input,temperatureScore" to pass the DCAInput object correctly.
-#     This test documents the mismatch — it will likely fail.
+#     Bridge args: "input,temperatureScore" — DCAInput object + temperature number
 # ---------------------------------------------------------------------------
 run_test "calculateTemperatureAdjustedDCA" '{
-    "temperature": 55,
-    "baseAmount": 50000
-}' "(KNOWN ISSUE: bridge arg mismatch — expects DCAInput object + number)"
+    "input": {
+        "monthlyAmount": 50000,
+        "months": 12,
+        "currentBtcPrice": 90000
+    },
+    "temperatureScore": 55
+}'
 
 # ---------------------------------------------------------------------------
 # 14. calculateCustodyRisk
