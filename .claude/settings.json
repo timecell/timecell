@@ -9,5 +9,13 @@
       "Bash(node -e*)"
     ],
     "deny": []
+  },
+  "hooks": {
+    "PreCompact": [
+      {
+        "command": ".claude/hooks/pre-compact.sh",
+        "timeout": 5000
+      }
+    ]
   }
 }

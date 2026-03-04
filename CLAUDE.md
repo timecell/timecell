@@ -100,6 +100,25 @@ External data sources that feed primitives. NOT a primitive itself — infrastru
 - Partial profile.md → offer to resume /setup
 - Overdue cadence → nudge at session start
 
+## Pre-Compaction Protocol
+
+When you detect that context is about to be compacted (you'll see a system message about compaction), IMMEDIATELY before it happens:
+
+1. **Save pending items to NOW.md:**
+   - Any unfinished tasks or decisions from this session
+   - Any user requests not yet addressed
+   - Current state of any in-progress skill
+
+2. **Update session-log.md:**
+   - Brief summary of what was accomplished
+   - What was in progress when compaction hit
+   - Key numbers/values the next context will need
+
+3. **After compaction resumes:**
+   - Read NOW.md and session-log.md to restore context
+   - Continue where you left off
+   - Acknowledge to user: "Context was compacted. I've saved our progress. Continuing with [task]."
+
 ## Decision Logging
 All changes to guardrails, strategies, or portfolio → logged to memory/decisions.md with date, context, reasoning.
 
