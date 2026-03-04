@@ -1,62 +1,94 @@
-# TimeCell
+# TimeCell — AI Family Office OS
 
-Crash survival calculator for Bitcoin investors. Know exactly how much crash you can survive before you need to sell.
+TimeCell is an open-source, CLI-first AI family office operating system. The product IS a Claude Code configuration — CLAUDE.md + skills + memory templates + engine. No web dashboard, no API server. Skills ARE the interface.
 
-**Local-first. Your data stays on your machine.**
-
-## What it does
-
-- Models portfolio impact across 30%, 50%, 70%, and 80% BTC crash scenarios
-- Calculates runway (months of burn covered) for each scenario
-- Runs the **Ruin Test**: if BTC drops 80% AND other assets drop 40%, do you survive?
-- Computes geometric mean CAGR for hedged vs unhedged portfolios (Spitznagel method)
-
-## Quick start
+## Quick Start
 
 ```bash
 npx timecell
+# → installs to ~/timecell
+# → "Open in Claude Code to start your setup"
+
+cd ~/timecell
+claude
+# → /setup runs automatically
 ```
 
-This launches an interactive wizard, starts a local server, and opens the dashboard in your browser.
+## How It Works
 
-## Development
+TimeCell turns Claude Code into your personal CIO (Chief Investment Officer). You interact through 6 skills organized by cadence:
 
-```bash
-git clone https://github.com/timecell/timecell.git
-cd timecell
-npm install
-npm run dev     # starts API + web dashboard
-npm test        # runs engine tests
+| Skill | When | Purpose |
+|-------|------|---------|
+| `/setup` | Once | Guided onboarding — builds your financial profile |
+| `/start` | Daily | "Where do I stand?" — 2-minute portfolio check |
+| `/weekly` | Weekly | Trends, strategy review, next-week priorities |
+| `/monthly` | Monthly | Full review, crash survival, goal progress |
+| `/check` | Anytime | "Am I ok?" — on-demand risk assessment |
+| `/ask` | Anytime | Free-form questions, rule changes, "what if" |
+
+## Architecture
+
+### Five Primitives
+
+Every piece of family office intelligence fits into one of five categories:
+
+1. **Entities** — Structural objects (accounts, trusts, wallets, people)
+2. **Metrics** — Computed values (runway months, concentration %, temperature)
+3. **Guardrails** — Constraints with zones (min runway, max concentration)
+4. **Strategies** — Decision frameworks (selling rules, DCA, crash deployment)
+5. **Buckets** — Allocation targets (Safety Floor, Core Conviction, Growth Engine)
+
+### Three Layers
+
+Each primitive exists at three layers. Override precedence: User > Pack > Core.
+
+| Layer | What | Who Creates |
+|-------|------|-------------|
+| **Core** | Universal defaults | TimeCell |
+| **Packs** | Expert opinions (e.g., "Bitcoin FO") | Community |
+| **User** | Your customizations | You |
+
+### Engine
+
+14 financial computation functions with 239 tests. Pure math — no opinions. The engine calculates, the CIO interprets.
+
+## Packs
+
+TimeCell ships with the `bitcoin-fo` pack — an opinionated framework for Bitcoin-conviction family offices. It adds:
+- Temperature-based selling/buying rules
+- Custody risk monitoring
+- Cycle-aware portfolio management
+- 6 specialized buckets
+
+Don't hold Bitcoin? Delete the pack. Use core + your own guardrails.
+
+## Project Structure
+
 ```
-
-## Project structure
-
+timecell/
+├── CLAUDE.md              # CIO persona (generic — pack beliefs loaded dynamically)
+├── entities/              # Structural objects
+│   ├── core/              # Schemas + templates
+│   ├── packs/bitcoin-fo/  # BTC-specific entity templates
+│   └── user/              # Your entities
+├── metrics/               # Computed values
+├── guardrails/            # Constraints with zones
+├── strategies/            # Decision frameworks
+├── buckets/               # Allocation targets
+├── skills/core/           # 6 cadence-based skills
+├── workflows/             # Internal orchestration
+├── memory/                # User state (profile, decisions, sessions)
+├── packs/bitcoin-fo/      # Bitcoin FO pack
+├── packages/engine/       # Computation engine (TypeScript)
+├── scripts/               # CLI tools
+└── reference/             # Templates + specs
 ```
-packages/
-  engine/   — Pure TypeScript math (zero dependencies)
-  api/      — Fastify server
-  web/      — React + Tailwind dashboard
-  cli/      — Interactive CLI wizard
-site/       — Landing page (timecell.ai)
-```
-
-## Tech stack
-
-- TypeScript throughout
-- Fastify API server
-- React + Vite + Tailwind CSS v4
-- Vitest for testing
-- SQLite for local persistence (planned)
-
-## Roadmap
-
-- Position sizing calculator (how much BTC to hold)
-- Bitcoin temperature gauge (market cycle awareness)
-- Hedge breakeven analysis (Spitznagel geometric mean)
-- Portfolio rebalancing rules
-- Tax optimization modeling
-- Multi-asset correlation engine
 
 ## License
 
 MIT
+
+## Status
+
+v0.1 "Mirror" — Foundation release. See ROADMAP.md for what's next.

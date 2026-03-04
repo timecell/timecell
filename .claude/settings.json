@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(*)",
+      "Glob(*)",
+      "Grep(*)",
+      "Bash(python3 scripts/engine-bridge.py*)",
+      "Bash(cd packages/engine && npm test*)",
+      "Bash(node -e*)"
+    ],
+    "deny": []
+  }
+}
